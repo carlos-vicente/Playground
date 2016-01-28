@@ -1,0 +1,7 @@
+{
+  "name": "playground",
+  "dependencies": {
+    "materialize": "~0.97.0",
+    "angular": "~1.4.9"
+  }
+}
