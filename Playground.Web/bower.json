@@ -2,6 +2,7 @@
   "name": "playground",
   "dependencies": {
     "materialize": "~0.97.0",
-    "angular": "~1.4.9"
+    "angular": "~1.4.9",
+    "angular-signalr-hub": "~1.5.0"
   }
 }

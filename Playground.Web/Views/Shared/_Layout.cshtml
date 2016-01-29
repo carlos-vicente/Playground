@@ -15,10 +15,13 @@
     <script type="text/javascript" src="~/lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="~/lib/materialize/js/materialize.js"></script>
     <script type="text/javascript" src="~/lib/angular/angular.js"></script>
+    <script type="text/javascript" src="~/lib/angular-signalr/signalr-hub.js"></script>
+
+    <script type="text/javascript" src="~/Scripts/sideNav.js"></script>
 
     <script type="text/javascript">
         jQuery(document).ready(function () {
-            jQuery(".button-collapse").sideNav();
+            sideNav.init();
         });
     </script>
 
@@ -43,9 +46,7 @@
             </div>
         </nav>
 
-        <div class="container">
-            @RenderBody()
-        </div>
+        @RenderBody()
     </div>
     @RenderSection("Scripts", false)
 </body>
