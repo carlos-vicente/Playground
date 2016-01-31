@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Playground.Data.Read.Queries")]
+[assembly: AssemblyTitle("Playground.DependencyResolver.Autofac")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Playground.Data.Read.Queries")]
+[assembly: AssemblyProduct("Playground.DependencyResolver.Autofac")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("67cc8c2d-c1b4-4e33-83cd-088d1c8907b3")]
+[assembly: Guid("6bca599f-a8c2-46f8-bf0d-3eb9dd1abaea")]
 
 // Version information for an assembly consists of the following four values:
 //

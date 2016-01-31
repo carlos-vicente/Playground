@@ -160,7 +160,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
-    <Compile Include="Models\View\ProfileViewModel.cs" />
+    <Compile Include="Models\ProfileViewModel.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -189,13 +189,32 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\Input\" />
     <Folder Include="Scripts\angular\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Playground.DependencyResolver.Autofac\Playground.DependencyResolver.Autofac.csproj">
+      <Project>{6bca599f-a8c2-46f8-bf0d-3eb9dd1abaea}</Project>
+      <Name>Playground.DependencyResolver.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.QueryService.InMemory.Autofac\Playground.QueryService.InMemory.Autofac.csproj">
+      <Project>{ed175880-ecf4-4696-abd0-b39ad38c27bb}</Project>
+      <Name>Playground.QueryService.InMemory.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Web.Services.Contracts\Playground.Web.Services.Contracts.csproj">
       <Project>{4B14567B-F920-4A03-BC9B-A43CE75237A4}</Project>
       <Name>Playground.Web.Services.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Web.Services.Queries.Handlers\Playground.Web.Services.Queries.Handlers.csproj">
+      <Project>{2235a509-eb29-44ce-929d-82fa2f5c43c0}</Project>
+      <Name>Playground.Web.Services.Queries.Handlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Web.Services.Queries\Playground.Web.Services.Queries.csproj">
+      <Project>{aea69604-a601-4c3d-a27a-bd7ecaacaf10}</Project>
+      <Name>Playground.Web.Services.Queries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Web.Services\Playground.Web.Services.csproj">
+      <Project>{CDB1C62B-67AD-4390-B8CE-A6AA0E06EC41}</Project>
+      <Name>Playground.Web.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

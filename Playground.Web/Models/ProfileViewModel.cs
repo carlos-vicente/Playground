@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Playground.Web.Models.View
+namespace Playground.Web.Models
 {
     public class ProfileViewModel
     {

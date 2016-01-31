@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CDB1C62B-67AD-4390-B8CE-A6AA0E06EC41}</ProjectGuid>
+    <ProjectGuid>{751BE90E-7BD6-46D5-9323-2098E6CCF1CA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.Web.Services</RootNamespace>
-    <AssemblyName>Playground.Web.Services</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>Playground.Core</RootNamespace>
+    <AssemblyName>Playground.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -40,22 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EqualityComparer.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Playground.QueryService.Contracts\Playground.QueryService.Contracts.csproj">
-      <Project>{a0e4096a-8d47-4167-9669-a7b8d2c1adb8}</Project>
-      <Name>Playground.QueryService.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Web.Services.Contracts\Playground.Web.Services.Contracts.csproj">
-      <Project>{4B14567B-F920-4A03-BC9B-A43CE75237A4}</Project>
-      <Name>Playground.Web.Services.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Web.Services.Queries\Playground.Web.Services.Queries.csproj">
-      <Project>{AEA69604-A601-4C3D-A27A-BD7ECAACAF10}</Project>
-      <Name>Playground.Web.Services.Queries</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

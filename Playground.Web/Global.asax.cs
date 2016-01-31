@@ -7,6 +7,11 @@ using System.Web.Http;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
+using Playground.DependencyResolver.Autofac;
+using Playground.QueryService.InMemory.Autofac;
+using Playground.Web.Services;
+using Playground.Web.Services.Contracts;
+using AutofacDependencyResolver = Autofac.Integration.Mvc.AutofacDependencyResolver;
 
 namespace Playground.Web
 {
@@ -21,15 +26,28 @@ namespace Playground.Web
 
             var builder = new ContainerBuilder();
 
-            // register MVC controllers
-            builder.RegisterControllers(typeof(HttpApplication).Assembly);
+            var executingAssembly = Assembly.GetExecutingAssembly();
 
-            // register WebApi controllers
-            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            // register MVC controllers
+            builder.RegisterControllers(executingAssembly);
+
+            // register WebApi controllersx
+            builder.RegisterApiControllers(executingAssembly);
+
+            builder.RegisterModule<AutofacDependencyResolverModule>();
+            builder.RegisterModule<QueryServiceModule>();
+
+            builder
+                .RegisterType<UserService>()
+                .As<IUserService>()
+                .InstancePerLifetimeScope();
 
             // register the generic container to both MVC and WebApi pipelines
             var container = builder.Build();
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+
+            System.Web.Mvc.DependencyResolver
+                .SetResolver(new AutofacDependencyResolver(container));
+
             GlobalConfiguration
                 .Configuration
                 .DependencyResolver = new AutofacWebApiDependencyResolver(container);
