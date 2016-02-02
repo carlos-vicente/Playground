@@ -5,29 +5,29 @@ namespace Playground.Data.Dapper.Tests.Postgresql
 {
     public static class DatabaseHelper
     {
-        public static string GetConnectionString()
+        public static NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
         {
-            var builder = new NpgsqlConnectionStringBuilder
+            return new NpgsqlConnectionStringBuilder
             {
                 Host = ConfigurationManager.AppSettings["host"],
                 Database = ConfigurationManager.AppSettings["database"],
                 Username = ConfigurationManager.AppSettings["user"],
-                Password = ConfigurationManager.AppSettings["password"]
-            };
+                Password = ConfigurationManager.AppSettings["password"],
 
-            return builder.ConnectionString;
+                SslMode = SslMode.Require,
+                TrustServerCertificate = true
+            };
         }
 
         public static void CreateTestTable()
         {
-            using (var connection = new NpgsqlConnection(GetConnectionString()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
             {
                 connection.Open();
 
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = string.Format(Scripts.CreateTable, "test");
-
                     command.ExecuteNonQuery();
                 }
             }
@@ -35,8 +35,30 @@ namespace Playground.Data.Dapper.Tests.Postgresql
 
         public static void DropTestTable()
         {
-            
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                connection.Open();
 
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = string.Format(Scripts.DropTable, "test");
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void InsertData(Test data)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = string.Format(Scripts.DropTable, "test");
+                    command.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
