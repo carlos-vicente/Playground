@@ -75,32 +75,32 @@ namespace Playground.Data.Dapper.Tests
                 .ShouldBeEquivalentTo(expected);
         }
 
-        [Test]
-        public async Task ExecuteCommand_InsertsRowsInDatabase_WhenInsertStatementIsPassed()
-        {
-            // arrange
-            const string sql = "UPDATE test SET Name = @Name WHERE Id = @Id";
-            var initial = new Test { Id = 1, Name = "dude" };
+        //[Test]
+        //public async Task ExecuteCommand_InsertsRowsInDatabase_WhenInsertStatementIsPassed()
+        //{
+        //    // arrange
+        //    const string sql = "UPDATE test SET Name = @Name WHERE Id = @Id";
+        //    var initial = new Test { Id = 1, Name = "dude" };
 
-            // act
-            _sut
-                .ExecuteCommand(sql, expected)
-                .Wait();
+        //    // act
+        //    _sut
+        //        .ExecuteCommand(sql, expected)
+        //        .Wait();
 
-            // assert
-            var actual = (await _realConnection
-                .QueryAsync<Test>("SELECT * from test")
-                .ConfigureAwait(false))
-                .ToList();
+        //    // assert
+        //    var actual = (await _realConnection
+        //        .QueryAsync<Test>("SELECT * from test")
+        //        .ConfigureAwait(false))
+        //        .ToList();
 
-            actual
-                .Count()
-                .Should()
-                .Be(1);
+        //    actual
+        //        .Count()
+        //        .Should()
+        //        .Be(1);
 
-            actual
-                .First()
-                .ShouldBeEquivalentTo(expected);
-        }
+        //    actual
+        //        .First()
+        //        .ShouldBeEquivalentTo(expected);
+        //}
     }
 }
