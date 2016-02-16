@@ -27,7 +27,7 @@ namespace Playground.Data.Dapper.Tests.Postgresql
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = string.Format(Scripts.CreateTable, "test");
+                    command.CommandText = string.Format(Scripts.Ddl.CreateTable, "test");
                     command.ExecuteNonQuery();
                 }
             }
@@ -41,7 +41,7 @@ namespace Playground.Data.Dapper.Tests.Postgresql
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = string.Format(Scripts.DropTable, "test");
+                    command.CommandText = string.Format(Scripts.Ddl.DropTable, "test");
                     command.ExecuteNonQuery();
                 }
             }
@@ -55,7 +55,7 @@ namespace Playground.Data.Dapper.Tests.Postgresql
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = string.Format(Scripts.DropTable, "test");
+                    command.CommandText = string.Format(Scripts.Ddl.DropTable, "test");
                     command.ExecuteNonQuery();
                 }
             }

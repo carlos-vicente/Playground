@@ -34,16 +34,21 @@ namespace Playground.Data.Dapper.Tests
         {
             base.SetUp();
 
-            var connectionStringBuilder = DatabaseHelper.GetConnectionStringBuilder();
+            var connectionStringBuilder = DatabaseHelper
+                .GetConnectionStringBuilder();
 
-            _realConnection = new NpgsqlConnection(connectionStringBuilder);
+            _realConnection = new NpgsqlConnection(
+                connectionStringBuilder);
             _realConnection.Open();
+
             _sut = new Connection(_realConnection);
         }
 
         [TearDown]
         public void TearDown()
         {
+            _realConnection.Execute(Scripts.Dml.DeleteAllTable);
+
             _sut.Dispose();
         }
 
@@ -51,12 +56,11 @@ namespace Playground.Data.Dapper.Tests
         public async Task ExecuteCommand_InsertsRowsInDatabase_WhenInsertStatementIsPassed()
         {
             // arrange
-            const string sql = "INSERT INTO test(id, name) VALUES (@Id, @Name)";
             var expected = new Test {Id = 1, Name = "dude"};
 
             // act
             _sut
-                .ExecuteCommand(sql, expected)
+                .ExecuteCommand(Scripts.Dml.InsertIntoTable, expected)
                 .Wait();
 
             // assert
@@ -75,32 +79,69 @@ namespace Playground.Data.Dapper.Tests
                 .ShouldBeEquivalentTo(expected);
         }
 
-        //[Test]
-        //public async Task ExecuteCommand_InsertsRowsInDatabase_WhenInsertStatementIsPassed()
-        //{
-        //    // arrange
-        //    const string sql = "UPDATE test SET Name = @Name WHERE Id = @Id";
-        //    var initial = new Test { Id = 1, Name = "dude" };
+        [Test]
+        public async Task ExecuteCommand_UpdateRowsInDatabase_WhenUpdateStatementIsPassed()
+        {
+            // arrange
+            var initial = new Test { Id = 1, Name = "dude" };
+            _realConnection
+                .Execute(
+                    Scripts.Dml.InsertIntoTable,
+                    initial);
 
-        //    // act
-        //    _sut
-        //        .ExecuteCommand(sql, expected)
-        //        .Wait();
+            var expected = new Test { Id = 1, Name = "another dude" };
 
-        //    // assert
-        //    var actual = (await _realConnection
-        //        .QueryAsync<Test>("SELECT * from test")
-        //        .ConfigureAwait(false))
-        //        .ToList();
+            // act
+            _sut
+                .ExecuteCommand(Scripts.Dml.UpdateTable, expected)
+                .Wait();
 
-        //    actual
-        //        .Count()
-        //        .Should()
-        //        .Be(1);
+            // assert
+            var actual = (await _realConnection
+                .QueryAsync<Test>("SELECT * from test")
+                .ConfigureAwait(false))
+                .ToList();
 
-        //    actual
-        //        .First()
-        //        .ShouldBeEquivalentTo(expected);
-        //}
+            actual
+                .Count()
+                .Should()
+                .Be(1);
+
+            actual
+                .First()
+                .ShouldBeEquivalentTo(expected);
+        }
+
+        [Test]
+        public async Task ExecuteCommand_DeleteRowsInDatabase_WhenDeleteStatementIsPassed()
+        {
+            // arrange
+            var toDelete = new Test { Id = 1, Name = "dude" };
+            var toStay = new Test { Id = 2, Name = "other dude" };
+            _realConnection
+                .Execute(
+                    Scripts.Dml.InsertIntoTable,
+                    toDelete);
+            _realConnection
+                .Execute(
+                    Scripts.Dml.InsertIntoTable,
+                    toStay);
+
+            // act
+            _sut
+                .ExecuteCommand(Scripts.Dml.DeleteTable, new { Id = 1 })
+                .Wait();
+
+            // assert
+            var actual = (await _realConnection
+                .QueryAsync<Test>("SELECT * FROM test WHERE Id = @Id", new { Id = 1 })
+                .ConfigureAwait(false))
+                .ToList();
+
+            actual
+                .Count()
+                .Should()
+                .Be(0);
+        }
     }
 }
