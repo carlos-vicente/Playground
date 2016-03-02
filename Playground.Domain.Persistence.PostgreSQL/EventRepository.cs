@@ -61,14 +61,16 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public async Task Add(Guid streamId, Event @event)
         {
+            // TODO: sanity checks
+
             using (var connection = _connectionFactory.CreateConnection())
             {
-                // make sure last event has lesser event id than current one
+                // TODO: make sure last event has lesser event id than current one
 
                 var command = new AddEventCommand
                 {
                     StreamId = streamId,
-                    // add the remainder of the Event's properties
+                    // TODO: add the remainder of the Event's properties
                 };
 
                 await connection
