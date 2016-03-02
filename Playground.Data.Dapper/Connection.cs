@@ -1,11 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Playground.Data.Contracts;
 
 namespace Playground.Data.Dapper
 {
+    /// <summary>
+    /// A connection implementation using the Dapper ORM
+    /// </summary>
     public class Connection : IConnection
     {
         private bool _disposed;
@@ -27,9 +32,19 @@ namespace Playground.Data.Dapper
             return Task.FromResult(1);
         }
 
-        public Task<T> ExecuteQuery<T>()
+        public async Task<T> ExecuteQuerySingle<T>(string sql, object parameters)
         {
-            throw new NotImplementedException();
+            return (await InnerConnection
+                .QueryAsync<T>(sql, parameters)
+                .ConfigureAwait(false))
+                .SingleOrDefault();
+        }
+
+        public async Task<IEnumerable<T>> ExecuteQueryMultiple<T>(string sql, object parameters)
+        {
+            return await InnerConnection
+                .QueryAsync<T>(sql, parameters)
+                .ConfigureAwait(false);
         }
 
         public void Dispose()

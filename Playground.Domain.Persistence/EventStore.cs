@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using Playground.Data.Contracts;
 
 namespace Playground.Domain.Persistence
 {
-    public class SqlEventStore : IEventStore
+    public class EventStore : IEventStore
     {
         private readonly IEventSerializer _serializer;
-        private readonly IConnectionFactory _connectionFactory;
+        private readonly IEventRepository _repository;
 
-        public SqlEventStore(
+        public EventStore(
             IEventSerializer serializer,
-            IConnectionFactory connectionFactory)
+            IEventRepository repository)
         {
             _serializer = serializer;
-            _connectionFactory = connectionFactory;
+            _repository = repository;
         }
 
         public void StoreEvents(

@@ -4,14 +4,14 @@ namespace Playground.Domain.Persistence
 {
     public class Event
     {
+        public long EventId { get; private set; }
+
         public string TypeName { get; private set; }
 
         public DateTime OccurredOn { get; private set; }
 
         public string EventBody { get; private set; }
-
-        public long EventId { get; private set; }
-
+        
         public Event(
             string typeName,
             DateTime occurredOn,
