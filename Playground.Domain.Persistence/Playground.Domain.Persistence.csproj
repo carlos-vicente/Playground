@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FCDB33D1-A194-4B07-BA2D-CD5858A576CB}</ProjectGuid>
+    <ProjectGuid>{8D22C8A7-4C4F-472C-9DBA-43BD55DEB1E8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.Messaging.Persistence</RootNamespace>
-    <AssemblyName>Playground.Messaging.Persistence</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <RootNamespace>Playground.Domain.Persistence</RootNamespace>
+    <AssemblyName>Playground.Domain.Persistence</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -40,7 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Event.cs" />
+    <Compile Include="IEventSerializer.cs" />
+    <Compile Include="IEventStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlEventStore.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Playground.Data.Contracts\Playground.Data.Contracts.csproj">
+      <Project>{db5f5dbe-547b-424e-abb9-ea63327c8615}</Project>
+      <Name>Playground.Data.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Domain\Playground.Domain.csproj">
+      <Project>{66b417d5-a799-4dc8-bf29-904898ce2653}</Project>
+      <Name>Playground.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

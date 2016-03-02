@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Aggregate.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="Event.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValueObject.cs" />
