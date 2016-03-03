@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Playground.Domain.Persistence
 {
@@ -16,19 +17,19 @@ namespace Playground.Domain.Persistence
             _repository = repository;
         }
 
-        public void StoreEvents(
+        public Task StoreEvents(
             Guid streamId,
             ICollection<IEvent> eventsToStore)
         {
             throw new NotImplementedException();
         }
 
-        public ICollection<IEvent> LoadAllEvents(Guid streamId)
+        public Task<ICollection<IEvent>> LoadAllEvents(Guid streamId)
         {
             throw new NotImplementedException();
         }
 
-        public ICollection<IEvent> LoadSelectedEvents(
+        public Task<ICollection<IEvent>> LoadSelectedEvents(
             Guid streamId,
             long fromEventId,
             long toEventId)

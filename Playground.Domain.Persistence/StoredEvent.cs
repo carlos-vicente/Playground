@@ -2,7 +2,7 @@
 
 namespace Playground.Domain.Persistence
 {
-    public class Event
+    public class StoredEvent
     {
         public long EventId { get; set; }
 
@@ -12,7 +12,7 @@ namespace Playground.Domain.Persistence
 
         public string EventBody { get; set; }
         
-        public Event(
+        public StoredEvent(
             string typeName,
             DateTime occurredOn,
             string eventBody,
@@ -45,7 +45,7 @@ namespace Playground.Domain.Persistence
         //    return default(TEvent); //TODO: what to actually do here?!?!?! -> change this to same place where this instance is built
         //}
 
-        public bool Equals(Event other)
+        public bool Equals(StoredEvent other)
         {
             if (ReferenceEquals(this, other))
                 return true;
@@ -57,7 +57,7 @@ namespace Playground.Domain.Persistence
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as Event);
+            return Equals(obj as StoredEvent);
         }
 
         public override int GetHashCode()

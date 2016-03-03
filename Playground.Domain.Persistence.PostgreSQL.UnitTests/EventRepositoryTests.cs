@@ -37,12 +37,12 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
 
             var streamId = Guid.NewGuid();
 
-            IEnumerable<Event> expected = Fixture
-                .CreateMany<Event>()
+            IEnumerable<StoredEvent> expected = Fixture
+                .CreateMany<StoredEvent>()
                 .ToList();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQueryMultiple<Event>(
+                .ExecuteQueryMultiple<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p => ((GetAllEventsQuery) p).StreamId == streamId)))
                 .Returns(Task.FromResult(expected));
@@ -71,10 +71,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
 
             var streamId = Guid.NewGuid();
 
-            IEnumerable<Event> expected = new List<Event>();
+            IEnumerable<StoredEvent> expected = new List<StoredEvent>();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQueryMultiple<Event>(
+                .ExecuteQueryMultiple<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p => ((GetAllEventsQuery)p).StreamId == streamId)))
                 .Returns(Task.FromResult(expected));
@@ -118,10 +118,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var eventId = Fixture.Create<long>();
 
             var expectedEvent = Fixture
-                .Create<Event>();
+                .Create<StoredEvent>();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetEventQuery) p).StreamId == streamId
@@ -154,12 +154,12 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var eventId = Fixture.Create<long>();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetEventQuery)p).StreamId == streamId
                         && ((GetEventQuery)p).EventId == eventId)))
-                .Returns(Task.FromResult<Event>(null));
+                .Returns(Task.FromResult<StoredEvent>(null));
 
             // act
             var actualEvent = await _sut
@@ -213,10 +213,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var streamId = Fixture.Create<Guid>();
             
             var expectedEvent = Fixture
-                .Create<Event>();
+                .Create<StoredEvent>();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetLastEventQuery)p).StreamId == streamId)))
@@ -247,11 +247,11 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var streamId = Fixture.Create<Guid>();
             
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetLastEventQuery)p).StreamId == streamId)))
-                .Returns(Task.FromResult<Event>(null));
+                .Returns(Task.FromResult<StoredEvent>(null));
 
             // act
             var actualEvent = await _sut
@@ -294,17 +294,17 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var streamId = Fixture.Create<Guid>();
 
             var eventToAdd = Fixture
-                .Build<Event>()
+                .Build<StoredEvent>()
                 .With(e => e.EventId, newEventId)
                 .Create();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetLastEventQuery) p).StreamId == streamId)))
                 .Returns(Task.FromResult(Fixture
-                    .Build<Event>()
+                    .Build<StoredEvent>()
                     .With(e => e.EventId, lastEventId)
                     .Create()));
 
@@ -345,17 +345,17 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var streamId = Fixture.Create<Guid>();
 
             var eventToAdd = Fixture
-                .Build<Event>()
+                .Build<StoredEvent>()
                 .With(e => e.EventId, newEventId)
                 .Create();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetLastEventQuery)p).StreamId == streamId)))
                 .Returns(Task.FromResult(Fixture
-                    .Build<Event>()
+                    .Build<StoredEvent>()
                     .With(e => e.EventId, lastEventId)
                     .Create()));
 
@@ -386,7 +386,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             Func<Task> exceptionThrower = async () => await _sut
-                .Add(Guid.Empty, Fixture.Create<Event>())
+                .Add(Guid.Empty, Fixture.Create<StoredEvent>())
                 .ConfigureAwait(false);
 
             // act/assert
@@ -403,18 +403,18 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             var fakeValidator = Faker
-                .Resolve<IValidator<Event>>();
+                .Resolve<IValidator<StoredEvent>>();
 
             A.CallTo(() => Faker.Resolve<IValidatorFactory>()
-                .CreateValidator<Event>())
+                .CreateValidator<StoredEvent>())
                 .Returns(fakeValidator);
 
             A.CallTo(() => fakeValidator
-                .Validate(A<Event>._))
+                .Validate(A<StoredEvent>._))
                 .Throws<ValidationException>();
 
             Func<Task> exceptionThrower = async () => await _sut
-                .Add(Guid.NewGuid(), null as Event)
+                .Add(Guid.NewGuid(), null as StoredEvent)
                 .ConfigureAwait(false);
 
             // act/assert
@@ -427,13 +427,13 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             var @event = Fixture
-                .Create<Event>();
+                .Create<StoredEvent>();
 
             var fakeValidator = Faker
-                .Resolve<IValidator<Event>>();
+                .Resolve<IValidator<StoredEvent>>();
 
             A.CallTo(() => Faker.Resolve<IValidatorFactory>()
-                .CreateValidator<Event>())
+                .CreateValidator<StoredEvent>())
                 .Returns(fakeValidator);
 
             A.CallTo(() => fakeValidator
@@ -465,28 +465,28 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var streamId = Fixture.Create<Guid>();
 
             var event1 = Fixture
-                .Build<Event>()
+                .Build<StoredEvent>()
                 .With(e => e.EventId, firstNewEventId)
                 .Create();
 
             var event2 = Fixture
-                .Build<Event>()
+                .Build<StoredEvent>()
                 .With(e => e.EventId, firstNewEventId + 1)
                 .Create();
 
-            var events = new List<Event>
+            var events = new List<StoredEvent>
             {
                 event2,
                 event1
             };
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetLastEventQuery)p).StreamId == streamId)))
                 .Returns(Task.FromResult(Fixture
-                    .Build<Event>()
+                    .Build<StoredEvent>()
                     .With(e => e.EventId, lastEventId)
                     .Create()));
 
@@ -536,21 +536,21 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
 
             var streamId = Fixture.Create<Guid>();
 
-            var events = new List<Event>()
+            var events = new List<StoredEvent>()
             {
                 Fixture
-                    .Build<Event>()
+                    .Build<StoredEvent>()
                     .With(e => e.EventId, newEventId)
                     .Create()
             };
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetLastEventQuery)p).StreamId == streamId)))
                 .Returns(Task.FromResult(Fixture
-                    .Build<Event>()
+                    .Build<StoredEvent>()
                     .With(e => e.EventId, lastEventId)
                     .Create()));
 
@@ -581,7 +581,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             Func<Task> exceptionThrower = async () => await _sut
-                .Add(Guid.Empty, Fixture.CreateMany<Event>().ToList())
+                .Add(Guid.Empty, Fixture.CreateMany<StoredEvent>().ToList())
                 .ConfigureAwait(false);
 
             // act/assert
@@ -598,18 +598,18 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             var fakeValidator = Faker
-                .Resolve<IValidator<Event>>();
+                .Resolve<IValidator<StoredEvent>>();
 
             A.CallTo(() => Faker.Resolve<IValidatorFactory>()
-                .CreateValidator<Event>())
+                .CreateValidator<StoredEvent>())
                 .Returns(fakeValidator);
 
             A.CallTo(() => fakeValidator
-                .ValidateAll(A<IEnumerable<Event>>._))
+                .ValidateAll(A<IEnumerable<StoredEvent>>._))
                 .Throws<ValidationException>();
 
             Func<Task> exceptionThrower = async () => await _sut
-                .Add(Guid.NewGuid(), null as IEnumerable<Event>)
+                .Add(Guid.NewGuid(), null as IEnumerable<StoredEvent>)
                 .ConfigureAwait(false);
 
             // act/assert
@@ -622,14 +622,14 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             var events = Fixture
-                .CreateMany<Event>()
+                .CreateMany<StoredEvent>()
                 .ToList();
 
             var fakeValidator = Faker
-                .Resolve<IValidator<Event>>();
+                .Resolve<IValidator<StoredEvent>>();
 
             A.CallTo(() => Faker.Resolve<IValidatorFactory>()
-                .CreateValidator<Event>())
+                .CreateValidator<StoredEvent>())
                 .Returns(fakeValidator);
 
             A.CallTo(() => fakeValidator
@@ -659,12 +659,12 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var eventId = Fixture.Create<long>();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetEventQuery)p).StreamId == streamId
                         && ((GetEventQuery)p).EventId == eventId)))
-                .Returns(Task.FromResult(Fixture.Create<Event>()));
+                .Returns(Task.FromResult(Fixture.Create<StoredEvent>()));
 
             // act
             await _sut
@@ -698,12 +698,12 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var eventId = Fixture.Create<long>();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetEventQuery)p).StreamId == streamId
                         && ((GetEventQuery)p).EventId == eventId)))
-                .Returns(Task.FromResult<Event>(null));
+                .Returns(Task.FromResult<StoredEvent>(null));
 
             // act
             await _sut
@@ -762,11 +762,11 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var eventId = Fixture.Create<long>();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetLastEventQuery)p).StreamId == streamId)))
-                .Returns(Task.FromResult(Fixture.Create<Event>()));
+                .Returns(Task.FromResult(Fixture.Create<StoredEvent>()));
 
             // act
             await _sut
@@ -798,11 +798,11 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             var streamId = Fixture.Create<Guid>();
 
             A.CallTo(() => fakeConnection
-                .ExecuteQuerySingle<Event>(
+                .ExecuteQuerySingle<StoredEvent>(
                     A<string>._,
                     A<object>.That.Matches(p =>
                         ((GetLastEventQuery)p).StreamId == streamId)))
-                .Returns(Task.FromResult<Event>(null));
+                .Returns(Task.FromResult<StoredEvent>(null));
 
             // act
             await _sut

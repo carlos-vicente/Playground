@@ -25,7 +25,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
             _validatorFactory = validatorFactory;
         }
 
-        public async Task<IEnumerable<Event>> GetAll(Guid streamId)
+        public async Task<IEnumerable<StoredEvent>> GetAll(Guid streamId)
         {
             if(streamId == Guid.Empty)
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
@@ -38,14 +38,14 @@ namespace Playground.Domain.Persistence.PostgreSQL
                 };
 
                 return await connection
-                    .ExecuteQueryMultiple<Event>(
+                    .ExecuteQueryMultiple<StoredEvent>(
                         Queries.Scripts.GetAllEvents,
                         query)
                     .ConfigureAwait(false);
             }
         }
 
-        public async Task<Event> Get(Guid streamId, long eventId)
+        public async Task<StoredEvent> Get(Guid streamId, long eventId)
         {
             if (streamId == Guid.Empty)
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
@@ -62,14 +62,14 @@ namespace Playground.Domain.Persistence.PostgreSQL
                 };
 
                 return await connection
-                    .ExecuteQuerySingle<Event>(
+                    .ExecuteQuerySingle<StoredEvent>(
                         Queries.Scripts.GetEvent,
                         query)
                     .ConfigureAwait(false);
             }
         }
 
-        public async Task<Event> GetLastEvent(Guid streamId)
+        public async Task<StoredEvent> GetLastEvent(Guid streamId)
         {
             if (streamId == Guid.Empty)
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
@@ -82,20 +82,20 @@ namespace Playground.Domain.Persistence.PostgreSQL
                 };
 
                 return await connection
-                    .ExecuteQuerySingle<Event>(
+                    .ExecuteQuerySingle<StoredEvent>(
                         Queries.Scripts.GetLastEvent,
                         query)
                     .ConfigureAwait(false);
             }
         }
 
-        public async Task Add(Guid streamId, Event @event)
+        public async Task Add(Guid streamId, StoredEvent storedEvent)
         {
             if(streamId == Guid.Empty)
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
-            var validator = _validatorFactory.CreateValidator<Event>();
-            validator.Validate(@event);
+            var validator = _validatorFactory.CreateValidator<StoredEvent>();
+            validator.Validate(storedEvent);
 
             using (var connection = _connectionFactory.CreateConnection())
             {
@@ -105,24 +105,24 @@ namespace Playground.Domain.Persistence.PostgreSQL
                 };
 
                 var lastEvent = await connection
-                    .ExecuteQuerySingle<Event>(
+                    .ExecuteQuerySingle<StoredEvent>(
                         Queries.Scripts.GetLastEvent,
                         query)
                     .ConfigureAwait(false);
 
-                if (@event.EventId <= lastEvent.EventId)
+                if (storedEvent.EventId <= lastEvent.EventId)
                 {
                     throw new InvalidOperationException(
-                        $"New EventId {@event.EventId} must be bigger than last EventId stored {lastEvent.EventId}");
+                        $"New EventId {storedEvent.EventId} must be bigger than last EventId stored {lastEvent.EventId}");
                 }
 
                 var command = new AddEventCommand
                 {
                     StreamId = streamId,
-                    EventId = @event.EventId,
-                    EventBody = @event.EventBody,
-                    OccurredOn = @event.OccurredOn,
-                    TypeName = @event.TypeName
+                    EventId = storedEvent.EventId,
+                    EventBody = storedEvent.EventBody,
+                    OccurredOn = storedEvent.OccurredOn,
+                    TypeName = storedEvent.TypeName
                 };
 
                 await connection
@@ -131,12 +131,12 @@ namespace Playground.Domain.Persistence.PostgreSQL
             }
         }
 
-        public async Task Add(Guid streamId, ICollection<Event> events)
+        public async Task Add(Guid streamId, ICollection<StoredEvent> events)
         {
             if (streamId == Guid.Empty)
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
-            var validator = _validatorFactory.CreateValidator<Event>();
+            var validator = _validatorFactory.CreateValidator<StoredEvent>();
             validator.ValidateAll(events);
 
             using (var connection = _connectionFactory.CreateConnection())
@@ -147,7 +147,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
                 };
 
                 var lastEvent = await connection
-                    .ExecuteQuerySingle<Event>(
+                    .ExecuteQuerySingle<StoredEvent>(
                         Queries.Scripts.GetLastEvent,
                         query)
                     .ConfigureAwait(false);
@@ -199,7 +199,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
                 };
 
                 var eventToDelete = await connection
-                    .ExecuteQuerySingle<Event>(
+                    .ExecuteQuerySingle<StoredEvent>(
                         Queries.Scripts.GetEvent,
                         query)
                     .ConfigureAwait(false);
@@ -234,7 +234,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
                 };
 
                 var eventToDelete = await connection
-                    .ExecuteQuerySingle<Event>(
+                    .ExecuteQuerySingle<StoredEvent>(
                         Queries.Scripts.GetLastEvent,
                         query)
                     .ConfigureAwait(false);

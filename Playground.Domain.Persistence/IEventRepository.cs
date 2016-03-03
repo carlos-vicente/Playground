@@ -14,7 +14,7 @@ namespace Playground.Domain.Persistence
         /// </summary>
         /// <param name="streamId">Stream identifier</param>
         /// <returns>Complete list of stored events</returns>
-        Task<IEnumerable<Event>> GetAll(Guid streamId);
+        Task<IEnumerable<StoredEvent>> GetAll(Guid streamId);
 
         /// <summary>
         /// Gets the specified event in a specified stream
@@ -22,28 +22,28 @@ namespace Playground.Domain.Persistence
         /// <param name="streamId">Stream identifier</param>
         /// <param name="eventId">Event identifier</param>
         /// <returns>The store event</returns>
-        Task<Event> Get(Guid streamId, long eventId);
+        Task<StoredEvent> Get(Guid streamId, long eventId);
 
         /// <summary>
         /// Gets the last event in a specified stream
         /// </summary>
         /// <param name="streamId">Stream identifier</param>
         /// <returns>The store event</returns>
-        Task<Event> GetLastEvent(Guid streamId);
+        Task<StoredEvent> GetLastEvent(Guid streamId);
 
         /// <summary>
         /// Adds a new event to the specified stream
         /// </summary>
         /// <param name="streamId">Stream identifier</param>
-        /// <param name="event">The event to add</param>
-        Task Add(Guid streamId, Event @event);
+        /// <param name="storedEvent">The event to add</param>
+        Task Add(Guid streamId, StoredEvent storedEvent);
 
         /// <summary>
         /// Adds new events to the specified stream
         /// </summary>
         /// <param name="streamId">Stream identifier</param>
         /// <param name="events">The events to add</param>
-        Task Add(Guid streamId, ICollection<Event> events);
+        Task Add(Guid streamId, ICollection<StoredEvent> events);
 
         /// <summary>
         /// Removes an event from the specified stream

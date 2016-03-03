@@ -72,6 +72,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Playground.Domain.Persistence\Playground.Domain.Persistence.csproj">
+      <Project>{8d22c8a7-4c4f-472c-9dba-43bd55deb1e8}</Project>
+      <Name>Playground.Domain.Persistence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Tests\Playground.Tests.csproj">
       <Project>{128691bd-75ca-4303-947d-b8d7062510ec}</Project>
       <Name>Playground.Tests</Name>
