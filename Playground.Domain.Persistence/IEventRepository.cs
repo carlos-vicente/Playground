@@ -25,6 +25,13 @@ namespace Playground.Domain.Persistence
         Task<Event> Get(Guid streamId, long eventId);
 
         /// <summary>
+        /// Gets the last event in a specified stream
+        /// </summary>
+        /// <param name="streamId">Stream identifier</param>
+        /// <returns>The store event</returns>
+        Task<Event> GetLastEvent(Guid streamId);
+
+        /// <summary>
         /// Adds a new event to the specified stream
         /// </summary>
         /// <param name="streamId">Stream identifier</param>
@@ -36,7 +43,7 @@ namespace Playground.Domain.Persistence
         /// </summary>
         /// <param name="streamId">Stream identifier</param>
         /// <param name="events">The events to add</param>
-        Task Add(Guid streamId, IEnumerable<Event> events);
+        Task Add(Guid streamId, ICollection<Event> events);
 
         /// <summary>
         /// Removes an event from the specified stream

@@ -2,8 +2,16 @@
 
 namespace Playground.Domain.Persistence.PostgreSQL.Commands
 {
-    public class AddEventCommand
+    internal class AddEventCommand
     {
         public Guid StreamId { get; set; }
+
+        public long EventId { get; set; }
+
+        public string TypeName { get; set; }
+
+        public DateTime OccurredOn { get; set; }
+
+        public string EventBody { get; set; }
     }
 }

@@ -41,12 +41,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddEventCommand.cs" />
+    <Compile Include="Commands\RemoveAllEventsCommand.cs" />
+    <Compile Include="Commands\RemoveEventCommand.cs" />
+    <Compile Include="Commands\Scripts.cs" />
     <Compile Include="EventRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetAllEventsQuery.cs" />
     <Compile Include="Queries\GetEventQuery.cs" />
+    <Compile Include="Queries\GetLastEventQuery.cs" />
+    <Compile Include="Queries\Scripts.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Playground.Core\Playground.Core.csproj">
+      <Project>{751be90e-7bd6-46d5-9323-2098e6ccf1ca}</Project>
+      <Name>Playground.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Data.Contracts\Playground.Data.Contracts.csproj">
       <Project>{db5f5dbe-547b-424e-abb9-ea63327c8615}</Project>
       <Name>Playground.Data.Contracts</Name>

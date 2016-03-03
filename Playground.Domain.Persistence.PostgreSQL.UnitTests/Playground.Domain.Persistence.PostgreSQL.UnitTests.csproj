@@ -72,6 +72,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Playground.Core\Playground.Core.csproj">
+      <Project>{751be90e-7bd6-46d5-9323-2098e6ccf1ca}</Project>
+      <Name>Playground.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Data.Contracts\Playground.Data.Contracts.csproj">
       <Project>{db5f5dbe-547b-424e-abb9-ea63327c8615}</Project>
       <Name>Playground.Data.Contracts</Name>
@@ -93,9 +97,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
