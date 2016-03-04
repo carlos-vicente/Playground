@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Playground.Domain.Persistence
+namespace Playground.Domain.Persistence.Events
 {
     public class StoredEvent
     {

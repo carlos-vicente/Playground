@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Playground.Domain.Persistence
+namespace Playground.Domain.Persistence.Events
 {
     public class EventStore : IEventStore
     {
@@ -15,6 +15,11 @@ namespace Playground.Domain.Persistence
         {
             _serializer = serializer;
             _repository = repository;
+        }
+
+        public Task<bool> CreateEventStream(Guid streamId)
+        {
+            throw new NotImplementedException();
         }
 
         public Task StoreEvents(

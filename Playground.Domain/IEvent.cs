@@ -2,6 +2,6 @@
 {
     public interface IEvent
     {
-        // marker interface
+        Metadata Metadata { get; }
     }
 }

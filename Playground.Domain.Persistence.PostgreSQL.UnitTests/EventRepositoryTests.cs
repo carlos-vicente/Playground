@@ -7,6 +7,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Playground.Core.Validation;
 using Playground.Data.Contracts;
+using Playground.Domain.Persistence.Events;
 using Playground.Domain.Persistence.PostgreSQL.Commands;
 using Playground.Domain.Persistence.PostgreSQL.Queries;
 using Playground.Tests;
@@ -609,7 +610,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Throws<ValidationException>();
 
             Func<Task> exceptionThrower = async () => await _sut
-                .Add(Guid.NewGuid(), null as IEnumerable<StoredEvent>)
+                .Add(Guid.NewGuid(), null as ICollection<StoredEvent>)
                 .ConfigureAwait(false);
 
             // act/assert

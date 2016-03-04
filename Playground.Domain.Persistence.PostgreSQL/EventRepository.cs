@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Playground.Core.Validation;
 using Playground.Data.Contracts;
+using Playground.Domain.Persistence.Events;
 using Playground.Domain.Persistence.PostgreSQL.Commands;
 using Playground.Domain.Persistence.PostgreSQL.Queries;
 

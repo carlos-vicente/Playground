@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Playground.Core.Validation;
 
 namespace Playground.Validation.Fluent
@@ -14,7 +10,7 @@ namespace Playground.Validation.Fluent
             throw new NotImplementedException();
         }
 
-        public IValidator GetValidator(Type type)
+        public IValidator CreateValidator(Type type)
         {
             throw new NotImplementedException();
         }

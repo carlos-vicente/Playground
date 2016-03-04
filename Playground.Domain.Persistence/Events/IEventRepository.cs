@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Playground.Domain.Persistence
+namespace Playground.Domain.Persistence.Events
 {
     /// <summary>
     /// The contract for an event repository, in any infrastructure.

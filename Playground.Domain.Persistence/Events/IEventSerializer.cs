@@ -1,4 +1,4 @@
-﻿namespace Playground.Domain.Persistence
+﻿namespace Playground.Domain.Persistence.Events
 {
     public interface IEventSerializer
     {
