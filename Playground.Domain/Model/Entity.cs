@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Playground.Domain
+namespace Playground.Domain.Model
 {
     public abstract class Entity : IEquatable<Entity>
     {

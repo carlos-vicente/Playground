@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Playground.Domain;
+using Playground.Domain.Model;
+using Playground.Domain.Persistence;
 
 namespace Playground.Messaging.Domain
 {
@@ -17,10 +19,22 @@ namespace Playground.Messaging.Domain
 
         public async Task Handle(TCommand command)
         {
-            var aggregate = await _aggregateContext.TryLoad<TAggregate>(command.Metadata.AggregateRootId)
-                            ?? await _aggregateContext.Create<TAggregate>(command.Metadata.AggregateRootId);
+            var aggregate = await _aggregateContext
+                .TryLoad<TAggregate>(command.Metadata.AggregateRootId)
+                .ConfigureAwait(false);
+
+            if (aggregate == null)
+            {
+                aggregate = await _aggregateContext
+                    .Create<TAggregate>(command.Metadata.AggregateRootId)
+                    .ConfigureAwait(false);
+            }
 
             await HandleOnAggregate(command, aggregate);
+
+            await _aggregateContext
+                .Save(aggregate)
+                .ConfigureAwait(false);
         }
 
         public override string ToString()

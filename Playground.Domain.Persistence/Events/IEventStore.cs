@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Playground.Domain.Events;
 
 namespace Playground.Domain.Persistence.Events
 {
@@ -14,20 +15,22 @@ namespace Playground.Domain.Persistence.Events
         /// If the stream already exists, it does not create another one, but it does not throw an exception
         /// </summary>
         /// <param name="streamId">The stream identifier to create</param>
+        /// <returns>True if event stream created, False if event stream not created</returns>
         Task<bool> CreateEventStream(Guid streamId);
 
         /// <summary>
-        /// Stores events in a given stream. If the stream does not exists then an InvalidOperationException
+        /// Stores events in a given stream
         /// </summary>
         /// <param name="streamId">The stream identifer for the events</param>
         /// <param name="eventsToStore">The events to store</param>
-        Task StoreEvents(Guid streamId, ICollection<IEvent> eventsToStore);
+        /// <returns>True if event were saved on to stream, False if events weren't saved</returns>
+        Task<bool> StoreEvents(Guid streamId, ICollection<IEvent> eventsToStore);
 
         /// <summary>
         /// Loads all the events of a given stream
         /// </summary>
         /// <param name="streamId">The stream identifier</param>
-        /// <returns>The complete list of domain events for the stream</returns>
+        /// <returns>The complete list of domain events for the stream; An empty list if the stream exists but has no events; Null if the stream does not exists</returns>
         Task<ICollection<IEvent>> LoadAllEvents(Guid streamId);
 
         /// <summary>
@@ -36,7 +39,7 @@ namespace Playground.Domain.Persistence.Events
         /// <param name="streamId">The stream identifier</param>
         /// <param name="fromEventId">The first event identifier to load (inclusive)</param>
         /// <param name="toEventId">The last event identifier to load (inclusive)</param>
-        /// <returns>The batch list of domain events for the stream</returns>
+        /// <returns>The batch list of domain events for the stream; An empty list if the stream exists but has no events; Null if the stream does not exists</returns>
         Task<ICollection<IEvent>> LoadSelectedEvents(Guid streamId, long fromEventId, long toEventId);
     }
 }

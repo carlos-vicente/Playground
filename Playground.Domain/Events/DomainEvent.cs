@@ -1,4 +1,4 @@
-﻿namespace Playground.Domain
+﻿namespace Playground.Domain.Events
 {
     public abstract class DomainEvent : IEvent
     {

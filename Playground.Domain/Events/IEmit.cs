@@ -1,4 +1,4 @@
-﻿namespace Playground.Domain
+﻿namespace Playground.Domain.Events
 {
     public interface IEmit<in TDomainEvent> where TDomainEvent : IEvent
     {

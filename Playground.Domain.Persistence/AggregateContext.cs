@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Playground.Domain.Model;
 using Playground.Domain.Persistence.Events;
 
 namespace Playground.Domain.Persistence
@@ -19,6 +20,12 @@ namespace Playground.Domain.Persistence
             var created = await _eventStore
                 .CreateEventStream(aggregateRootId)
                 .ConfigureAwait(false);
+
+            if (!created)
+            {
+                throw new InvalidOperationException(
+                    $"A stream already for aggregate root id {aggregateRootId}");
+            }
 
             return Activator
                 .CreateInstance(typeof (TAggregateRoot), aggregateRootId) as TAggregateRoot;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Playground.Domain;
+using Playground.Domain.Events;
+using Playground.Domain.Model;
 using Playground.TicketOffice.Domain.Write.Events;
 
 namespace Playground.TicketOffice.Domain.Write.Model

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Playground.Domain.Events;
 
 namespace Playground.Domain.Persistence.Events
 {
@@ -22,7 +23,7 @@ namespace Playground.Domain.Persistence.Events
             throw new NotImplementedException();
         }
 
-        public Task StoreEvents(
+        public Task<bool> StoreEvents(
             Guid streamId,
             ICollection<IEvent> eventsToStore)
         {

@@ -97,7 +97,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             Func<Task> exceptionThrower = async () => await _sut
-                .GetAll(Guid.Empty)
+                .GetAll(default(Guid))
                 .ConfigureAwait(false);
 
             // act/assert
@@ -179,7 +179,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             Func<Task> exceptionThrower = async () => await _sut
-                .Get(Guid.Empty, Fixture.Create<long>())
+                .Get(default(Guid), Fixture.Create<long>())
                 .ConfigureAwait(false);
 
             // act/assert
@@ -271,7 +271,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             Func<Task> exceptionThrower = async () => await _sut
-                .GetLastEvent(Guid.Empty)
+                .GetLastEvent(default(Guid))
                 .ConfigureAwait(false);
 
             // act/assert
@@ -387,7 +387,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             Func<Task> exceptionThrower = async () => await _sut
-                .Add(Guid.Empty, Fixture.Create<StoredEvent>())
+                .Add(default(Guid), Fixture.Create<StoredEvent>())
                 .ConfigureAwait(false);
 
             // act/assert
@@ -582,7 +582,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             Func<Task> exceptionThrower = async () => await _sut
-                .Add(Guid.Empty, Fixture.CreateMany<StoredEvent>().ToList())
+                .Add(default(Guid), Fixture.CreateMany<StoredEvent>().ToList())
                 .ConfigureAwait(false);
 
             // act/assert
@@ -727,7 +727,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             Func<Task> exceptionThrower = async () => await _sut
-                .Remove(Guid.Empty, Fixture.Create<long>())
+                .Remove(default(Guid), Fixture.Create<long>())
                 .ConfigureAwait(false);
 
             // act/assert
@@ -760,7 +760,6 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(fakeConnection);
 
             var streamId = Fixture.Create<Guid>();
-            var eventId = Fixture.Create<long>();
 
             A.CallTo(() => fakeConnection
                 .ExecuteQuerySingle<StoredEvent>(
@@ -826,7 +825,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         {
             // arrange
             Func<Task> exceptionThrower = async () => await _sut
-                .Remove(Guid.Empty)
+                .Remove(default(Guid))
                 .ConfigureAwait(false);
 
             // act/assert

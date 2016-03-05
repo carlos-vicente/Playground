@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Playground.Domain;
+using Playground.Domain.Model;
 
 namespace Playground.TicketOffice.Domain.Write.Model
 {

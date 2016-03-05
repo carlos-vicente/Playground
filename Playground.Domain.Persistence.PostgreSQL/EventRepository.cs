@@ -28,7 +28,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public async Task<IEnumerable<StoredEvent>> GetAll(Guid streamId)
         {
-            if(streamId == Guid.Empty)
+            if(streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
             using (var connection = _connectionFactory.CreateConnection())
@@ -48,7 +48,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public async Task<StoredEvent> Get(Guid streamId, long eventId)
         {
-            if (streamId == Guid.Empty)
+            if (streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
             if (eventId <= 0L)
@@ -72,7 +72,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public async Task<StoredEvent> GetLastEvent(Guid streamId)
         {
-            if (streamId == Guid.Empty)
+            if (streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
             using (var connection = _connectionFactory.CreateConnection())
@@ -92,7 +92,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public async Task Add(Guid streamId, StoredEvent storedEvent)
         {
-            if(streamId == Guid.Empty)
+            if(streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
             var validator = _validatorFactory.CreateValidator<StoredEvent>();
@@ -134,7 +134,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public async Task Add(Guid streamId, ICollection<StoredEvent> events)
         {
-            if (streamId == Guid.Empty)
+            if (streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
             var validator = _validatorFactory.CreateValidator<StoredEvent>();
@@ -185,7 +185,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public async Task Remove(Guid streamId, long eventId)
         {
-            if (streamId == Guid.Empty)
+            if (streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
             if (eventId <= 0L)
@@ -224,7 +224,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public async Task Remove(Guid streamId)
         {
-            if (streamId == Guid.Empty)
+            if (streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
             using (var connection = _connectionFactory.CreateConnection())

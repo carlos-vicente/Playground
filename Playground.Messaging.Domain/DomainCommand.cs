@@ -1,5 +1,6 @@
 ﻿using System;
 using Playground.Domain;
+using Playground.Domain.Model;
 
 namespace Playground.Messaging.Domain
 {

@@ -46,6 +46,7 @@
     <Compile Include="Events\IEventRepository.cs" />
     <Compile Include="Events\IEventSerializer.cs" />
     <Compile Include="Events\IEventStore.cs" />
+    <Compile Include="IAggregateContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Events\EventStore.cs" />
   </ItemGroup>

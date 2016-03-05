@@ -1,4 +1,5 @@
 ﻿using Playground.Domain;
+using Playground.Domain.Events;
 
 namespace Playground.TicketOffice.Domain.Write.Events
 {

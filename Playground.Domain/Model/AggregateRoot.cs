@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Playground.Domain.Events;
 
-namespace Playground.Domain
+namespace Playground.Domain.Model
 {
     public abstract class AggregateRoot : Entity
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Playground.Domain
+namespace Playground.Domain.Model
 {
     public abstract class ValueObject : IEquatable<ValueObject>
     {
