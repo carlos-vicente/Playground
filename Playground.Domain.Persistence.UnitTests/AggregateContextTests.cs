@@ -69,26 +69,18 @@ namespace Playground.Domain.Persistence.UnitTests
             // arrange
             var aggregateRootId = Fixture.Create<Guid>();
 
-            var created = new TestAggregateCreated
-            {
-                Metadata = new Metadata(aggregateRootId),
-                Name = Fixture.Create<string>()
-            };
+            var event1 = Faker.Resolve<IEvent>();
+            var event2 = Faker.Resolve<IEvent>();
 
-            var changed = new TestAggregateChanged
+            var events = new List<IEvent>
             {
-                Metadata = new Metadata(aggregateRootId),
-                NewName = Fixture.Create<string>()
+                event1,
+                event2
             };
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
-                .Returns(Task.FromResult<ICollection<IEvent>>(new List<IEvent>
-                {
-                    created,
-                    changed
-                }));
-
+                .Returns(Task.FromResult<ICollection<IEvent>>(events));
             
             // act
             var aggregate = await _sut
@@ -96,18 +88,137 @@ namespace Playground.Domain.Persistence.UnitTests
                 .ConfigureAwait(false);
 
             // assert
+            aggregate.Should().NotBeNull();
+            aggregate.Id.Should().Be(aggregateRootId);
+
+            A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
+                .HydrateAggregateWithEvents(aggregate, events))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
-        public void TryLoad_LoadsAggregateWithoutEvents_WhenStreamExistsButHasNoEvents()
+        public async Task TryLoad_LoadsAggregateWithoutEvents_WhenStreamExistsButHasNoEvents()
         {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
 
+            A.CallTo(() => Faker.Resolve<IEventStore>()
+                .LoadAllEvents(aggregateRootId))
+                .Returns(Task.FromResult<ICollection<IEvent>>(new List<IEvent>()));
+
+            // act
+            var aggregate = await _sut
+                .TryLoad<TestAggregateRoot>(aggregateRootId)
+                .ConfigureAwait(false);
+
+            // assert
+            aggregate.Should().NotBeNull();
+            aggregate.Id.Should().Be(aggregateRootId);
+
+            A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
+                .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<IEvent>>._))
+                .MustHaveHappened(Repeated.Never);
         }
 
         [Test]
-        public void TryLoad_ReturnsNull_WhenStreamDoesNotExist()
+        public async Task TryLoad_ReturnsNull_WhenStreamDoesNotExist()
         {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
 
+            A.CallTo(() => Faker.Resolve<IEventStore>()
+                .LoadAllEvents(aggregateRootId))
+                .Returns(Task.FromResult<ICollection<IEvent>>(null));
+            
+            // act
+            var aggregate = await _sut
+                .TryLoad<TestAggregateRoot>(aggregateRootId)
+                .ConfigureAwait(false);
+
+            // assert
+            aggregate.Should().BeNull();
+        }
+
+        [Test]
+        public async Task Load_LoadsAggregateWithAllEvents_WhenStreamExistsAndHasEvents()
+        {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
+
+            var event1 = Faker.Resolve<IEvent>();
+            var event2 = Faker.Resolve<IEvent>();
+
+            var events = new List<IEvent>
+            {
+                event1,
+                event2
+            };
+
+            A.CallTo(() => Faker.Resolve<IEventStore>()
+                .LoadAllEvents(aggregateRootId))
+                .Returns(Task.FromResult<ICollection<IEvent>>(events));
+
+            // act
+            var aggregate = await _sut
+                .Load<TestAggregateRoot>(aggregateRootId)
+                .ConfigureAwait(false);
+
+            // assert
+            aggregate.Should().NotBeNull();
+            aggregate.Id.Should().Be(aggregateRootId);
+
+            A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
+                .HydrateAggregateWithEvents(aggregate, events))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public async Task Load_LoadsAggregateWithoutEvents_WhenStreamExistsButHasNoEvents()
+        {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
+
+            A.CallTo(() => Faker.Resolve<IEventStore>()
+                .LoadAllEvents(aggregateRootId))
+                .Returns(Task.FromResult<ICollection<IEvent>>(new List<IEvent>()));
+
+            // act
+            var aggregate = await _sut
+                .Load<TestAggregateRoot>(aggregateRootId)
+                .ConfigureAwait(false);
+
+            // assert
+            aggregate.Should().NotBeNull();
+            aggregate.Id.Should().Be(aggregateRootId);
+
+            A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
+                .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<IEvent>>._))
+                .MustHaveHappened(Repeated.Never);
+        }
+
+        [Test]
+        public void Load_ThrowsException_WhenStreamDoesNotExist()
+        {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
+
+            A.CallTo(() => Faker.Resolve<IEventStore>()
+                .LoadAllEvents(aggregateRootId))
+                .Returns(Task.FromResult<ICollection<IEvent>>(null));
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .Load<TestAggregateRoot>(aggregateRootId)
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<InvalidOperationException>();
+        }
+
+        [Test]
+        public void Save_StoresEvents_WhenStreamExists()
+        {
+            Assert.Inconclusive();
         }
     }
 }
