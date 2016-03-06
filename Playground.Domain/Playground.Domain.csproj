@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events\IEventDispatcher.cs" />
+    <Compile Include="Model\AggregateHydrator.cs" />
     <Compile Include="Model\AggregateRoot.cs" />
     <Compile Include="Events\DomainEvent.cs" />
     <Compile Include="Model\Entity.cs" />
