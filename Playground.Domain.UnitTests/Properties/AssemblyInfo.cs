@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Playground.Domain")]
+[assembly: AssemblyTitle("Playground.Domain.UnitTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Playground.Domain")]
+[assembly: AssemblyProduct("Playground.Domain.UnitTests")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("66b417d5-a799-4dc8-bf29-904898ce2653")]
+[assembly: Guid("a3b89895-154d-4eff-8c12-8d43b8a66cb2")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -6,11 +6,25 @@ namespace Playground.Domain.Model
 {
     public abstract class AggregateRoot : Entity
     {
-        public ICollection<DomainEvent> Events { get; private set; }
+        internal ICollection<DomainEvent> Events { get; private set; }
+
+        protected AggregateRoot()
+            : base(Guid.NewGuid())
+        { 
+            // Only for tests
+        }
 
         protected AggregateRoot(Guid id) : base(id)
         {
             Events = new List<DomainEvent>();
+        }
+
+        protected void When<TDomainEvent>(TDomainEvent domainEvent)
+            where TDomainEvent : DomainEvent
+        {
+            Events.Add(domainEvent);
+
+            ((IEmit<TDomainEvent>)this).Apply(domainEvent);
         }
     }
 }

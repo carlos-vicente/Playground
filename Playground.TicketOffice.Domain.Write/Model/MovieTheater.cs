@@ -25,7 +25,7 @@ namespace Playground.TicketOffice.Domain.Write.Model
                 Name = name
             };
 
-            Events.Add(@event);
+            When(@event);
         }
 
         #region Events Apply
