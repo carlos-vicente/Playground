@@ -8,12 +8,6 @@ namespace Playground.Domain.Model
     {
         internal ICollection<DomainEvent> Events { get; private set; }
 
-        protected AggregateRoot()
-            : base(Guid.NewGuid())
-        { 
-            // Only for tests
-        }
-
         protected AggregateRoot(Guid id) : base(id)
         {
             Events = new List<DomainEvent>();

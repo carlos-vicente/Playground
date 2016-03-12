@@ -12,7 +12,8 @@ namespace Playground.Domain.Model
         {
             foreach (var domainEvent in domainEvents)
             {
-                Do(aggregateRootBase, domainEvent);
+                // the dynamic cast makes sure the right method is called
+                Do(aggregateRootBase, (dynamic)domainEvent);
             }
 
             return aggregateRootBase;

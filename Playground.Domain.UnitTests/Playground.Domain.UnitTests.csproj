@@ -77,6 +77,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateHydratorTests.cs" />
+    <Compile Include="Event1.cs" />
+    <Compile Include="Event2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
