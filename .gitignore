@@ -12,12 +12,12 @@
 [Dd]ebugPublic/
 [Rr]elease/
 x64/
-build/
 bld/
 [Bb]in/
 [Oo]bj/
 lib
-
+build/tools/*
+*.dcvr
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
