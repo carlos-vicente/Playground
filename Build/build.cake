@@ -61,7 +61,12 @@ Task("Run NUnit tests")
 {
     var files = GetFiles(unitTestsPath);
     
-    NUnit3(files);
+    var settings = new NUnit3Settings
+    {
+        ResultFormat = "AppVeyor"
+    };
+    
+    NUnit3(files, settings);
 });
 
 Task("Code cover NUnit tests")
@@ -86,8 +91,7 @@ Task("Show coverage on AppVeyor")
 {
     if(AppVeyor.IsRunningOnAppVeyor)
     {
-        AppVeyor.UploadArtifact(File("./TestResult.xml").Path);
-        AppVeyor.UploadArtifact(File("./results.html").Path);
+        
     }
 });
 
