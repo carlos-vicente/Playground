@@ -78,6 +78,15 @@ Task("Code cover NUnit tests")
         coverSettings);
 });
 
+Task("Show coverage on AppVeyor")
+    .Does(() =>
+{
+    if(AppVeyor.IsRunningOnAppVeyor)
+    {
+        AppVeyor.UploadArtifact(File("./results.dcvr").Path);
+    }
+});
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // TARGETS
@@ -85,7 +94,8 @@ Task("Code cover NUnit tests")
 
 Task("Default")
     .IsDependentOn("Run NUnit tests")
-    .IsDependentOn("Code cover NUnit tests");
+    .IsDependentOn("Code cover NUnit tests")
+    .IsDependentOn("Show coverage on AppVeyor");
 
 ///////////////////////////////////////////////////////////////////////////////
 // EXECUTION
