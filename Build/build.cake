@@ -69,12 +69,15 @@ Task("Code cover NUnit tests")
 {
     var assemblies = GetFiles(unitTestsPath);
     
-    var coverSettings = new DotCoverCoverSettings()
+    var coverSettings = new DotCoverAnalyseSettings
+    {
+        ReportType = Cake.Common.Tools.DotCover.DotCoverReportType.HTML
+    }
         .WithFilter("-:*.UnitTests");
     
-    DotCoverCover(
+    DotCoverAnalyse(
         tool => tool.NUnit3(assemblies),
-        File("./results.dcvr").Path,
+        File("./results.html").Path,
         coverSettings);
 });
 
@@ -83,7 +86,8 @@ Task("Show coverage on AppVeyor")
 {
     if(AppVeyor.IsRunningOnAppVeyor)
     {
-        AppVeyor.UploadArtifact(File("./results.dcvr").Path);
+        AppVeyor.UploadArtifact(File("./TestResult.xml").Path);
+        AppVeyor.UploadArtifact(File("./results.html").Path);
     }
 });
 
