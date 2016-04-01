@@ -19,9 +19,8 @@ namespace Playground.TicketOffice.Domain.Write.Model
 
         public void CreateMovieTheater(string name)
         {
-            var @event = new MovieTheaterCreated
+            var @event = new MovieTheaterCreated(Id)
             {
-                Metadata = new Metadata(Id),
                 Name = name
             };
 

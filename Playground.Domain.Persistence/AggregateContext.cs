@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Playground.Domain.Events;
@@ -46,20 +47,9 @@ namespace Playground.Domain.Persistence
                 .LoadAllEvents(aggregateRootId)
                 .ConfigureAwait(false);
 
-            if (events == null)
-            {
-                return null;
-            }
-
-            var instance = CreateInstance<TAggregateRoot>(aggregateRootId);
-
-            if (events.Any())
-            {
-                _aggregateHydrator
-                    .HydrateAggregateWithEvents(instance, events);
-            }
-
-            return instance;
+            return events == null 
+                ? null 
+                : GetAggregateInstance<TAggregateRoot>(aggregateRootId, events);
         }
 
         public async Task<TAggregateRoot> Load<TAggregateRoot>(Guid aggregateRootId)
@@ -75,21 +65,43 @@ namespace Playground.Domain.Persistence
                     $"No stream with identifier {aggregateRootId}");
             }
 
+            return GetAggregateInstance<TAggregateRoot>(aggregateRootId, events);
+        }
+
+        private TAggregateRoot GetAggregateInstance<TAggregateRoot>(
+            Guid aggregateRootId,
+            ICollection<IEvent> events)
+            where TAggregateRoot : AggregateRoot
+        {
             var instance = CreateInstance<TAggregateRoot>(aggregateRootId);
 
             if (events.Any())
             {
                 _aggregateHydrator
                     .HydrateAggregateWithEvents(instance, events);
+
+                instance.CurrentVersion = events.Last().Metadata.StorageVersion;
             }
 
             return instance;
         }
 
-        public Task Save<TAggregateRoot>(TAggregateRoot aggregateRoot) 
+        public async Task Save<TAggregateRoot>(TAggregateRoot aggregateRoot)
             where TAggregateRoot : AggregateRoot
         {
-            throw new NotImplementedException();
+            var events = aggregateRoot.Events.Cast<IEvent>().ToList();
+
+            await _eventStore
+                .StoreEvents(aggregateRoot.Id, aggregateRoot.CurrentVersion, events)
+                .ConfigureAwait(false);
+
+            // everything worked correctly so lets dispatch the events
+            foreach (var domainEvent in aggregateRoot.Events)
+            {
+                await _eventDispatcher
+                    .RaiseEvent(domainEvent)
+                    .ConfigureAwait(false);
+            }
         }
 
         private static TAggregateRoot CreateInstance<TAggregateRoot>(Guid aggregateRootId)

@@ -24,16 +24,16 @@ namespace Playground.Domain.UnitTests
             var event1 = Fixture.Create<Event1>();
             var event2 = Fixture.Create<Event2>();
 
+            var events = new List<IEvent>
+            {
+                event1,
+                event2
+            };
+
             // act
             Faker
                 .Resolve<AggregateHydrator>()
-                .HydrateAggregateWithEvents(
-                    fakeAggregate,
-                    new List<IEvent>
-                    {
-                        event1,
-                        event2
-                    });
+                .HydrateAggregateWithEvents(fakeAggregate, events);
 
             // assert
             A.CallTo(() => ((IEmit<Event1>) fakeAggregate)

@@ -12,7 +12,7 @@ namespace Playground.Messaging.Domain
 
         protected DomainCommand(Guid aggregateRootId)
         {
-            Metadata = new Metadata(aggregateRootId);
+            //Metadata = new Metadata(aggregateRootId);
         }
     }
 }

@@ -23,8 +23,9 @@ namespace Playground.Domain.Persistence.Events
         /// </summary>
         /// <param name="streamId">The stream identifer for the events</param>
         /// <param name="eventsToStore">The events to store</param>
-        /// <returns>True if event were saved on to stream, False if events weren't saved</returns>
-        Task<bool> StoreEvents(Guid streamId, ICollection<IEvent> eventsToStore);
+        /// <param name="currentVersion"></param>
+        /// <exception cref="InvalidOperationException">When store version is higher than <paramref name="currentVersion"/></exception>
+        Task StoreEvents(Guid streamId, long currentVersion, ICollection<IEvent> eventsToStore);
 
         /// <summary>
         /// Loads all the events of a given stream

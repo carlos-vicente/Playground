@@ -4,27 +4,32 @@ using Playground.Domain.Model;
 
 namespace Playground.Domain.Persistence
 {
+    /// <summary>
+    /// The contract for the storage context to the aggregate data (domain events storage)
+    /// </summary>
     public interface IAggregateContext
     {
         /// <summary>
-        /// Creates an aggregate root of the given type with the given ID. Throws if an instance already exists with the given ID
+        /// Creates an aggregate root of the given type with the given ID, by creating its stream. Throws if an instance already exists with the given ID
         /// <param name="aggregateRootId">The aggregate root identifier to create</param>
         /// <exception cref="InvalidOperationException">Thrown if a stream with that identifier already exists</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="aggregateRootId"/> is Guid's default value</exception>
         /// </summary>
+        /// <returns>An empty aggregate</returns>
         Task<TAggregateRoot> Create<TAggregateRoot>(Guid aggregateRootId) 
             where TAggregateRoot : AggregateRoot;
 
         /// <summary>
-        /// Attempts to load the given aggregate root, returning null if it does not exist
+        /// Attempts to load the given aggregate root
         /// <param name="aggregateRootId">The aggregate root identifier to look for</param>
         /// <exception cref="ArgumentException">Thrown if <paramref name="aggregateRootId"/> is Guid's default value</exception>
         /// </summary>
+        /// <returns>Returns the aggregate instance with it's entire stream of events applied if the stream exists. An empty aggregate if the stream exists, but has no events. Null if the stream does not exists.</returns>
         Task<TAggregateRoot> TryLoad<TAggregateRoot>(Guid aggregateRootId) 
             where TAggregateRoot : AggregateRoot;
 
         /// <summary>
-        /// Attempts to load the given aggregate root, throwing an exception if it does not exist
+        /// Attempts to load the given aggregate root
         /// <param name="aggregateRootId">The aggregate root identifier to look for</param>
         /// <exception cref="InvalidOperationException">Thrown if the stream does not exist</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="aggregateRootId"/> is Guid's default value</exception>

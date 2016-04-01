@@ -30,7 +30,8 @@ namespace Playground.Messaging.Domain
                     .ConfigureAwait(false);
             }
 
-            await HandleOnAggregate(command, aggregate);
+            await HandleOnAggregate(command, aggregate)
+                .ConfigureAwait(false);
 
             await _aggregateContext
                 .Save(aggregate)

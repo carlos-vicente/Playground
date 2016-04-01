@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FakeItEasy;
 using FluentAssertions;
@@ -69,8 +70,22 @@ namespace Playground.Domain.Persistence.UnitTests
             // arrange
             var aggregateRootId = Fixture.Create<Guid>();
 
+            var event1Version = Fixture.Create<long>();
+            var event2Version = Fixture.Create<long>();
             var event1 = Faker.Resolve<IEvent>();
             var event2 = Faker.Resolve<IEvent>();
+
+            A.CallTo(() => event1.Metadata)
+                .Returns(new Metadata
+                {
+                    StorageVersion = event1Version
+                });
+
+            A.CallTo(() => event2.Metadata)
+                .Returns(new Metadata
+                {
+                    StorageVersion = event2Version
+                });
 
             var events = new List<IEvent>
             {
@@ -90,6 +105,7 @@ namespace Playground.Domain.Persistence.UnitTests
             // assert
             aggregate.Should().NotBeNull();
             aggregate.Id.Should().Be(aggregateRootId);
+            aggregate.CurrentVersion.Should().Be(event2Version);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
                 .HydrateAggregateWithEvents(aggregate, events))
@@ -114,6 +130,7 @@ namespace Playground.Domain.Persistence.UnitTests
             // assert
             aggregate.Should().NotBeNull();
             aggregate.Id.Should().Be(aggregateRootId);
+            aggregate.CurrentVersion.Should().Be(0);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
                 .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<IEvent>>._))
@@ -145,8 +162,22 @@ namespace Playground.Domain.Persistence.UnitTests
             // arrange
             var aggregateRootId = Fixture.Create<Guid>();
 
+            var event1Version = Fixture.Create<long>();
+            var event2Version = Fixture.Create<long>();
             var event1 = Faker.Resolve<IEvent>();
             var event2 = Faker.Resolve<IEvent>();
+
+            A.CallTo(() => event1.Metadata)
+                .Returns(new Metadata
+                {
+                    StorageVersion = event1Version
+                });
+
+            A.CallTo(() => event2.Metadata)
+                .Returns(new Metadata
+                {
+                    StorageVersion = event2Version
+                });
 
             var events = new List<IEvent>
             {
@@ -166,6 +197,7 @@ namespace Playground.Domain.Persistence.UnitTests
             // assert
             aggregate.Should().NotBeNull();
             aggregate.Id.Should().Be(aggregateRootId);
+            aggregate.CurrentVersion.Should().Be(event2Version);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
                 .HydrateAggregateWithEvents(aggregate, events))
@@ -190,6 +222,7 @@ namespace Playground.Domain.Persistence.UnitTests
             // assert
             aggregate.Should().NotBeNull();
             aggregate.Id.Should().Be(aggregateRootId);
+            aggregate.CurrentVersion.Should().Be(0);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
                 .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<IEvent>>._))
@@ -216,9 +249,89 @@ namespace Playground.Domain.Persistence.UnitTests
         }
 
         [Test]
-        public void Save_StoresEvents_WhenStreamExists()
+        public async Task Save_StoresEvents_WhenStreamExists()
         {
-            Assert.Inconclusive();
+            // arrange
+            var event1 = Faker.Resolve<DomainEvent>();
+            var event2 = Faker.Resolve<DomainEvent>();
+
+            var aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
+            aggregateRoot.Events.Add(event1);
+            aggregateRoot.Events.Add(event2);
+
+            var expectedEvents = new List<IEvent>
+            {
+                event1,
+                event2
+            };
+
+            // act
+            await _sut
+                .Save(aggregateRoot)
+                .ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => Faker.Resolve<IEventStore>()
+                .StoreEvents(
+                    aggregateRoot.Id,
+                    aggregateRoot.CurrentVersion,
+                    A<ICollection<IEvent>>.That.Matches(events => events.All(e => expectedEvents.Contains(e)))))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public async Task Save_WillDispatchAllEvents_AfterTheyHaveBeenCorrectlySaved()
+        {
+            // arrange
+            var event1 = Faker.Resolve<DomainEvent>();
+            var event2 = Faker.Resolve<DomainEvent>();
+
+            var aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
+            aggregateRoot.Events.Add(event1);
+            aggregateRoot.Events.Add(event2);
+
+            // act
+            await _sut
+                .Save(aggregateRoot)
+                .ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => Faker.Resolve<IEventDispatcher>()
+                .RaiseEvent(event1))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => Faker.Resolve<IEventDispatcher>()
+                .RaiseEvent(event2))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public async Task Save_WillNotDispatchAnyEvent_WhenEventStoreThrowsException()
+        {
+            // arrange
+            var event1 = Faker.Resolve<DomainEvent>();
+            var event2 = Faker.Resolve<DomainEvent>();
+
+            var aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
+            aggregateRoot.Events.Add(event1);
+            aggregateRoot.Events.Add(event2);
+
+            A.CallTo(() => Faker.Resolve<IEventStore>()
+                .StoreEvents(
+                    aggregateRoot.Id,
+                    aggregateRoot.CurrentVersion,
+                    A<ICollection<IEvent>>._))
+                .Throws<InvalidOperationException>();
+
+            // act
+            await _sut
+                .Save(aggregateRoot)
+                .ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => Faker.Resolve<IEventDispatcher>()
+                .RaiseEvent(A<IEvent>._))
+                .MustHaveHappened(Repeated.Never);
         }
     }
 }

@@ -23,8 +23,9 @@ namespace Playground.Domain.Persistence.Events
             throw new NotImplementedException();
         }
 
-        public Task<bool> StoreEvents(
+        public Task StoreEvents(
             Guid streamId,
+            long currentVersion,
             ICollection<IEvent> eventsToStore)
         {
             throw new NotImplementedException();
