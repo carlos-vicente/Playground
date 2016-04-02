@@ -89,7 +89,10 @@ namespace Playground.Domain.Persistence
         public async Task Save<TAggregateRoot>(TAggregateRoot aggregateRoot)
             where TAggregateRoot : AggregateRoot
         {
-            var events = aggregateRoot.Events.Cast<IEvent>().ToList();
+            var events = aggregateRoot
+                .Events
+                .Cast<IEvent>()
+                .ToList();
 
             await _eventStore
                 .StoreEvents(aggregateRoot.Id, aggregateRoot.CurrentVersion, events)

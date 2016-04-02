@@ -283,8 +283,8 @@ namespace Playground.Domain.Persistence.UnitTests
         public async Task Save_WillDispatchAllEvents_AfterTheyHaveBeenCorrectlySaved()
         {
             // arrange
-            var event1 = Faker.Resolve<DomainEvent>();
-            var event2 = Faker.Resolve<DomainEvent>();
+            var event1 = Fixture.Create<TestAggregateCreated>();
+            var event2 = Fixture.Create<TestAggregateChanged>();
 
             var aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot.Events.Add(event1);
@@ -306,11 +306,11 @@ namespace Playground.Domain.Persistence.UnitTests
         }
 
         [Test]
-        public async Task Save_WillNotDispatchAnyEvent_WhenEventStoreThrowsException()
+        public void Save_WillNotDispatchAnyEvent_WhenEventStoreThrowsException()
         {
             // arrange
-            var event1 = Faker.Resolve<DomainEvent>();
-            var event2 = Faker.Resolve<DomainEvent>();
+            var event1 = Fixture.Create<TestAggregateCreated>();
+            var event2 = Fixture.Create<TestAggregateChanged>();
 
             var aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
             aggregateRoot.Events.Add(event1);
@@ -323,12 +323,15 @@ namespace Playground.Domain.Persistence.UnitTests
                     A<ICollection<IEvent>>._))
                 .Throws<InvalidOperationException>();
 
-            // act
-            await _sut
-                .Save(aggregateRoot)
-                .ConfigureAwait(false);
+            Func<Task> expectionThrower = async () =>
+                await _sut
+                    .Save(aggregateRoot)
+                    .ConfigureAwait(false);
 
-            // assert
+            // act & assert
+            expectionThrower
+                .ShouldThrow<InvalidOperationException>();
+
             A.CallTo(() => Faker.Resolve<IEventDispatcher>()
                 .RaiseEvent(A<IEvent>._))
                 .MustHaveHappened(Repeated.Never);
