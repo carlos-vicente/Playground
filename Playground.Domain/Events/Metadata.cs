@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Playground.Domain
+namespace Playground.Domain.Events
 {
     /// <summary>
     /// This class represents the meta data of an event

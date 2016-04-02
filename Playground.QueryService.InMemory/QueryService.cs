@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Playground.DependencyResolver.Contracts;
 using Playground.QueryService.Contracts;
 
@@ -13,19 +14,29 @@ namespace Playground.QueryService.InMemory
             _dependencyResolver = dependencyResolver;
         }
 
-        public T Query<T, TQuery>(TQuery query)
-            where T : class
-            where TQuery : IQuery<T>
+        public TQueryResult Query<TQuery, TQueryResult>(TQuery query)
+            where TQueryResult : class
+            where TQuery : IQuery<TQueryResult>
         {
-            var handler = _dependencyResolver.Resolve<IQueryHandler<TQuery, T>>();
+            var handler = _dependencyResolver
+                .Resolve<IQueryHandler<TQuery, TQueryResult>>();
+
+            if(handler == null)
+                throw new InvalidOperationException($"Failed to resolve implementation of {typeof(IQueryHandler<TQuery, TQueryResult>)}");
+
             return handler.Handle(query);
         }
 
-        public async Task<T> QueryAsync<T, TQuery>(TQuery query)
-            where T : class
-            where TQuery : IQuery<T>
+        public async Task<TQueryResult> QueryAsync<TQuery, TQueryResult>(TQuery query)
+            where TQueryResult : class
+            where TQuery : IQuery<TQueryResult>
         {
-            var handler = _dependencyResolver.Resolve<IAsyncQueryHandler<TQuery, T>>();
+            var handler = _dependencyResolver
+                .Resolve<IAsyncQueryHandler<TQuery, TQueryResult>>();
+
+            if (handler == null)
+                throw new InvalidOperationException($"Failed to resolve implementation of {typeof(IQueryHandler<TQuery, TQueryResult>)}");
+
             return await handler
                 .Handle(query)
                 .ConfigureAwait(false);

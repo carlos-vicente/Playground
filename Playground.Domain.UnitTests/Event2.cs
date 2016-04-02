@@ -5,7 +5,8 @@ namespace Playground.Domain.UnitTests
 {
     public class Event2 : DomainEvent
     {
-        public Event2(Guid aggregateRootId) : base(aggregateRootId)
+        public Event2(Guid aggregateRootId) 
+            : base(aggregateRootId)
         {
         }
     }

@@ -111,6 +111,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Domain.UnitTests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventStoreWeb", "EventStoreWeb", "{E62AA9E2-7DA2-44FD-BCBA-301C1AE07856}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.QueryService.InMemory.UnitTests", "Playground.QueryService.InMemory.UnitTests\Playground.QueryService.InMemory.UnitTests.csproj", "{43A69474-6807-4F92-8762-967D974FDBD0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -233,6 +235,10 @@ Global
 		{A3B89895-154D-4EFF-8C12-8D43B8A66CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3B89895-154D-4EFF-8C12-8D43B8A66CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3B89895-154D-4EFF-8C12-8D43B8A66CB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43A69474-6807-4F92-8762-967D974FDBD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43A69474-6807-4F92-8762-967D974FDBD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43A69474-6807-4F92-8762-967D974FDBD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43A69474-6807-4F92-8762-967D974FDBD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -289,5 +295,6 @@ Global
 		{51B53DE2-7F9A-42A4-9E42-32B39B7C44F3} = {A39437E2-7AEA-4DB0-BFCF-F28C0D02B668}
 		{8E624E7C-ED10-46DF-8B9C-2E4E0A110DBB} = {94A251EA-7A9B-45E7-96AF-1EA5F55431FE}
 		{A3B89895-154D-4EFF-8C12-8D43B8A66CB2} = {8E624E7C-ED10-46DF-8B9C-2E4E0A110DBB}
+		{43A69474-6807-4F92-8762-967D974FDBD0} = {78383115-CB2B-475E-8C7C-A3263433600F}
 	EndGlobalSection
 EndGlobal

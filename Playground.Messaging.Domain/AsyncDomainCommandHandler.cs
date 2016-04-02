@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Playground.Domain;
 using Playground.Domain.Model;
 using Playground.Domain.Persistence;
 
@@ -20,13 +19,13 @@ namespace Playground.Messaging.Domain
         public async Task Handle(TCommand command)
         {
             var aggregate = await _aggregateContext
-                .TryLoad<TAggregate>(command.Metadata.AggregateRootId)
+                .TryLoad<TAggregate>(command.AggregateRootId)
                 .ConfigureAwait(false);
 
             if (aggregate == null)
             {
                 aggregate = await _aggregateContext
-                    .Create<TAggregate>(command.Metadata.AggregateRootId)
+                    .Create<TAggregate>(command.AggregateRootId)
                     .ConfigureAwait(false);
             }
 

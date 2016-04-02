@@ -90,6 +90,11 @@ namespace Playground.Domain.Persistence.PostgreSQL
             }
         }
 
+        public Task Create(Guid streamId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task Add(Guid streamId, StoredEvent storedEvent)
         {
             if(streamId == default(Guid))

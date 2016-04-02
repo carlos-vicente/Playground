@@ -13,7 +13,9 @@ namespace Playground.DependencyResolver.Autofac
         public static void RegisterGenerics(this ContainerBuilder builder, Type openGenericType)
         {
             var types = AppDomain
-                .CurrentDomain.GetAssemblies().ToArray()
+                .CurrentDomain
+                .GetAssemblies()
+                .ToArray()
                 .SelectMany(a => a.GetTypes())
                 .Where(type => type
                     .GetInterfaces()

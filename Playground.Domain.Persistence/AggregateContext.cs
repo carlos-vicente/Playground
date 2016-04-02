@@ -68,24 +68,6 @@ namespace Playground.Domain.Persistence
             return GetAggregateInstance<TAggregateRoot>(aggregateRootId, events);
         }
 
-        private TAggregateRoot GetAggregateInstance<TAggregateRoot>(
-            Guid aggregateRootId,
-            ICollection<IEvent> events)
-            where TAggregateRoot : AggregateRoot
-        {
-            var instance = CreateInstance<TAggregateRoot>(aggregateRootId);
-
-            if (events.Any())
-            {
-                _aggregateHydrator
-                    .HydrateAggregateWithEvents(instance, events);
-
-                instance.CurrentVersion = events.Last().Metadata.StorageVersion;
-            }
-
-            return instance;
-        }
-
         public async Task Save<TAggregateRoot>(TAggregateRoot aggregateRoot)
             where TAggregateRoot : AggregateRoot
         {
@@ -114,6 +96,24 @@ namespace Playground.Domain.Persistence
                 .CreateInstance(
                     typeof (TAggregateRoot),
                     aggregateRootId) as TAggregateRoot;
+        }
+
+        private TAggregateRoot GetAggregateInstance<TAggregateRoot>(
+            Guid aggregateRootId,
+            ICollection<IEvent> events)
+            where TAggregateRoot : AggregateRoot
+        {
+            var instance = CreateInstance<TAggregateRoot>(aggregateRootId);
+
+            if (events.Any())
+            {
+                _aggregateHydrator
+                    .HydrateAggregateWithEvents(instance, events);
+
+                instance.CurrentVersion = events.Last().Metadata.StorageVersion;
+            }
+
+            return instance;
         }
     }
 }
