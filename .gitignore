@@ -17,6 +17,7 @@ bld/
 [Oo]bj/
 lib
 build/tools/*
+build/results/*
 *.dcvr
 
 # MSTest test Results
@@ -180,4 +181,5 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 Status API Training Shop Blog About Pricing
-© 2016 GitHub, Inc. Terms Privacy Security Contact Help
+ï¿½ 2016 GitHub, Inc. Terms Privacy Security Contact Help
+Build/results.html
