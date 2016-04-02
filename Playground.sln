@@ -109,6 +109,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8E624E7C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Domain.UnitTests", "Playground.Domain.UnitTests\Playground.Domain.UnitTests.csproj", "{A3B89895-154D-4EFF-8C12-8D43B8A66CB2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventStoreWeb", "EventStoreWeb", "{E62AA9E2-7DA2-44FD-BCBA-301C1AE07856}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
