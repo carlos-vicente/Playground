@@ -9,6 +9,7 @@ using Playground.Domain.Events;
 using Playground.Domain.Model;
 using Playground.Domain.Persistence.Events;
 using Playground.Domain.Persistence.UnitTests.TestModel;
+using Playground.Messaging;
 using Playground.Tests;
 using Ploeh.AutoFixture;
 

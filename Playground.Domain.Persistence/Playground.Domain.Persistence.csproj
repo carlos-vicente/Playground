@@ -55,6 +55,10 @@
       <Project>{66b417d5-a799-4dc8-bf29-904898ce2653}</Project>
       <Name>Playground.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
+      <Project>{a15462e6-1f1a-40ad-9ede-23127289cb6a}</Project>
+      <Name>Playground.Messaging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Playground.Domain.Events;
 
-namespace Playground.Domain.Events
+namespace Playground.Messaging
 {
     public interface IEventDispatcher
     {

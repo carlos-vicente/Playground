@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Playground.Domain.Persistence;
-using Playground.Messaging.Domain;
+using Playground.Messaging.Persistence;
 using Playground.TicketOffice.Domain.Write.Commands;
 using Playground.TicketOffice.Domain.Write.Model;
 

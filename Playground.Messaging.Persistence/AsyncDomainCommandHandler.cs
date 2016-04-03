@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Playground.Domain.Model;
 using Playground.Domain.Persistence;
+using Playground.Messaging.Commands;
 
-namespace Playground.Messaging.Domain
+namespace Playground.Messaging.Persistence
 {
     public abstract class AsyncDomainCommandHandler<TCommand, TAggregate>
         : IAsyncCommandHandler<TCommand> 

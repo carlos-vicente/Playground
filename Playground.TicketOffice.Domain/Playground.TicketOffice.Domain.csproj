@@ -54,10 +54,6 @@
       <Project>{66b417d5-a799-4dc8-bf29-904898ce2653}</Project>
       <Name>Playground.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Playground.Messaging.Domain\Playground.Messaging.Domain.csproj">
-      <Project>{51b53de2-7f9a-42a4-9e42-32b39b7c44f3}</Project>
-      <Name>Playground.Messaging.Domain</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
       <Project>{a15462e6-1f1a-40ad-9ede-23127289cb6a}</Project>
       <Name>Playground.Messaging</Name>

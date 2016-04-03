@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Playground.Domain.Events;
 using Playground.Domain.Model;
 using Playground.Domain.Persistence.Events;
+using Playground.Messaging;
 
 namespace Playground.Domain.Persistence
 {

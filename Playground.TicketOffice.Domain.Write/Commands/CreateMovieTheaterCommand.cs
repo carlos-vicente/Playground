@@ -1,5 +1,5 @@
 ﻿using System;
-using Playground.Messaging.Domain;
+using Playground.Messaging.Commands;
 using Playground.TicketOffice.Domain.Write.Model;
 
 namespace Playground.TicketOffice.Domain.Write.Commands

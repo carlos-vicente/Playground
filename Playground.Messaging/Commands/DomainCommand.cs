@@ -1,7 +1,7 @@
 ﻿using System;
 using Playground.Domain.Model;
 
-namespace Playground.Messaging.Domain
+namespace Playground.Messaging.Commands
 {
     public abstract class DomainCommand<TAggregateRoot>
         : ICommand

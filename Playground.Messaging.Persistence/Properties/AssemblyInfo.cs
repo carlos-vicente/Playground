@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Playground.Messaging.Domain")]
+[assembly: AssemblyTitle("Playground.Messaging.Persistence")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Playground.Messaging.Domain")]
+[assembly: AssemblyProduct("Playground.Messaging.Persistence")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("51b53de2-7f9a-42a4-9e42-32b39b7c44f3")]
+[assembly: Guid("ae4eb9f1-9803-4d54-bfa7-da0953a5dc99")]
 
 // Version information for an assembly consists of the following four values:
 //
