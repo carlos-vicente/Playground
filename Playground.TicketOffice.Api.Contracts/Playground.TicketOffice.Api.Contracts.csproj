@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MovieTheater\CreateRequest.cs" />
+    <Compile Include="MovieTheater\Data\MovieTheater.cs" />
+    <Compile Include="MovieTheater\GetAllResult.cs" />
+    <Compile Include="MovieTheater\GetResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

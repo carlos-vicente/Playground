@@ -114,6 +114,12 @@
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Playground.TicketOffice.Api.Contracts\Playground.TicketOffice.Api.Contracts.csproj">
+      <Project>{4981258e-7746-4d16-9194-0f7c813fe525}</Project>
+      <Name>Playground.TicketOffice.Api.Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

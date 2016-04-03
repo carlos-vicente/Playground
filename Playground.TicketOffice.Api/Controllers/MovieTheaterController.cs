@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using Playground.TicketOffice.Api.Contracts;
+using Playground.TicketOffice.Api.Contracts.MovieTheater;
+using Playground.TicketOffice.Api.Contracts.MovieTheater.Data;
 
 namespace Playground.TicketOffice.Api.Controllers
 {
@@ -16,12 +19,29 @@ namespace Playground.TicketOffice.Api.Controllers
         /// <returns>Complete list of movie theaters</returns>
         [Route("")]
         [HttpGet]
-        public IEnumerable<string> GetAll()
+        public GetAllResult GetAll()
         {
-            return new List<string>
+            // execute query, which returns read model
+            // map read model to api data
+            // build result object with api data
+
+            return new GetAllResult
             {
-                Guid.NewGuid().ToString(),
-                Guid.NewGuid().ToString()
+                Theaters = new List<MovieTheater>
+                {
+                    new MovieTheater
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Colombo",
+                        RoomsNumber = 10
+                    },
+                    new MovieTheater
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Odivelas",
+                        RoomsNumber = 7
+                    }
+                }
             };
         }
 
@@ -32,13 +52,24 @@ namespace Playground.TicketOffice.Api.Controllers
         /// <returns>The specified movie theater (if it exists)</returns>
         [Route("{id}")]
         [HttpGet]
-        public object Get(Guid id)
+        public GetResult Get(Guid id)
         {
-            return new
+            return new GetResult
             {
-                Id = id,
-                Name = "something"
+                Theater = new MovieTheater
+                {
+                    Id = id,
+                    Name = "um qualquer",
+                    RoomsNumber = 10
+                }
             };
+        }
+
+        [Route("")]
+        [HttpPost]
+        public void Create(CreateRequest request)
+        {
+            // send a command to create this movie theater
         }
     }
 }
