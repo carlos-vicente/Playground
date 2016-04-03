@@ -28,15 +28,9 @@ namespace Playground.Domain.Persistence
         public async Task<TAggregateRoot> Create<TAggregateRoot>(Guid aggregateRootId)
             where TAggregateRoot : AggregateRoot
         {
-            var created = await _eventStore
+            await _eventStore
                 .CreateEventStream(aggregateRootId)
                 .ConfigureAwait(false);
-
-            if (!created)
-            {
-                throw new InvalidOperationException(
-                    $"A stream already for aggregate root id {aggregateRootId}");
-            }
 
             return CreateInstance<TAggregateRoot>(aggregateRootId);
         }

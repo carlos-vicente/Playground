@@ -47,25 +47,6 @@ namespace Playground.Domain.Persistence.UnitTests
         }
 
         [Test]
-        public void Create_ThrowsException_WhenStreamIsNotCreated()
-        {
-            // arrange
-            var aggregateRootId = Fixture.Create<Guid>();
-
-            A.CallTo(() => Faker.Resolve<IEventStore>()
-                .CreateEventStream(aggregateRootId))
-                .Returns(Task.FromResult(false));
-
-            Func<Task> exceptionThrower = async () => await _sut
-                .Create<TestAggregateRoot>(aggregateRootId)
-                .ConfigureAwait(true);
-
-            // act/assert
-            exceptionThrower
-                .ShouldThrow<InvalidOperationException>();
-        }
-
-        [Test]
         public async Task TryLoad_LoadsAggregateWithAllEvents_WhenStreamExistsAndHasEvents()
         {
             // arrange
