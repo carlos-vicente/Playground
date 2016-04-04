@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using Playground.TicketOffice.Api.Contracts;
+using Playground.Messaging;
 using Playground.TicketOffice.Api.Contracts.MovieTheater;
 using Playground.TicketOffice.Api.Contracts.MovieTheater.Data;
+using System.Threading.Tasks;
+using Playground.TicketOffice.Domain.Write.Commands;
 
 namespace Playground.TicketOffice.Api.Controllers
 {
@@ -13,6 +15,13 @@ namespace Playground.TicketOffice.Api.Controllers
     [RoutePrefix("theater")]
     public class MovieTheaterController : ApiController
     {
+        private readonly IMessageBus _messageBus;
+
+        public MovieTheaterController(IMessageBus messageBus)
+        {
+            _messageBus = messageBus;
+        }
+
         /// <summary>
         /// Gets all the available movie theaters
         /// </summary>
@@ -67,9 +76,16 @@ namespace Playground.TicketOffice.Api.Controllers
 
         [Route("")]
         [HttpPost]
-        public void Create(CreateRequest request)
+        public async Task Create(CreateRequest request)
         {
-            // send a command to create this movie theater
+            var command = new CreateMovieTheaterCommand(
+                request.TheaterToCreate.Id,
+                request.TheaterToCreate.Name,
+                request.TheaterToCreate.RoomsNumber);
+
+            await _messageBus
+                .SendCommand(command)
+                .ConfigureAwait(false);
         }
     }
 }

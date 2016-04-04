@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Playground.Domain;
 using Playground.Domain.Events;
 using Playground.Domain.Model;
 using Playground.TicketOffice.Domain.Write.Events;
@@ -17,11 +16,12 @@ namespace Playground.TicketOffice.Domain.Write.Model
 
         public MovieTheater(Guid id) : base(id) { }
 
-        public void CreateMovieTheater(string name)
+        public void CreateMovieTheater(string name, int roomsNumber)
         {
             var @event = new MovieTheaterCreated(Id)
             {
-                Name = name
+                Name = name,
+                RoomsNumber = roomsNumber
             };
 
             When(@event);
@@ -32,7 +32,7 @@ namespace Playground.TicketOffice.Domain.Write.Model
         void IEmit<MovieTheaterCreated>.Apply(MovieTheaterCreated e)
         {
             Name = e.Name;
-            Rooms = new List<TheaterRoom>();
+            Rooms = new TheaterRoom[e.RoomsNumber];
         }
 
         #endregion

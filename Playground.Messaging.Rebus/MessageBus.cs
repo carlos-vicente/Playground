@@ -1,15 +1,24 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Playground.Messaging.Commands;
+using Rebus.Bus;
 
 namespace Playground.Messaging.Rebus
 {
     public class MessageBus : IMessageBus
     {
-        public Task SendCommand<TCommand>(TCommand command) 
+        private readonly IBus _rebus;
+
+        public MessageBus(IBus rebus)
+        {
+            _rebus = rebus;
+        }
+
+        public async Task SendCommand<TCommand>(TCommand command) 
             where TCommand : ICommand
         {
-            throw new NotImplementedException();
+            await _rebus
+                .Send(command)
+                .ConfigureAwait(false);
         }
     }
 }

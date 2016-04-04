@@ -101,6 +101,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
             var validator = _validatorFactory.CreateValidator<StoredEvent>();
+
             validator.Validate(storedEvent);
 
             using (var connection = _connectionFactory.CreateConnection())

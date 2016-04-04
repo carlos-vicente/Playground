@@ -8,10 +8,13 @@ namespace Playground.TicketOffice.Domain.Write.Commands
     {
         public string Name { get; private set; }
 
-        public CreateMovieTheaterCommand(Guid aggregateRootId, string name)
+        public int RoomsNumber { get; private set; }
+
+        public CreateMovieTheaterCommand(Guid aggregateRootId, string name, int rooms)
             : base(aggregateRootId)
         {
             Name = name;
+            RoomsNumber = rooms;
         }
     }
 }

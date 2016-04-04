@@ -5,9 +5,16 @@ namespace Playground.Validation.Fluent
 {
     public class FluentValidationValidatorFactory : IValidatorFactory
     {
+        private readonly FluentValidation.IValidatorFactory _validatorFactory;
+
+        public FluentValidationValidatorFactory(FluentValidation.IValidatorFactory validatorFactory)
+        {
+            _validatorFactory = validatorFactory;
+        }
+
         public IValidator<T> CreateValidator<T>()
         {
-            throw new NotImplementedException();
+            var fluentValidator = _validatorFactory.GetValidator<T>();
         }
 
         public IValidator CreateValidator(Type type)

@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1C7C0DC4-201F-41E7-8DB9-66F94D1F31EB}</ProjectGuid>
+    <ProjectGuid>{D5436D18-0841-4D6F-BC9C-867E87B01979}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.TicketOffice.Domain.Write.Handlers</RootNamespace>
-    <AssemblyName>Playground.TicketOffice.Domain.Write.Handlers</AssemblyName>
+    <RootNamespace>Playground.Serialization.Jil</RootNamespace>
+    <AssemblyName>Playground.Serialization.Jil</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,12 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Rebus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rebus.0.99.47\lib\NET45\Rebus.dll</HintPath>
+    <Reference Include="Jil, Version=2.14.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jil.2.14.0\lib\net45\Jil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Sigil, Version=4.5.1.0, Culture=neutral, PublicKeyToken=2d06c3494341c8ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sigil.4.5.1\lib\net45\Sigil.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,37 +49,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CreateMovieTheaterCommandHandler.cs" />
+    <Compile Include="EventSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegistrationHook.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Playground.Domain.Persistence\Playground.Domain.Persistence.csproj">
       <Project>{8d22c8a7-4c4f-472c-9dba-43bd55deb1e8}</Project>
       <Name>Playground.Domain.Persistence</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Playground.Domain\Playground.Domain.csproj">
-      <Project>{66b417d5-a799-4dc8-bf29-904898ce2653}</Project>
-      <Name>Playground.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Messaging.Persistence\Playground.Messaging.Persistence.csproj">
-      <Project>{AE4EB9F1-9803-4D54-BFA7-DA0953A5DC99}</Project>
-      <Name>Playground.Messaging.Persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
-      <Project>{a15462e6-1f1a-40ad-9ede-23127289cb6a}</Project>
-      <Name>Playground.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.TicketOffice.Domain.Write\Playground.TicketOffice.Domain.Write.csproj">
-      <Project>{724D8C2D-81D0-4C39-B4A1-9D5A708C8BE1}</Project>
-      <Name>Playground.TicketOffice.Domain.Write</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

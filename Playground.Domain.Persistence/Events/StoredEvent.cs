@@ -11,7 +11,12 @@ namespace Playground.Domain.Persistence.Events
         public DateTime OccurredOn { get; set; }
 
         public string EventBody { get; set; }
-        
+
+        public Type EventType
+        {
+            get { return Type.GetType(TypeName); }
+        }
+
         public StoredEvent(
             string typeName,
             DateTime occurredOn,

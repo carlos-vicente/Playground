@@ -42,6 +42,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -49,6 +57,26 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rebus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rebus.0.99.47\lib\NET45\Rebus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rebus.Autofac, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rebus.Autofac.0.99.47\lib\NET45\Rebus.Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rebus.Serilog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rebus.Serilog.0.99.47\lib\NET45\Rebus.Serilog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.FullNetFx, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.FullNetFx.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
@@ -115,9 +143,29 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Playground.DependencyResolver.Autofac\Playground.DependencyResolver.Autofac.csproj">
+      <Project>{6bca599f-a8c2-46f8-bf0d-3eb9dd1abaea}</Project>
+      <Name>Playground.DependencyResolver.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
+      <Project>{A15462E6-1F1A-40AD-9EDE-23127289CB6A}</Project>
+      <Name>Playground.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Api.AutofacRegister\Playground.TicketOffice.Api.AutofacRegister.csproj">
+      <Project>{6D233D87-B613-4FE8-83B0-D87437E0CD8B}</Project>
+      <Name>Playground.TicketOffice.Api.AutofacRegister</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.TicketOffice.Api.Contracts\Playground.TicketOffice.Api.Contracts.csproj">
       <Project>{4981258e-7746-4d16-9194-0f7c813fe525}</Project>
       <Name>Playground.TicketOffice.Api.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Domain.Write.Handlers\Playground.TicketOffice.Domain.Write.Handlers.csproj">
+      <Project>{1c7c0dc4-201f-41e7-8db9-66f94d1f31eb}</Project>
+      <Name>Playground.TicketOffice.Domain.Write.Handlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Domain.Write\Playground.TicketOffice.Domain.Write.csproj">
+      <Project>{724D8C2D-81D0-4C39-B4A1-9D5A708C8BE1}</Project>
+      <Name>Playground.TicketOffice.Domain.Write</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -35,21 +35,27 @@ namespace Playground.Domain.Persistence.Events
                 .GetLastEvent(streamId)
                 .ConfigureAwait(false);
 
-            // TODO: turn the if arround to throw exception
-            if (currentVersion >= lastStoredEvent.EventId)
+            if (lastStoredEvent != null && currentVersion < lastStoredEvent.EventId)
             {
-                //var events = eventsToStore
-                //    .Select(e => new StoredEvent(
-                //        e.GetType().AssemblyQualifiedName,
-                //        e.Metadata.OccorredOn,
-                //        _serializer.Serialize(e),
-                //        ))
+                throw new InvalidOperationException($"Cant add new events on version {currentVersion} as current storage version is {lastStoredEvent.EventId}");
             }
+
+            var events = eventsToStore
+                .Select(e => new StoredEvent(
+                    e.GetType().AssemblyQualifiedName,
+                    e.Metadata.OccorredOn,
+                    _serializer.Serialize(e)))
+                .ToList();
+
+            await _repository
+                .Add(streamId, events)
+                .ConfigureAwait(false);
         }
 
-        public Task<ICollection<IEvent>> LoadAllEvents(Guid streamId)
+        private IEvent GetDomainEvent(StoredEvent storedEvent)
         {
-            throw new NotImplementedException();
+            return _serializer
+                .Deserialize(storedEvent.EventBody) as IEvent;
         }
 
         public Task<ICollection<IEvent>> LoadSelectedEvents(
@@ -58,6 +64,18 @@ namespace Playground.Domain.Persistence.Events
             long toEventId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ICollection<IEvent>> LoadAllEvents(Guid streamId)
+        {
+            var storedEvents = await _repository
+                .GetAll(streamId)
+                .ConfigureAwait(false);
+
+            return storedEvents?
+                .Select(GetDomainEvent)
+                .ToList()
+                   ?? new List<IEvent>();
         }
     }
 }

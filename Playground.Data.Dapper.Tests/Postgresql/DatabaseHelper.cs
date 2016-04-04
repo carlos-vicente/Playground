@@ -14,7 +14,7 @@ namespace Playground.Data.Dapper.Tests.Postgresql
                 Username = ConfigurationManager.AppSettings["user"],
                 Password = ConfigurationManager.AppSettings["password"],
 
-                SslMode = SslMode.Prefer,
+                SslMode = SslMode.Require,
                 TrustServerCertificate = true
             };
         }

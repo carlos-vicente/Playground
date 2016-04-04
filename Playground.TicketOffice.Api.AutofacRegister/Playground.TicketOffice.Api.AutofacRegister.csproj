@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4D8CCC23-E2FD-43EB-B50F-66DC63671981}</ProjectGuid>
+    <ProjectGuid>{6D233D87-B613-4FE8-83B0-D87437E0CD8B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.Domain.Persistence.PostgreSQL.UnitTests</RootNamespace>
-    <AssemblyName>Playground.Domain.Persistence.PostgreSQL.UnitTests</AssemblyName>
+    <RootNamespace>Playground.TicketOffice.Api.AutofacRegister</RootNamespace>
+    <AssemblyName>Playground.TicketOffice.Api.AutofacRegister</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -34,30 +34,6 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Autofac.Extras.FakeItEasy, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Extras.FakeItEasy.3.0.3\lib\net40\Autofac.Extras.FakeItEasy.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FakeItEasy, Version=1.25.3.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
-      <HintPath>..\packages\FakeItEasy.1.25.3\lib\net40\FakeItEasy.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions, Version=4.3.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.3.2\lib\net45\FluentAssertions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.3.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.3.2\lib\net45\FluentAssertions.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.2.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.2.0\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ploeh.AutoFixture, Version=3.43.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.3.43.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -68,36 +44,45 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventRepositoryTests.cs" />
+    <Compile Include="CommandModule.cs" />
+    <Compile Include="DomainModule.cs" />
+    <Compile Include="EventStoreModule.cs" />
+    <Compile Include="RebusModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Playground.Core\Playground.Core.csproj">
-      <Project>{751be90e-7bd6-46d5-9323-2098e6ccf1ca}</Project>
-      <Name>Playground.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Data.Contracts\Playground.Data.Contracts.csproj">
-      <Project>{db5f5dbe-547b-424e-abb9-ea63327c8615}</Project>
-      <Name>Playground.Data.Contracts</Name>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Playground.DependencyResolver.Autofac\Playground.DependencyResolver.Autofac.csproj">
+      <Project>{6BCA599F-A8C2-46F8-BF0D-3EB9DD1ABAEA}</Project>
+      <Name>Playground.DependencyResolver.Autofac</Name>
     </ProjectReference>
     <ProjectReference Include="..\Playground.Domain.Persistence.PostgreSQL\Playground.Domain.Persistence.PostgreSQL.csproj">
-      <Project>{bd5ab0dc-1289-4992-ab79-0665af35c0f4}</Project>
+      <Project>{BD5AB0DC-1289-4992-AB79-0665AF35C0F4}</Project>
       <Name>Playground.Domain.Persistence.PostgreSQL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Playground.Domain.Persistence\Playground.Domain.Persistence.csproj">
-      <Project>{8d22c8a7-4c4f-472c-9dba-43bd55deb1e8}</Project>
+      <Project>{8D22C8A7-4C4F-472C-9DBA-43BD55DEB1E8}</Project>
       <Name>Playground.Domain.Persistence</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Playground.Tests\Playground.Tests.csproj">
-      <Project>{128691bd-75ca-4303-947d-b8d7062510ec}</Project>
-      <Name>Playground.Tests</Name>
+    <ProjectReference Include="..\Playground.Domain\Playground.Domain.csproj">
+      <Project>{66B417D5-A799-4DC8-BF29-904898CE2653}</Project>
+      <Name>Playground.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Messaging.Rebus\Playground.Messaging.Rebus.csproj">
+      <Project>{07ae8ea0-ba36-4c78-bd67-e2c9979abdec}</Project>
+      <Name>Playground.Messaging.Rebus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
+      <Project>{a15462e6-1f1a-40ad-9ede-23127289cb6a}</Project>
+      <Name>Playground.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Serialization.Jil\Playground.Serialization.Jil.csproj">
+      <Project>{D5436D18-0841-4D6F-BC9C-867E87B01979}</Project>
+      <Name>Playground.Serialization.Jil</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
