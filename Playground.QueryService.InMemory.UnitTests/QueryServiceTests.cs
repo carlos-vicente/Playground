@@ -11,17 +11,8 @@ using Ploeh.AutoFixture;
 
 namespace Playground.QueryService.InMemory.UnitTests
 {
-    public class QueryServiceTests : TestBase
+    public class QueryServiceTests : TestBaseWithSut<QueryService>
     {
-        private QueryService _sut;
-
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            _sut = Faker.Resolve<QueryService>();
-        }
-
         [Test]
         public void Query_WillExecuteQueryHandler_WithReceivedQuery()
         {
@@ -39,7 +30,7 @@ namespace Playground.QueryService.InMemory.UnitTests
                 .Returns(queryResult);
 
             // act
-            var actual = _sut.Query<TestQuery, TestQueryResult>(query);
+            var actual = Sut.Query<TestQuery, TestQueryResult>(query);
 
             // assert
             actual
@@ -56,7 +47,7 @@ namespace Playground.QueryService.InMemory.UnitTests
                 .Resolve<IQueryHandler<TestQuery, TestQueryResult>>())
                 .Returns(null);
 
-            Action expectionThrower = () => _sut.Query<TestQuery, TestQueryResult>(query);
+            Action expectionThrower = () => Sut.Query<TestQuery, TestQueryResult>(query);
 
             // act & assert
             expectionThrower
@@ -84,7 +75,7 @@ namespace Playground.QueryService.InMemory.UnitTests
                 .Returns(queryResult);
 
             // act
-            var actual = await _sut
+            var actual = await Sut
                 .QueryAsync<TestQuery, TestQueryResult>(query)
                 .ConfigureAwait(false);
 
@@ -103,7 +94,7 @@ namespace Playground.QueryService.InMemory.UnitTests
                 .Resolve<IAsyncQueryHandler<TestQuery, TestQueryResult>>())
                 .Returns(null);
 
-            Func<Task> expectionThrower = async () => await _sut
+            Func<Task> expectionThrower = async () => await Sut
                 .QueryAsync<TestQuery, TestQueryResult>(query)
                 .ConfigureAwait(false);
 

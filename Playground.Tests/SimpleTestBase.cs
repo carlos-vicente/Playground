@@ -5,7 +5,7 @@ using Ploeh.AutoFixture;
 namespace Playground.Tests
 {
     [TestFixture]
-    public abstract class TestBase
+    public abstract class SimpleTestBase
     {
         protected AutoFake Faker;
         protected Fixture Fixture;

@@ -10,7 +10,7 @@ using Ploeh.AutoFixture;
 namespace Playground.Data.Dapper.Tests
 {
     [TestFixture]
-    public class ConnectionFactoryTests : TestBase
+    public class ConnectionFactorySimpleTests : SimpleTestBase
     {
         [Test]
         public void CreateConnection_ReturnsConnectionAbstraction_WithObtainedConnection()

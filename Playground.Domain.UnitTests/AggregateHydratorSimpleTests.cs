@@ -10,7 +10,7 @@ using Ploeh.AutoFixture;
 namespace Playground.Domain.UnitTests
 {
     [TestFixture]
-    public class AggregateHydratorTests : TestBase
+    public class AggregateHydratorSimpleTests : SimpleTestBase
     {
         [Test]
         public void HydrateAggregateWithEvents_InvokesApplyForAllEvents()

@@ -13,17 +13,8 @@ using Ploeh.AutoFixture;
 
 namespace Playground.Domain.Persistence.UnitTests
 {
-    public class EventStoreTests : TestBase
+    public class EventStoreTests : TestBaseWithSut<EventStore>
     {
-        private EventStore _sut;
-
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            _sut = Faker.Resolve<EventStore>();
-        }
-
         [Test]
         public async Task CreateEventStream_WillCreateStream()
         {
@@ -31,7 +22,7 @@ namespace Playground.Domain.Persistence.UnitTests
             var streamId = Guid.NewGuid();
 
             // act
-            await _sut
+            await Sut
                 .CreateEventStream(streamId)
                 .ConfigureAwait(false);
 
@@ -88,7 +79,7 @@ namespace Playground.Domain.Persistence.UnitTests
             };
 
             // act
-            await _sut
+            await Sut
                 .StoreEvents(streamId, currentStreamVersion, new IEvent[] { event1, event2 })
                 .ConfigureAwait(false);
 
@@ -140,7 +131,7 @@ namespace Playground.Domain.Persistence.UnitTests
             };
 
             // act
-            await _sut
+            await Sut
                 .StoreEvents(streamId, 0L, new IEvent[] { event1, event2 })
                 .ConfigureAwait(false);
 
@@ -179,7 +170,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .GetLastEvent(streamId))
                 .Returns(Task.FromResult(lastStreamEvent));
 
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .StoreEvents(streamId, currentStreamVersion, new IEvent[] {event1, event2})
                 .ConfigureAwait(false);
 
@@ -248,7 +239,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(event2);
 
             // act
-            var events = await _sut
+            var events = await Sut
                 .LoadAllEvents(streamId)
                 .ConfigureAwait(false);
 
@@ -268,7 +259,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(new List<StoredEvent>());
             
             // act
-            var events = await _sut
+            var events = await Sut
                 .LoadAllEvents(streamId)
                 .ConfigureAwait(false);
 
@@ -293,7 +284,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(null as List<StoredEvent>);
 
             // act
-            var events = await _sut
+            var events = await Sut
                 .LoadAllEvents(streamId)
                 .ConfigureAwait(false);
 

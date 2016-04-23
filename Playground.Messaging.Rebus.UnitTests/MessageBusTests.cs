@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FakeItEasy;
 using NUnit.Framework;
-using Playground.Messaging.Commands;
 using Playground.Messaging.Rebus.UnitTests.Model;
 using Playground.Tests;
 using Ploeh.AutoFixture;
@@ -9,17 +8,8 @@ using Rebus.Bus;
 
 namespace Playground.Messaging.Rebus.UnitTests
 {
-    public class MessageBusTests: TestBase
+    public class MessageBusTests: TestBaseWithSut<MessageBus>
     {
-        private MessageBus _sut;
-
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            _sut = Faker.Resolve<MessageBus>();
-        }
-
         [Test]
         public async Task SendCommand_WillSendComandToRebus()
         {
@@ -27,7 +17,7 @@ namespace Playground.Messaging.Rebus.UnitTests
             var command = Fixture.Create<TestCommand>();
 
             // act
-            await _sut
+            await Sut
                 .SendCommand(command)
                 .ConfigureAwait(false);
 

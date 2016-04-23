@@ -11,7 +11,7 @@ using FluentAssertions;
 
 namespace Playground.Data.Dapper.Tests
 {
-    public class ConnectionTests : TestBase
+    public class ConnectionSimpleTests : SimpleTestBase
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()

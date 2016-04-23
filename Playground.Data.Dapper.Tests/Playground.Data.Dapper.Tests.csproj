@@ -77,8 +77,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectionFactoryTests.cs" />
-    <Compile Include="ConnectionTests.cs" />
+    <Compile Include="ConnectionFactorySimpleTests.cs" />
+    <Compile Include="ConnectionSimpleTests.cs" />
     <Compile Include="Postgresql\DatabaseHelper.cs" />
     <Compile Include="Postgresql\Scripts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

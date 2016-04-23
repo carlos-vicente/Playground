@@ -15,17 +15,8 @@ using Ploeh.AutoFixture;
 
 namespace Playground.Domain.Persistence.UnitTests
 {
-    public class AggregateContextTests : TestBase
+    public class AggregateContextTests : TestBaseWithSut<AggregateContext>
     {
-        private AggregateContext _sut;
-
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            _sut = Faker.Resolve<AggregateContext>();
-        }
-
         [Test]
         public async Task Create_ReturnsNewInstanceWithId_WhenStreamIsSuccessfullyCreated()
         {
@@ -37,7 +28,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(Task.FromResult(true));
 
             // act
-            var aggregateRoot = await _sut
+            var aggregateRoot = await Sut
                 .Create<TestAggregateRoot>(aggregateRootId)
                 .ConfigureAwait(true);
 
@@ -80,7 +71,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(Task.FromResult<ICollection<IEvent>>(events));
             
             // act
-            var aggregate = await _sut
+            var aggregate = await Sut
                 .TryLoad<TestAggregateRoot>(aggregateRootId)
                 .ConfigureAwait(false);
 
@@ -105,7 +96,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(Task.FromResult<ICollection<IEvent>>(new List<IEvent>()));
 
             // act
-            var aggregate = await _sut
+            var aggregate = await Sut
                 .TryLoad<TestAggregateRoot>(aggregateRootId)
                 .ConfigureAwait(false);
 
@@ -130,7 +121,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(Task.FromResult<ICollection<IEvent>>(null));
             
             // act
-            var aggregate = await _sut
+            var aggregate = await Sut
                 .TryLoad<TestAggregateRoot>(aggregateRootId)
                 .ConfigureAwait(false);
 
@@ -172,7 +163,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(Task.FromResult<ICollection<IEvent>>(events));
 
             // act
-            var aggregate = await _sut
+            var aggregate = await Sut
                 .Load<TestAggregateRoot>(aggregateRootId)
                 .ConfigureAwait(false);
 
@@ -197,7 +188,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(Task.FromResult<ICollection<IEvent>>(new List<IEvent>()));
 
             // act
-            var aggregate = await _sut
+            var aggregate = await Sut
                 .Load<TestAggregateRoot>(aggregateRootId)
                 .ConfigureAwait(false);
 
@@ -221,7 +212,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .LoadAllEvents(aggregateRootId))
                 .Returns(Task.FromResult<ICollection<IEvent>>(null));
 
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Load<TestAggregateRoot>(aggregateRootId)
                 .ConfigureAwait(false);
 
@@ -248,7 +239,7 @@ namespace Playground.Domain.Persistence.UnitTests
             };
 
             // act
-            await _sut
+            await Sut
                 .Save(aggregateRoot)
                 .ConfigureAwait(false);
 
@@ -273,7 +264,7 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregateRoot.Events.Add(event2);
 
             // act
-            await _sut
+            await Sut
                 .Save(aggregateRoot)
                 .ConfigureAwait(false);
 
@@ -306,7 +297,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Throws<InvalidOperationException>();
 
             Func<Task> expectionThrower = async () =>
-                await _sut
+                await Sut
                     .Save(aggregateRoot)
                     .ConfigureAwait(false);
 

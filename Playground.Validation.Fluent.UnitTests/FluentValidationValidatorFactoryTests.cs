@@ -7,24 +7,16 @@ using Playground.Tests;
 
 namespace Playground.Validation.Fluent.UnitTests
 {
-    public class FluentValidationValidatorFactoryTests : TestBase
+    public class FluentValidationValidatorFactoryTests 
+        : TestBaseWithSut<FluentValidationValidatorFactory>
     {
-        private FluentValidationValidatorFactory _sut;
-
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            _sut = Faker.Resolve<FluentValidationValidatorFactory>();
-        }
-
         [Test]
         public void GenericCreateValidator_WillReturnValidator()
         {
             // arrange
 
             // act
-            var validator = _sut.CreateValidator<string>();
+            var validator = Sut.CreateValidator<string>();
 
             // assert
             validator
@@ -44,7 +36,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .GetValidator<string>())
                 .Returns(null as IValidator<string>);
 
-            Action exceptionThrower = () => _sut.CreateValidator<string>();
+            Action exceptionThrower = () => Sut.CreateValidator<string>();
 
             // act/assert
             exceptionThrower
@@ -58,7 +50,7 @@ namespace Playground.Validation.Fluent.UnitTests
             var type = typeof (string);
 
             // act
-            var validator = _sut.CreateValidator(type);
+            var validator = Sut.CreateValidator(type);
 
             // assert
             validator
@@ -80,7 +72,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .GetValidator(type))
                 .Returns(null as IValidator);
 
-            Action exceptionThrower = () => _sut.CreateValidator(type);
+            Action exceptionThrower = () => Sut.CreateValidator(type);
 
             // act/assert
             exceptionThrower

@@ -1,7 +1,9 @@
-﻿namespace Playground.Messaging.Rebus.UnitTests
+﻿using Playground.Tests;
+
+namespace Playground.Messaging.Rebus.UnitTests
 {
-    public class EventDispatcherTests
+    public class EventDispatcherTests : TestBaseWithSut<EventDispatcher>
     {
-         
+
     }
 }

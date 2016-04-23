@@ -10,17 +10,8 @@ using Ploeh.AutoFixture;
 
 namespace Playground.Validation.Fluent.UnitTests
 {
-    public class FluentValidationValidatorTests: TestBase
+    public class FluentValidationValidatorTests: TestBaseWithSut<FluentValidationValidator>
     {
-        private FluentValidationValidator _sut;
-
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            _sut = Faker.Resolve<FluentValidationValidator>();
-        }
-
         [Test]
         public void Validate_WillCallValidateOnFluentValidationValidator()
         {
@@ -33,7 +24,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .Returns(validResult);
 
             // act
-            _sut.Validate(objToValidate);
+            Sut.Validate(objToValidate);
 
             // assert
             A.CallTo(() => Faker.Resolve<FluentValidation.IValidator>()
@@ -52,7 +43,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .Validate(objToValidate))
                 .Returns(new ValidationResult(expectedFailures));
 
-            Action expectionThrower = () => _sut.Validate(objToValidate);
+            Action expectionThrower = () => Sut.Validate(objToValidate);
 
             var expectedErrors = expectedFailures.Select(f => f.ErrorMessage);
 
@@ -83,7 +74,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .Returns(validResult);
 
             // act
-            _sut.ValidateAll(objsToValidate);
+            Sut.ValidateAll(objsToValidate);
 
             // assert
             A.CallTo(() => Faker.Resolve<FluentValidation.IValidator>()
@@ -128,7 +119,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .Validate(A<string>.That.Matches(s => failedObjects.Contains(s))))
                 .Returns(failedResult);
 
-            Action exceptionThrower = () => _sut.ValidateAll(objectsToValidate.ToArray());
+            Action exceptionThrower = () => Sut.ValidateAll(objectsToValidate.ToArray());
 
             // act/assert
             exceptionThrower
@@ -171,7 +162,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .CanValidateInstancesOfType(A<Type>.That.Matches(t => t == invalidObject.GetType())))
                 .Returns(false);
 
-            Action exceptionThrower = () => _sut.ValidateAll(objectsToValidate.ToArray());
+            Action exceptionThrower = () => Sut.ValidateAll(objectsToValidate.ToArray());
 
             // act/assert
             exceptionThrower
@@ -183,17 +174,9 @@ namespace Playground.Validation.Fluent.UnitTests
         }
     }
 
-    public class GenericFluentValidationValidatorTests : TestBase
+    public class GenericFluentValidationValidatorTests 
+        : TestBaseWithSut<FluentValidationValidator<string>>
     {
-        private FluentValidationValidator<string> _sut;
-
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            _sut = Faker.Resolve<FluentValidationValidator<string>>();
-        }
-
         [Test]
         public void Validate_WillCallValidateOnFluentValidationValidator()
         {
@@ -206,7 +189,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .Returns(validResult);
 
             // act
-            _sut.Validate(objToValidate);
+            Sut.Validate(objToValidate);
 
             // assert
             A.CallTo(() => Faker.Resolve<FluentValidation.IValidator<string>>()
@@ -225,7 +208,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .Validate(objToValidate))
                 .Returns(new ValidationResult(expectedFailures));
 
-            Action expectionThrower = () => _sut.Validate(objToValidate);
+            Action expectionThrower = () => Sut.Validate(objToValidate);
 
             var expectedErrors = expectedFailures.Select(f => f.ErrorMessage);
 
@@ -255,7 +238,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .Returns(validResult);
 
             // act
-            _sut.ValidateAll(objsToValidate);
+            Sut.ValidateAll(objsToValidate);
 
             // assert
             A.CallTo(() => Faker.Resolve<FluentValidation.IValidator<string>>()
@@ -298,7 +281,7 @@ namespace Playground.Validation.Fluent.UnitTests
                 .Validate(A<string>.That.Matches(s => failedObjects.Contains(s))))
                 .Returns(failedResult);
 
-            Action exceptionThrower = () => _sut.ValidateAll(objectsToValidate.ToArray());
+            Action exceptionThrower = () => Sut.ValidateAll(objectsToValidate.ToArray());
 
             // act/assert
             exceptionThrower

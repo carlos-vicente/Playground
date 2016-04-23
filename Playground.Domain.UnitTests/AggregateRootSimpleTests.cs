@@ -9,7 +9,7 @@ using Ploeh.AutoFixture;
 
 namespace Playground.Domain.UnitTests
 {
-    public class AggregateRootTests : TestBase
+    public class AggregateRootSimpleTests : SimpleTestBase
     {
         public class TestAggregateRoot 
             : AggregateRoot,

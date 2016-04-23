@@ -15,17 +15,8 @@ using Ploeh.AutoFixture;
 
 namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
 {
-    public class EventRepositoryTests: TestBase
+    public class EventRepositoryTests: TestBaseWithSut<EventRepository>
     {
-        private IEventRepository _sut;
-
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            _sut = Faker.Resolve<EventRepository>();
-        }
-
         [Test]
         public async Task GetAll_ObtainsAllEvents_WhenOpensConnection()
         {
@@ -49,7 +40,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult(expected));
 
             // act
-            var actual = await _sut
+            var actual = await Sut
                 .GetAll(streamId)
                 .ConfigureAwait(false);
 
@@ -81,7 +72,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult(expected));
 
             // act
-            var actual = await _sut
+            var actual = await Sut
                 .GetAll(streamId)
                 .ConfigureAwait(false);
 
@@ -96,7 +87,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         public void GetAll_ThrowsException_WhenStreamIdIsEmpty()
         {
             // arrange
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .GetAll(default(Guid))
                 .ConfigureAwait(false);
 
@@ -130,7 +121,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult(expectedEvent));
 
             // act
-            var actualEvent = await _sut
+            var actualEvent = await Sut
                 .Get(streamId, eventId)
                 .ConfigureAwait(false);
 
@@ -163,7 +154,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult<StoredEvent>(null));
 
             // act
-            var actualEvent = await _sut
+            var actualEvent = await Sut
                 .Get(streamId, eventId)
                 .ConfigureAwait(false);
 
@@ -178,7 +169,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         public void Get_ThrowsException_WhenStreamIdIsEmpty()
         {
             // arrange
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Get(default(Guid), Fixture.Create<long>())
                 .ConfigureAwait(false);
 
@@ -192,7 +183,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         public void Get_ThrowsException_WhenEventIdIsInvalid(long invalidEventId)
         {
             // arrange
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Get(Fixture.Create<Guid>(), invalidEventId)
                 .ConfigureAwait(false);
 
@@ -224,7 +215,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult(expectedEvent));
 
             // act
-            var actualEvent = await _sut
+            var actualEvent = await Sut
                 .GetLastEvent(streamId)
                 .ConfigureAwait(false);
 
@@ -255,7 +246,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult<StoredEvent>(null));
 
             // act
-            var actualEvent = await _sut
+            var actualEvent = await Sut
                 .GetLastEvent(streamId)
                 .ConfigureAwait(false);
 
@@ -270,7 +261,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         public void GetLastEvent_ThrowsException_WhenStreamIdIsEmpty()
         {
             // arrange
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .GetLastEvent(default(Guid))
                 .ConfigureAwait(false);
 
@@ -310,7 +301,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                     .Create()));
 
             // act
-            await _sut
+            await Sut
                 .Add(streamId, eventToAdd)
                 .ConfigureAwait(false);
 
@@ -360,7 +351,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                     .With(e => e.EventId, lastEventId)
                     .Create()));
 
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Add(streamId, eventToAdd)
                 .ConfigureAwait(false);
 
@@ -386,7 +377,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         public void Add_ThrowsException_WhenStreamIdIsEmpty()
         {
             // arrange
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Add(default(Guid), Fixture.Create<StoredEvent>())
                 .ConfigureAwait(false);
 
@@ -414,7 +405,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Validate(A<StoredEvent>._))
                 .Throws<ValidationException>();
 
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Add(Guid.NewGuid(), null as StoredEvent)
                 .ConfigureAwait(false);
 
@@ -441,7 +432,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Validate(@event))
                 .Throws<ValidationException>();
 
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Add(Guid.NewGuid(), @event)
                 .ConfigureAwait(false);
 
@@ -492,7 +483,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                     .Create()));
 
             // act
-            await _sut
+            await Sut
                 .Add(streamId, events)
                 .ConfigureAwait(false);
 
@@ -555,7 +546,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                     .With(e => e.EventId, lastEventId)
                     .Create()));
 
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Add(streamId, events)
                 .ConfigureAwait(false);
 
@@ -581,7 +572,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         public void AddMultiple_ThrowsException_WhenStreamIdIsEmpty()
         {
             // arrange
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Add(default(Guid), Fixture.CreateMany<StoredEvent>().ToList())
                 .ConfigureAwait(false);
 
@@ -609,7 +600,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .ValidateAll(A<ICollection<StoredEvent>>._))
                 .Throws<ValidationException>();
 
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Add(Guid.NewGuid(), null as ICollection<StoredEvent>)
                 .ConfigureAwait(false);
 
@@ -637,7 +628,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .ValidateAll(events))
                 .Throws<ValidationException>();
 
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Add(Guid.NewGuid(), events)
                 .ConfigureAwait(false);
 
@@ -668,7 +659,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult(Fixture.Create<StoredEvent>()));
 
             // act
-            await _sut
+            await Sut
                 .Remove(streamId, eventId)
                 .ConfigureAwait(false);
 
@@ -707,7 +698,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult<StoredEvent>(null));
 
             // act
-            await _sut
+            await Sut
                 .Remove(streamId, eventId)
                 .ConfigureAwait(false);
 
@@ -726,7 +717,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         public void Remove_ThrowsException_WhenStreamIdIsEmpty()
         {
             // arrange
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Remove(default(Guid), Fixture.Create<long>())
                 .ConfigureAwait(false);
 
@@ -740,7 +731,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         public void Remove_ThrowsException_WhenEventIdIsInvalid(long invalidEventId)
         {
             // arrange
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Remove(Fixture.Create<Guid>(), invalidEventId)
                 .ConfigureAwait(false);
 
@@ -769,7 +760,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult(Fixture.Create<StoredEvent>()));
 
             // act
-            await _sut
+            await Sut
                 .Remove(streamId)
                 .ConfigureAwait(false);
 
@@ -805,7 +796,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(Task.FromResult<StoredEvent>(null));
 
             // act
-            await _sut
+            await Sut
                 .Remove(streamId)
                 .ConfigureAwait(false);
 
@@ -824,7 +815,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
         public void RemoveMultiple_ThrowsException_WhenStreamIdIsEmpty()
         {
             // arrange
-            Func<Task> exceptionThrower = async () => await _sut
+            Func<Task> exceptionThrower = async () => await Sut
                 .Remove(default(Guid))
                 .ConfigureAwait(false);
 
