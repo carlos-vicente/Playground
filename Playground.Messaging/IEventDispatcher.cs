@@ -5,6 +5,7 @@ namespace Playground.Messaging
 {
     public interface IEventDispatcher
     {
-        Task RaiseEvent(IEvent domainEvent);
+        Task RaiseEvent<TEvent>(TEvent domainEvent)
+            where TEvent : DomainEvent;
     }
 }

@@ -76,6 +76,7 @@
     <Compile Include="EventDispatcherTests.cs" />
     <Compile Include="MessageBusTests.cs" />
     <Compile Include="Model\TestCommand.cs" />
+    <Compile Include="Model\TestEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +84,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Playground.Domain\Playground.Domain.csproj">
+      <Project>{66B417D5-A799-4DC8-BF29-904898CE2653}</Project>
+      <Name>Playground.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Messaging.Rebus\Playground.Messaging.Rebus.csproj">
       <Project>{07AE8EA0-BA36-4C78-BD67-E2C9979ABDEC}</Project>
       <Name>Playground.Messaging.Rebus</Name>

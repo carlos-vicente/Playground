@@ -270,11 +270,11 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // assert
             A.CallTo(() => Faker.Resolve<IEventDispatcher>()
-                .RaiseEvent(event1))
+                .RaiseEvent(A<DomainEvent>.That.Matches(de => de.Equals(event1))))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             A.CallTo(() => Faker.Resolve<IEventDispatcher>()
-                .RaiseEvent(event2))
+                .RaiseEvent(A<DomainEvent>.That.Matches(de => de.Equals(event2))))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -306,7 +306,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .ShouldThrow<InvalidOperationException>();
 
             A.CallTo(() => Faker.Resolve<IEventDispatcher>()
-                .RaiseEvent(A<IEvent>._))
+                .RaiseEvent(A<DomainEvent>._))
                 .MustHaveHappened(Repeated.Never);
         }
     }
