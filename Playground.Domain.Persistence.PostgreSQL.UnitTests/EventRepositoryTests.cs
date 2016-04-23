@@ -606,7 +606,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
                 .Returns(fakeValidator);
 
             A.CallTo(() => fakeValidator
-                .ValidateAll(A<IEnumerable<StoredEvent>>._))
+                .ValidateAll(A<ICollection<StoredEvent>>._))
                 .Throws<ValidationException>();
 
             Func<Task> exceptionThrower = async () => await _sut

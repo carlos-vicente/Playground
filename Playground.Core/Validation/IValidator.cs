@@ -5,12 +5,12 @@ namespace Playground.Core.Validation
     public interface IValidator
     {
         void Validate(object objectToValidate);
-        void ValidateAll(IEnumerable<object> objectsToValidate);
+        void ValidateAll(ICollection<object> objectsToValidate);
     }
 
-    public interface IValidator<in TEntity>
+    public interface IValidator<TEntity>
     {
         void Validate(TEntity objectToValidate);
-        void ValidateAll(IEnumerable<TEntity> objectToValidate);
+        void ValidateAll(ICollection<TEntity> objectToValidate);
     }
 }

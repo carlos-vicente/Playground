@@ -7,19 +7,34 @@ namespace Playground.Validation.Fluent
     {
         private readonly FluentValidation.IValidatorFactory _validatorFactory;
 
-        public FluentValidationValidatorFactory(FluentValidation.IValidatorFactory validatorFactory)
+        public FluentValidationValidatorFactory(
+            FluentValidation.IValidatorFactory validatorFactory)
         {
             _validatorFactory = validatorFactory;
         }
 
         public IValidator<T> CreateValidator<T>()
         {
-            var fluentValidator = _validatorFactory.GetValidator<T>();
+            var fluentValidator = _validatorFactory
+                .GetValidator<T>();
+
+            if(fluentValidator == null)
+                throw new InvalidOperationException(
+                    $"Could not find validator for type {typeof(T).Name}");
+
+            return new FluentValidationValidator<T>(fluentValidator);
         }
 
         public IValidator CreateValidator(Type type)
         {
-            throw new NotImplementedException();
+            var fluentValidator = _validatorFactory
+                .GetValidator(type);
+
+            if (fluentValidator == null)
+                throw new InvalidOperationException(
+                    $"Could not find validator for type {type.Name}");
+
+            return new FluentValidationValidator(fluentValidator);
         }
     }
 }

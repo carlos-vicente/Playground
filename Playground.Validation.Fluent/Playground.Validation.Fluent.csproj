@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="FluentValidationValidator.cs" />
     <Compile Include="FluentValidationValidatorFactory.cs" />
+    <Compile Include="Mapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

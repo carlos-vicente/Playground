@@ -129,6 +129,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.TicketOffice.Api
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Serialization.Jil", "Playground.Serialization.Jil\Playground.Serialization.Jil.csproj", "{D5436D18-0841-4D6F-BC9C-867E87B01979}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{507686BF-9EF1-41BF-835E-1BEBD7787A0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Validation.Fluent.UnitTests", "Playground.Validation.Fluent.UnitTests\Playground.Validation.Fluent.UnitTests.csproj", "{1D242C29-0689-45C0-AE90-BE6B4A2B9305}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -279,6 +283,10 @@ Global
 		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D242C29-0689-45C0-AE90-BE6B4A2B9305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D242C29-0689-45C0-AE90-BE6B4A2B9305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D242C29-0689-45C0-AE90-BE6B4A2B9305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D242C29-0689-45C0-AE90-BE6B4A2B9305}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -344,5 +352,7 @@ Global
 		{9E6F7489-4855-4948-BFD2-8C06FEDDD222} = {9BD849FB-09FB-4409-96D4-7D6E417CC82E}
 		{6D233D87-B613-4FE8-83B0-D87437E0CD8B} = {E3B354AC-EAB5-41A9-951F-F6E714099941}
 		{D5436D18-0841-4D6F-BC9C-867E87B01979} = {D55E4790-B548-449D-B3E0-DEEB162660A3}
+		{507686BF-9EF1-41BF-835E-1BEBD7787A0B} = {589F195F-F837-4881-823A-6F8C701FDD78}
+		{1D242C29-0689-45C0-AE90-BE6B4A2B9305} = {507686BF-9EF1-41BF-835E-1BEBD7787A0B}
 	EndGlobalSection
 EndGlobal
