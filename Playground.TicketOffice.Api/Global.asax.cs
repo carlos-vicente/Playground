@@ -2,6 +2,7 @@
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
+using Playground.DependencyResolver.Autofac;
 using Playground.TicketOffice.Api.AutofacRegister;
 using Playground.TicketOffice.Domain.Write.Commands;
 using Rebus.Auditing.Messages;
@@ -27,8 +28,13 @@ namespace Playground.TicketOffice.Api
 
             var builder = new ContainerBuilder();
 
+            builder.RegisterModule<AutofacDependencyResolverModule>();
             builder.RegisterModule<CommandModule>();
             builder.RegisterModule<RebusModule>();
+            builder.RegisterModule<DomainModule>();
+            builder.RegisterModule<EventStoreModule>();
+            builder.RegisterModule<ValidationModule>();
+            builder.RegisterModule<DbConnectionModule>();
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterWebApiFilterProvider(config);

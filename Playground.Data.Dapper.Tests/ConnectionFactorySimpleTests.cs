@@ -39,6 +39,9 @@ namespace Playground.Data.Dapper.Tests
                 .As<Connection>()
                 .InnerConnection
                 .ShouldBeEquivalentTo(expectedConnection);
+
+            A.CallTo(() => expectedConnection.Open())
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

@@ -19,7 +19,9 @@ namespace Playground.Data.Dapper
 
         public IConnection CreateConnection()
         {
-            return new Connection(_connectionBuilderFunc(_connectionString));
+            var realConnection = _connectionBuilderFunc(_connectionString);
+            realConnection.Open();
+            return new Connection(realConnection);
         }
     }
 }

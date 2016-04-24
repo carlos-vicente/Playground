@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9E6F7489-4855-4948-BFD2-8C06FEDDD222}</ProjectGuid>
+    <ProjectGuid>{180948CB-8441-43C4-9DDD-612713ACAAC4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.Messaging.Rebus.UnitTests</RootNamespace>
-    <AssemblyName>Playground.Messaging.Rebus.UnitTests</AssemblyName>
+    <RootNamespace>Playground.Validation.Fluent.Autofac.UnitTests</RootNamespace>
+    <AssemblyName>Playground.Validation.Fluent.Autofac.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,16 +50,16 @@
       <HintPath>..\packages\FluentAssertions.4.4.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.2.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.2.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ploeh.AutoFixture, Version=3.45.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoFixture.3.45.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Rebus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rebus.0.99.50\lib\NET45\Rebus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -73,10 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventDispatcherTests.cs" />
-    <Compile Include="MessageBusTests.cs" />
-    <Compile Include="Model\TestCommand.cs" />
-    <Compile Include="Model\TestEvent.cs" />
+    <Compile Include="ValidatorFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,21 +80,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Playground.Domain\Playground.Domain.csproj">
-      <Project>{66B417D5-A799-4DC8-BF29-904898CE2653}</Project>
-      <Name>Playground.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Messaging.Rebus\Playground.Messaging.Rebus.csproj">
-      <Project>{07AE8EA0-BA36-4C78-BD67-E2C9979ABDEC}</Project>
-      <Name>Playground.Messaging.Rebus</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
-      <Project>{A15462E6-1F1A-40AD-9EDE-23127289CB6A}</Project>
-      <Name>Playground.Messaging</Name>
+    <ProjectReference Include="..\Playground.DependencyResolver.Contracts\Playground.DependencyResolver.Contracts.csproj">
+      <Project>{EED64DC6-A6B0-4DDD-9725-5A11021F4221}</Project>
+      <Name>Playground.DependencyResolver.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Playground.Tests\Playground.Tests.csproj">
-      <Project>{128691bd-75ca-4303-947d-b8d7062510ec}</Project>
+      <Project>{128691BD-75CA-4303-947D-B8D7062510EC}</Project>
       <Name>Playground.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Validation.Fluent.Autofac\Playground.Validation.Fluent.Autofac.csproj">
+      <Project>{BDDD9A1D-81DB-4330-8874-D0555AFEE318}</Project>
+      <Name>Playground.Validation.Fluent.Autofac</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
