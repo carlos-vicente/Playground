@@ -17,6 +17,11 @@ namespace Playground.Domain.Persistence.Events
             get { return Type.GetType(TypeName); }
         }
 
+        public StoredEvent()
+        {
+            // Used only for mapping
+        }
+
         public StoredEvent(
             string typeName,
             DateTime occurredOn,
@@ -28,27 +33,6 @@ namespace Playground.Domain.Persistence.Events
             EventBody = eventBody;
             EventId = eventId;
         }
-        
-        //public IEvent ToDomainEvent()
-        //{
-        //    return ToDomainEvent<IEvent>();
-        //}
-
-        //public TEvent ToDomainEvent<TEvent>()
-        //    where TEvent : IEvent
-        //{
-        //    var eventType = default(Type);
-        //    try
-        //    {
-        //        eventType = Type.GetType(TypeName);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new InvalidOperationException(
-        //            string.Format("Class load error, because: {0}", ex));
-        //    }
-        //    return default(TEvent); //TODO: what to actually do here?!?!?! -> change this to same place where this instance is built
-        //}
 
         public bool Equals(StoredEvent other)
         {

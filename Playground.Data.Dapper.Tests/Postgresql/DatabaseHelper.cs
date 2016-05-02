@@ -14,7 +14,7 @@ namespace Playground.Data.Dapper.Tests.Postgresql
                 Username = ConfigurationManager.AppSettings["user"],
                 Password = ConfigurationManager.AppSettings["password"],
 
-                SslMode = SslMode.Require,
+                SslMode = SslMode.Prefer,
                 TrustServerCertificate = true
             };
         }
@@ -27,7 +27,21 @@ namespace Playground.Data.Dapper.Tests.Postgresql
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = string.Format(Scripts.Ddl.CreateTable, "test");
+                    command.CommandText = Scripts.Ddl.CreateTable;
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void CreateStoredProcedure()
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = Scripts.Ddl.CreateProdecure;
                     command.ExecuteNonQuery();
                 }
             }
@@ -41,7 +55,21 @@ namespace Playground.Data.Dapper.Tests.Postgresql
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = string.Format(Scripts.Ddl.DropTable, "test");
+                    command.CommandText = Scripts.Ddl.DropTable;
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void DropStoredProcedure()
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = Scripts.Ddl.DropProcedure;
                     command.ExecuteNonQuery();
                 }
             }
@@ -55,7 +83,7 @@ namespace Playground.Data.Dapper.Tests.Postgresql
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = string.Format(Scripts.Ddl.DropTable, "test");
+                    command.CommandText = Scripts.Ddl.DropTable;
                     command.ExecuteNonQuery();
                 }
             }

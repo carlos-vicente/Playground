@@ -32,7 +32,8 @@ namespace Playground.Domain.Persistence
                 .CreateEventStream(aggregateRootId)
                 .ConfigureAwait(false);
 
-            return CreateInstance<TAggregateRoot>(aggregateRootId);
+            //return CreateInstance<TAggregateRoot>(aggregateRootId);
+            return GetAggregateInstance<TAggregateRoot>(aggregateRootId, null);
         }
 
         public async Task<TAggregateRoot> TryLoad<TAggregateRoot>(Guid aggregateRootId)
@@ -84,23 +85,26 @@ namespace Playground.Domain.Persistence
             }
         }
 
-        private static TAggregateRoot CreateInstance<TAggregateRoot>(Guid aggregateRootId)
-            where TAggregateRoot : AggregateRoot
-        {
-            return Activator
-                .CreateInstance(
-                    typeof (TAggregateRoot),
-                    aggregateRootId) as TAggregateRoot;
-        }
+        //private static TAggregateRoot CreateInstance<TAggregateRoot>(Guid aggregateRootId)
+        //    where TAggregateRoot : AggregateRoot
+        //{
+        //    return Activator
+        //        .CreateInstance(
+        //            typeof (TAggregateRoot),
+        //            aggregateRootId) as TAggregateRoot;
+        //}
 
         private TAggregateRoot GetAggregateInstance<TAggregateRoot>(
             Guid aggregateRootId,
             ICollection<IEvent> events)
             where TAggregateRoot : AggregateRoot
         {
-            var instance = CreateInstance<TAggregateRoot>(aggregateRootId);
+            //var instance = CreateInstance<TAggregateRoot>(aggregateRootId);
+            var instance = Activator
+                .CreateInstance(typeof (TAggregateRoot), aggregateRootId)
+                as TAggregateRoot;
 
-            if (events.Any())
+            if (events != null && events.Any())
             {
                 _aggregateHydrator
                     .HydrateAggregateWithEvents(instance, events);

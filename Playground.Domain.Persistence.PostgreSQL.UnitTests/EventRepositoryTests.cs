@@ -36,7 +36,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             A.CallTo(() => fakeConnection
                 .ExecuteQueryMultiple<StoredEvent>(
                     A<string>._,
-                    A<object>.That.Matches(p => ((GetAllEventsQuery) p).StreamId == streamId)))
+                    A<object>.That.Matches(p => ((GetAllEventsQuery) p).streamId == streamId)))
                 .Returns(Task.FromResult(expected));
 
             // act
@@ -68,7 +68,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.UnitTests
             A.CallTo(() => fakeConnection
                 .ExecuteQueryMultiple<StoredEvent>(
                     A<string>._,
-                    A<object>.That.Matches(p => ((GetAllEventsQuery)p).StreamId == streamId)))
+                    A<object>.That.Matches(p => ((GetAllEventsQuery)p).streamId == streamId)))
                 .Returns(Task.FromResult(expected));
 
             // act

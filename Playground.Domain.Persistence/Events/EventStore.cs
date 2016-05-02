@@ -22,7 +22,7 @@ namespace Playground.Domain.Persistence.Events
         public async Task CreateEventStream(Guid streamId)
         {
             await _repository
-                .Create(streamId)
+                .CreateStream(streamId)
                 .ConfigureAwait(false);
         }
 
@@ -40,22 +40,21 @@ namespace Playground.Domain.Persistence.Events
                 throw new InvalidOperationException($"Cant add new events on version {currentVersion} as current storage version is {lastStoredEvent.EventId}");
             }
 
+            var lastStoredEventId = 0L;
+            if (lastStoredEvent != null)
+                lastStoredEventId = lastStoredEvent.EventId;
+
             var events = eventsToStore
                 .Select(e => new StoredEvent(
                     e.GetType().AssemblyQualifiedName,
                     e.Metadata.OccorredOn,
-                    _serializer.Serialize(e)))
+                    _serializer.Serialize(e),
+                    ++lastStoredEventId))
                 .ToList();
 
             await _repository
                 .Add(streamId, events)
                 .ConfigureAwait(false);
-        }
-
-        private IEvent GetDomainEvent(StoredEvent storedEvent)
-        {
-            return _serializer
-                .Deserialize(storedEvent.EventBody) as IEvent;
         }
 
         public Task<ICollection<IEvent>> LoadSelectedEvents(
@@ -68,14 +67,26 @@ namespace Playground.Domain.Persistence.Events
 
         public async Task<ICollection<IEvent>> LoadAllEvents(Guid streamId)
         {
+            var doesStreamExist = await _repository
+                .CheckStream(streamId)
+                .ConfigureAwait(false);
+
+            if (!doesStreamExist)
+                return null;
+
             var storedEvents = await _repository
                 .GetAll(streamId)
                 .ConfigureAwait(false);
 
             return storedEvents?
                 .Select(GetDomainEvent)
-                .ToList()
-                   ?? new List<IEvent>();
+                .ToList() ?? new List<IEvent>();
+        }
+
+        private IEvent GetDomainEvent(StoredEvent storedEvent)
+        {
+            return _serializer
+                .Deserialize(storedEvent.EventBody) as IEvent;
         }
     }
 }

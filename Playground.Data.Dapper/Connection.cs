@@ -32,6 +32,16 @@ namespace Playground.Data.Dapper
             return Task.FromResult(1);
         }
 
+        public Task ExecuteCommandAsStoredProcedure(string storedProcedure, object parameters)
+        {
+            InnerConnection.Execute(
+                storedProcedure,
+                parameters,
+                commandType: CommandType.StoredProcedure);
+
+            return Task.FromResult(1);
+        }
+
         public async Task<T> ExecuteQuerySingle<T>(string sql, object parameters)
         {
             return (await InnerConnection
@@ -40,10 +50,40 @@ namespace Playground.Data.Dapper
                 .SingleOrDefault();
         }
 
-        public async Task<IEnumerable<T>> ExecuteQueryMultiple<T>(string sql, object parameters)
+        public async Task<T> ExecuteQuerySingleAsStoredProcedure<T>(
+            string storedProcedure,
+            object parameters)
+        {
+            var enumerable = await InnerConnection
+                .QueryAsync<T>(
+                    storedProcedure,
+                    parameters,
+                    null,
+                    null,
+                    CommandType.StoredProcedure)
+                .ConfigureAwait(false);
+
+            return enumerable.SingleOrDefault();
+        }
+
+        public async Task<IEnumerable<T>> ExecuteQueryMultiple<T>(
+            string sql,
+            object parameters)
         {
             return await InnerConnection
                 .QueryAsync<T>(sql, parameters)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<T>> ExecuteQueryMultipleAsStoredProcedure<T>(
+            string storedProcedure, 
+            object parameters)
+        {
+            return await InnerConnection
+                .QueryAsync<T>(
+                    storedProcedure,
+                    parameters,
+                    commandType: CommandType.StoredProcedure)
                 .ConfigureAwait(false);
         }
 

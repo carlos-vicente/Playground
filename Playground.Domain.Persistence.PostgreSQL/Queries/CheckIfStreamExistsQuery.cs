@@ -2,8 +2,8 @@
 
 namespace Playground.Domain.Persistence.PostgreSQL.Queries
 {
-    internal class GetAllEventsQuery
+    public class CheckIfStreamExistsQuery
     {
-        public Guid streamId { get; set; }
+        public Guid streamId { get; set; } 
     }
 }

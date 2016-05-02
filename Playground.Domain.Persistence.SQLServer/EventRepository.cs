@@ -7,6 +7,11 @@ namespace Playground.Domain.Persistence.SQLServer
 {
     public class EventRepository : IEventRepository
     {
+        public Task<bool> CheckStream(Guid streamId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<StoredEvent>> GetAll(Guid streamId)
         {
             throw new NotImplementedException();
@@ -22,7 +27,7 @@ namespace Playground.Domain.Persistence.SQLServer
             throw new NotImplementedException();
         }
 
-        public Task Create(Guid streamId)
+        public Task CreateStream(Guid streamId)
         {
             throw new NotImplementedException();
         }

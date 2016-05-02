@@ -25,6 +25,45 @@ namespace Playground.Domain.Persistence.PostgreSQL
             _connectionFactory = connectionFactory;
             _validatorFactory = validatorFactory;
         }
+        public async Task CreateStream(Guid streamId)
+        {
+            if (streamId == default(Guid))
+                throw new ArgumentException("Pass in a valid Guid", "streamId");
+
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var command = new CreateEventStreamCommand
+                {
+                    streamId = streamId
+                };
+
+                await connection
+                    .ExecuteCommandAsStoredProcedure(
+                        Commands.Scripts.CreateEventStream,
+                        command)
+                    .ConfigureAwait(false);
+            }
+        }
+
+        public async Task<bool> CheckStream(Guid streamId)
+        {
+            if (streamId == default(Guid))
+                throw new ArgumentException("Pass in a valid Guid", "streamId");
+
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                var query = new CheckIfStreamExistsQuery
+                {
+                    streamId = streamId
+                };
+
+                return await connection
+                    .ExecuteQuerySingleAsStoredProcedure<bool>(
+                        Queries.Scripts.CheckIfStreamExists,
+                        query)
+                    .ConfigureAwait(false);
+            }
+        }
 
         public async Task<IEnumerable<StoredEvent>> GetAll(Guid streamId)
         {
@@ -35,11 +74,11 @@ namespace Playground.Domain.Persistence.PostgreSQL
             {
                 var query = new GetAllEventsQuery
                 {
-                    StreamId = streamId
+                    streamId = streamId
                 };
 
                 return await connection
-                    .ExecuteQueryMultiple<StoredEvent>(
+                    .ExecuteQueryMultipleAsStoredProcedure<StoredEvent>(
                         Queries.Scripts.GetAllEvents,
                         query)
                     .ConfigureAwait(false);
@@ -83,26 +122,21 @@ namespace Playground.Domain.Persistence.PostgreSQL
                 };
 
                 return await connection
-                    .ExecuteQuerySingle<StoredEvent>(
+                    .ExecuteQuerySingleAsStoredProcedure<StoredEvent>(
                         Queries.Scripts.GetLastEvent,
                         query)
                     .ConfigureAwait(false);
             }
         }
-
-        public Task Create(Guid streamId)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public async Task Add(Guid streamId, StoredEvent storedEvent)
         {
             if(streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
-            var validator = _validatorFactory.CreateValidator<StoredEvent>();
+            //var validator = _validatorFactory.CreateValidator<StoredEvent>();
 
-            validator.Validate(storedEvent);
+            //validator.Validate(storedEvent);
 
             using (var connection = _connectionFactory.CreateConnection())
             {
@@ -143,8 +177,9 @@ namespace Playground.Domain.Persistence.PostgreSQL
             if (streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");
 
-            var validator = _validatorFactory.CreateValidator<StoredEvent>();
-            validator.ValidateAll(events);
+            //var validator = _validatorFactory.CreateValidator<StoredEvent>();
+
+            //validator.ValidateAll(events);
 
             using (var connection = _connectionFactory.CreateConnection())
             {

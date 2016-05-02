@@ -28,7 +28,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // assert
             A.CallTo(() => Faker.Resolve<IEventRepository>()
-                .Create(streamId))
+                .CreateStream(streamId))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 

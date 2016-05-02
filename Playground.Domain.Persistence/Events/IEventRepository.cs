@@ -10,6 +10,19 @@ namespace Playground.Domain.Persistence.Events
     public interface IEventRepository
     {
         /// <summary>
+        /// Creates an event stream to store events
+        /// </summary>
+        /// <param name="streamId">Stream identifier</param>
+        Task CreateStream(Guid streamId);
+
+        /// <summary>
+        /// Checks if a stream exists
+        /// </summary>
+        /// <param name="streamId">The stream identifier to search for</param>
+        /// <returns>True if the stream already exists; False if the stream does not exist</returns>
+        Task<bool> CheckStream(Guid streamId);
+
+        /// <summary>
         /// Gets all the events for the specified stream identifier
         /// </summary>
         /// <param name="streamId">Stream identifier</param>
@@ -30,12 +43,6 @@ namespace Playground.Domain.Persistence.Events
         /// <param name="streamId">Stream identifier</param>
         /// <returns>The store event</returns>
         Task<StoredEvent> GetLastEvent(Guid streamId);
-
-        /// <summary>
-        /// Creates an event stream to store events
-        /// </summary>
-        /// <param name="streamId">Stream identifier</param>
-        Task Create(Guid streamId);
 
         /// <summary>
         /// Adds a new event to the specified stream

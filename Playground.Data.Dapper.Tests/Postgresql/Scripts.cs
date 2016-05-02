@@ -21,6 +21,15 @@ END
 $do$
 ";
             public const string DropTable = "DROP TABLE test;";
+
+            public const string CreateProdecure = @"CREATE OR REPLACE FUNCTION get_test() 
+RETURNS setof test AS $$
+BEGIN
+	RETURN QUERY SELECT * FROM test;
+END;
+$$ LANGUAGE plpgsql;";
+
+            public const string DropProcedure = "DROP FUNCTION IF EXISTS get_test();";
         }
 
         public static class Dml
@@ -29,6 +38,8 @@ $do$
             public const string UpdateTable = "UPDATE test SET Name = @Name WHERE Id = @Id";
             public const string DeleteAllTable = "DELETE FROM test";
             public const string DeleteTable = "DELETE FROM test WHERE Id = @Id";
+
+            public const string StoredProcedureName = "get_test";
         }
     }
 }

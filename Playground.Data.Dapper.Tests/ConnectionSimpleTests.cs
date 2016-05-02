@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Npgsql;
@@ -18,6 +19,9 @@ namespace Playground.Data.Dapper.Tests
         {
             // create table
             DatabaseHelper.CreateTestTable();
+
+            // create stored procedure
+            DatabaseHelper.CreateStoredProcedure();
         }
 
         [OneTimeTearDown]
@@ -25,6 +29,9 @@ namespace Playground.Data.Dapper.Tests
         {
             // drop table
             DatabaseHelper.DropTestTable();
+            
+            // drop stored procedure
+            DatabaseHelper.DropStoredProcedure();
         }
 
         private IDbConnection _realConnection;
@@ -37,8 +44,7 @@ namespace Playground.Data.Dapper.Tests
             var connectionStringBuilder = DatabaseHelper
                 .GetConnectionStringBuilder();
 
-            _realConnection = new NpgsqlConnection(
-                connectionStringBuilder);
+            _realConnection = new NpgsqlConnection(connectionStringBuilder);
             _realConnection.Open();
 
             _sut = new Connection(_realConnection);
@@ -142,6 +148,62 @@ namespace Playground.Data.Dapper.Tests
                 .Count()
                 .Should()
                 .Be(0);
+        }
+
+        [Test]
+        public async Task ExecuteQuerySingleAsStoredProcedure_WillGetSingleRowUsingStoredProcedure()
+        {
+            // arrange
+            var row = new Test
+            {
+                Id = 2,
+                Name = "other dude"
+            };
+            
+            _realConnection.Execute(Scripts.Dml.InsertIntoTable, row);
+            
+            // act
+            var actual = await _sut
+                .ExecuteQuerySingleAsStoredProcedure<Test>(Scripts.Dml.StoredProcedureName, null)
+                .ConfigureAwait(false);
+
+            // assert
+            actual
+                .ShouldBeEquivalentTo(row);
+        }
+
+        [Test]
+        public async Task ExecuteQueryMultipleAsStoredProcedure_WillGetAllRowsUsingStoredProcedure()
+        {
+            // arrange
+            var row1 = new Test
+            {
+                Id = 1,
+                Name = "dude"
+            };
+            var row2 = new Test
+            {
+                Id = 2,
+                Name = "other dude"
+            };
+
+            _realConnection.Execute(Scripts.Dml.InsertIntoTable, row1);
+            _realConnection.Execute(Scripts.Dml.InsertIntoTable, row2);
+
+            var expected = new List<Test>
+            {
+                row1,
+                row2
+            };
+
+            // act
+            var actual = await _sut
+                .ExecuteQueryMultipleAsStoredProcedure<Test>(Scripts.Dml.StoredProcedureName, null)
+                .ConfigureAwait(false);
+
+            // assert
+            actual
+                .ShouldAllBeEquivalentTo(expected);
         }
     }
 }

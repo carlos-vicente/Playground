@@ -26,16 +26,8 @@ namespace Playground.TicketOffice.Api.AutofacRegister
             builder
                 .RegisterType<NpgsqlConnection>()
                 .As<IDbConnection>()
-                .InstancePerLifetimeScope();
+                .InstancePerDependency();
             
-            //builder
-            //    .Register<Func<string, IDbConnection>>(ctx =>
-            //    {
-            //        return connectionString => ctx
-            //            .Resolve<IDbConnection>(
-            //                new NamedParameter("connectionString", connectionString));
-            //    });
-
             builder
                 .Register<Func<string, IDbConnection>>(ctx =>
                 {
