@@ -118,7 +118,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
             {
                 var query = new GetLastEventQuery
                 {
-                    StreamId = streamId,
+                    streamId = streamId,
                 };
 
                 return await connection
@@ -142,7 +142,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
             {
                 var query = new GetLastEventQuery
                 {
-                    StreamId = streamId
+                    streamId = streamId
                 };
 
                 var lastEvent = await connection
@@ -157,18 +157,20 @@ namespace Playground.Domain.Persistence.PostgreSQL
                         $"New EventId {storedEvent.EventId} must be bigger than last EventId stored {lastEvent.EventId}");
                 }
 
-                var command = new AddEventCommand
-                {
-                    StreamId = streamId,
-                    EventId = storedEvent.EventId,
-                    EventBody = storedEvent.EventBody,
-                    OccurredOn = storedEvent.OccurredOn,
-                    TypeName = storedEvent.TypeName
-                };
+                //TODO: convert this in an array with 1 element
 
-                await connection
-                    .ExecuteCommand(Commands.Scripts.AddEvent, command)
-                    .ConfigureAwait(false);
+                //var command = new AddEventsCommand
+                //{
+                //    StreamId = streamId,
+                //    EventId = storedEvent.EventId,
+                //    EventBody = storedEvent.EventBody,
+                //    OccurredOn = storedEvent.OccurredOn,
+                //    TypeName = storedEvent.TypeName
+                //};
+
+                //await connection
+                //    .ExecuteCommand(Commands.Scripts.AddEvents, command)
+                //    .ConfigureAwait(false);
             }
         }
 
@@ -183,44 +185,66 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
             using (var connection = _connectionFactory.CreateConnection())
             {
-                var query = new GetLastEventQuery
+                // TODO: remove this bit completely as it is EventStore's responsability
+
+                //var query = new GetLastEventQuery
+                //{
+                //    streamId = streamId
+                //};
+
+                //var lastEvent = await connection
+                //    .ExecuteQuerySingleAsStoredProcedure<StoredEvent>(
+                //        Queries.Scripts.GetLastEvent,
+                //        query)
+                //    .ConfigureAwait(false);
+
+                //var orderedEvents = events
+                //    .OrderBy(e => e.EventId)
+                //    .ToList();
+
+                //if (orderedEvents.First().EventId <= lastEvent.EventId)
+                //{
+                //    throw new InvalidOperationException(
+                //        $"New EventId {orderedEvents.First().EventId} must be bigger than last EventId stored {lastEvent.EventId}");
+                //}
+
+                //foreach (var @event in orderedEvents)
+                //{
+                //var command = new AddEventsCommand
+                //{
+                //    StreamId = streamId,
+                //    EventId = @event.EventId,
+                //    EventBody = @event.EventBody,
+                //    OccurredOn = @event.OccurredOn,
+                //    TypeName = @event.TypeName
+                //};
+
+                //await connection
+                //    .ExecuteCommand(
+                //        Commands.Scripts.AddEvents,
+                //        command)
+                //    .ConfigureAwait(false);
+                //}
+
+                var command = new AddEventsCommand
                 {
-                    StreamId = streamId
+                    streamId = streamId,
+                    events = events
+                                .Select(se => new AddEventsCommand.Event
+                                {
+                                    EventId = se.EventId,
+                                    EventBody = se.EventBody,
+                                    TypeName = se.TypeName,
+                                    OccurredOn = se.OccurredOn
+                                })
+                                .ToArray()
                 };
 
-                var lastEvent = await connection
-                    .ExecuteQuerySingle<StoredEvent>(
-                        Queries.Scripts.GetLastEvent,
-                        query)
+                await connection
+                    .ExecuteCommandAsStoredProcedure(
+                        Commands.Scripts.AddEvents,
+                        command)
                     .ConfigureAwait(false);
-
-                var orderedEvents = events
-                    .OrderBy(e => e.EventId)
-                    .ToList();
-
-                if (orderedEvents.First().EventId <= lastEvent.EventId)
-                {
-                    throw new InvalidOperationException(
-                        $"New EventId {orderedEvents.First().EventId} must be bigger than last EventId stored {lastEvent.EventId}");
-                }
-
-                foreach (var @event in orderedEvents)
-                {
-                    var command = new AddEventCommand
-                    {
-                        StreamId = streamId,
-                        EventId = @event.EventId,
-                        EventBody = @event.EventBody,
-                        OccurredOn = @event.OccurredOn,
-                        TypeName = @event.TypeName
-                    };
-
-                    await connection
-                        .ExecuteCommand(
-                            Commands.Scripts.AddEvent,
-                            command)
-                        .ConfigureAwait(false);
-                }
             }
         }
 
@@ -272,7 +296,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
             {
                 var query = new GetLastEventQuery
                 {
-                    StreamId = streamId
+                    streamId = streamId
                 };
 
                 var eventToDelete = await connection

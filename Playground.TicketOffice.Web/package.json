@@ -1,0 +1,10 @@
+{
+	"version": "1.0.0",
+	"name": "TicketOffice",
+	"private": true,
+  "devDependencies": {
+    "bower": "^1.4.1",
+    "gulp": "^3.9.0",
+    "require-dir": "^0.3.0"
+  }
+}

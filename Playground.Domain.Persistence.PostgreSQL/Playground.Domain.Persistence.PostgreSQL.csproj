@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AddEventCommand.cs" />
+    <Compile Include="Commands\AddEventsCommand.cs" />
     <Compile Include="Commands\CreateEventStreamCommand.cs" />
     <Compile Include="Commands\RemoveAllEventsCommand.cs" />
     <Compile Include="Commands\RemoveEventCommand.cs" />

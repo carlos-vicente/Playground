@@ -48,7 +48,7 @@ namespace Playground.Domain.Persistence.Events
                 .Select(e => new StoredEvent(
                     e.GetType().AssemblyQualifiedName,
                     e.Metadata.OccorredOn,
-                    _serializer.Serialize(e),
+                    _serializer.Serialize(e as object),
                     ++lastStoredEventId))
                 .ToList();
 

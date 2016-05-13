@@ -4,6 +4,6 @@ namespace Playground.Domain.Persistence.PostgreSQL.Queries
 {
     internal class GetLastEventQuery
     {
-        public Guid StreamId { get; set; }
+        public Guid streamId { get; set; }
     }
 }

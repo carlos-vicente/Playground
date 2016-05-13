@@ -75,3 +75,23 @@ BEGIN
 		LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+
+CREATE TYPE event AS (
+	EventId bigint, 
+	TypeName text, 
+	OccurredOn timestamp without time zone, 
+	EventBody json
+);
+
+
+
+
+CREATE OR REPLACE FUNCTION save_events_in_stream(events event[], streamId uuid)
+RETURNS void AS $$
+BEGIN
+	
+END;
+$$ LANGUAGE plpgsql;
