@@ -1,34 +1,4 @@
-CREATE TABLE public."EventStreams"
-(
-  "EventStreamId" uuid NOT NULL,
-  CONSTRAINT "EventStream_PK" PRIMARY KEY ("EventStreamId")
-)
-WITH (
-  OIDS=FALSE
-);
-
-
-CREATE TABLE public."Events"
-(
-  "EventStreamId" uuid NOT NULL,
-  "EventId" bigint NOT NULL,
-  "TypeName" text NOT NULL,
-  "OccurredOn" timestamp without time zone NOT NULL,
-  "EventBody" json NOT NULL,
-  CONSTRAINT "EventPK" PRIMARY KEY ("EventStreamId", "EventId"),
-  CONSTRAINT "Events_EventStreams_FK" FOREIGN KEY ("EventStreamId")
-      REFERENCES public."EventStreams" ("EventStreamId") MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-
-
-
-
-
-CREATE OR REPLACE FUNCTION get_events_for_stream(streamId UUID)
+﻿CREATE OR REPLACE FUNCTION get_events_for_stream(streamId UUID)
 RETURNS TABLE ("EventId" bigint, "TypeName" text, "OccurredOn" timestamp without time zone, "EventBody" json) AS $$
 BEGIN
 	RETURN QUERY SELECT E."EventId", E."TypeName", E."OccurredOn", E."EventBody"
@@ -75,18 +45,6 @@ BEGIN
 		LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
-
-
-
-
-CREATE TYPE event AS (
-	EventId bigint, 
-	TypeName text, 
-	OccurredOn timestamp without time zone, 
-	EventBody json
-);
-
-
 
 
 CREATE OR REPLACE FUNCTION save_events_in_stream(events event[], streamId uuid)
