@@ -42,7 +42,7 @@ namespace Playground.Domain.Persistence.Events
         /// </summary>
         /// <param name="streamId">Stream identifier</param>
         /// <returns>The store event</returns>
-        Task<StoredEvent> GetLastEvent(Guid streamId);
+        Task<StoredEvent> GetLast(Guid streamId);
 
         /// <summary>
         /// Adds a new event to the specified stream

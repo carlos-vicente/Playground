@@ -22,7 +22,7 @@ namespace Playground.Domain.Persistence.SQLServer
             throw new NotImplementedException();
         }
 
-        public Task<StoredEvent> GetLastEvent(Guid streamId)
+        public Task<StoredEvent> GetLast(Guid streamId)
         {
             throw new NotImplementedException();
         }

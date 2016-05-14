@@ -18,7 +18,7 @@ namespace Playground.Domain.Model
         /// <returns>The aggregate instance with the events applied</returns>
         TAggregateRoot HydrateAggregateWithEvents<TAggregateRoot>(
             TAggregateRoot aggregateRootBase,
-            ICollection<IEvent> domainEvents)
+            ICollection<DomainEvent> domainEvents)
             where TAggregateRoot : AggregateRoot;
     }
 }

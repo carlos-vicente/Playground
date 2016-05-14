@@ -109,7 +109,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
             }
         }
 
-        public async Task<StoredEvent> GetLastEvent(Guid streamId)
+        public async Task<StoredEvent> GetLast(Guid streamId)
         {
             if (streamId == default(Guid))
                 throw new ArgumentException("Pass in a valid Guid", "streamId");

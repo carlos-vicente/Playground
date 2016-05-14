@@ -32,7 +32,6 @@ namespace Playground.Domain.Persistence
                 .CreateEventStream(aggregateRootId)
                 .ConfigureAwait(false);
 
-            //return CreateInstance<TAggregateRoot>(aggregateRootId);
             return GetAggregateInstance<TAggregateRoot>(aggregateRootId, null);
         }
 
@@ -67,13 +66,8 @@ namespace Playground.Domain.Persistence
         public async Task Save<TAggregateRoot>(TAggregateRoot aggregateRoot)
             where TAggregateRoot : AggregateRoot
         {
-            var events = aggregateRoot
-                .Events
-                .Cast<IEvent>()
-                .ToList();
-
             await _eventStore
-                .StoreEvents(aggregateRoot.Id, aggregateRoot.CurrentVersion, events)
+                .StoreEvents(aggregateRoot.Id, aggregateRoot.CurrentVersion, aggregateRoot.Events)
                 .ConfigureAwait(false);
 
             // everything worked correctly so lets dispatch the events
@@ -96,7 +90,7 @@ namespace Playground.Domain.Persistence
 
         private TAggregateRoot GetAggregateInstance<TAggregateRoot>(
             Guid aggregateRootId,
-            ICollection<IEvent> events)
+            ICollection<DomainEvent> events)
             where TAggregateRoot : AggregateRoot
         {
             //var instance = CreateInstance<TAggregateRoot>(aggregateRootId);

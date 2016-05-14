@@ -7,8 +7,8 @@
     <ProjectGuid>{4D8CCC23-E2FD-43EB-B50F-66DC63671981}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.Domain.Persistence.PostgreSQL.UnitTests</RootNamespace>
-    <AssemblyName>Playground.Domain.Persistence.PostgreSQL.UnitTests</AssemblyName>
+    <RootNamespace>Playground.Domain.Persistence.PostgreSQL.IntegrationTests</RootNamespace>
+    <AssemblyName>Playground.Domain.Persistence.PostgreSQL.IntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -24,7 +24,7 @@ namespace Playground.Domain.UnitTests
             var event1 = Fixture.Create<Event1>();
             var event2 = Fixture.Create<Event2>();
 
-            var events = new List<IEvent>
+            var events = new List<DomainEvent>
             {
                 event1,
                 event2

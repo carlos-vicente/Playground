@@ -45,8 +45,8 @@ namespace Playground.Domain.Persistence.UnitTests
 
             var event1Version = Fixture.Create<long>();
             var event2Version = Fixture.Create<long>();
-            var event1 = Faker.Resolve<IEvent>();
-            var event2 = Faker.Resolve<IEvent>();
+            var event1 = Faker.Resolve<DomainEvent>();
+            var event2 = Faker.Resolve<DomainEvent>();
 
             A.CallTo(() => event1.Metadata)
                 .Returns(new Metadata
@@ -60,7 +60,7 @@ namespace Playground.Domain.Persistence.UnitTests
                     StorageVersion = event2Version
                 });
 
-            var events = new List<IEvent>
+            var events = new List<DomainEvent>
             {
                 event1,
                 event2
@@ -68,7 +68,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
-                .Returns(Task.FromResult<ICollection<IEvent>>(events));
+                .Returns(Task.FromResult<ICollection<DomainEvent>>(events));
             
             // act
             var aggregate = await Sut
@@ -93,7 +93,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
-                .Returns(Task.FromResult<ICollection<IEvent>>(new List<IEvent>()));
+                .Returns(Task.FromResult<ICollection<DomainEvent>>(new List<DomainEvent>()));
 
             // act
             var aggregate = await Sut
@@ -106,7 +106,7 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(0);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<IEvent>>._))
+                .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<DomainEvent>>._))
                 .MustHaveHappened(Repeated.Never);
         }
 
@@ -118,7 +118,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
-                .Returns(Task.FromResult<ICollection<IEvent>>(null));
+                .Returns(Task.FromResult<ICollection<DomainEvent>>(null));
             
             // act
             var aggregate = await Sut
@@ -137,8 +137,8 @@ namespace Playground.Domain.Persistence.UnitTests
 
             var event1Version = Fixture.Create<long>();
             var event2Version = Fixture.Create<long>();
-            var event1 = Faker.Resolve<IEvent>();
-            var event2 = Faker.Resolve<IEvent>();
+            var event1 = Faker.Resolve<DomainEvent>();
+            var event2 = Faker.Resolve<DomainEvent>();
 
             A.CallTo(() => event1.Metadata)
                 .Returns(new Metadata
@@ -152,7 +152,7 @@ namespace Playground.Domain.Persistence.UnitTests
                     StorageVersion = event2Version
                 });
 
-            var events = new List<IEvent>
+            var events = new List<DomainEvent>
             {
                 event1,
                 event2
@@ -160,7 +160,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
-                .Returns(Task.FromResult<ICollection<IEvent>>(events));
+                .Returns(Task.FromResult<ICollection<DomainEvent>>(events));
 
             // act
             var aggregate = await Sut
@@ -185,7 +185,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
-                .Returns(Task.FromResult<ICollection<IEvent>>(new List<IEvent>()));
+                .Returns(Task.FromResult<ICollection<DomainEvent>>(new List<DomainEvent>()));
 
             // act
             var aggregate = await Sut
@@ -198,7 +198,7 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(0);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<IEvent>>._))
+                .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<DomainEvent>>._))
                 .MustHaveHappened(Repeated.Never);
         }
 
@@ -210,7 +210,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
-                .Returns(Task.FromResult<ICollection<IEvent>>(null));
+                .Returns(Task.FromResult<ICollection<DomainEvent>>(null));
 
             Func<Task> exceptionThrower = async () => await Sut
                 .Load<TestAggregateRoot>(aggregateRootId)
@@ -232,7 +232,7 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregateRoot.Events.Add(event1);
             aggregateRoot.Events.Add(event2);
 
-            var expectedEvents = new List<IEvent>
+            var expectedEvents = new List<DomainEvent>
             {
                 event1,
                 event2
@@ -248,7 +248,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .StoreEvents(
                     aggregateRoot.Id,
                     aggregateRoot.CurrentVersion,
-                    A<ICollection<IEvent>>.That.Matches(events => events.All(e => expectedEvents.Contains(e)))))
+                    A<ICollection<DomainEvent>>.That.Matches(events => events.All(e => expectedEvents.Contains(e)))))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -293,7 +293,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .StoreEvents(
                     aggregateRoot.Id,
                     aggregateRoot.CurrentVersion,
-                    A<ICollection<IEvent>>._))
+                    A<ICollection<DomainEvent>>._))
                 .Throws<InvalidOperationException>();
 
             Func<Task> expectionThrower = async () =>

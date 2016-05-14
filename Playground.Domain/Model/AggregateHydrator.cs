@@ -18,7 +18,7 @@ namespace Playground.Domain.Model
         /// <returns>The aggregate instance with the events applied</returns>
         public TAggregateRoot HydrateAggregateWithEvents<TAggregateRoot>(
             TAggregateRoot aggregateRootBase, 
-            ICollection<IEvent> domainEvents) 
+            ICollection<DomainEvent> domainEvents) 
             where TAggregateRoot : AggregateRoot
         {
             foreach (var domainEvent in domainEvents)
@@ -34,7 +34,7 @@ namespace Playground.Domain.Model
             TAggregateRoot aggregateRootBase,
             TDomainEvent domainEvent)
             where TAggregateRoot : AggregateRoot
-            where TDomainEvent : IEvent
+            where TDomainEvent : DomainEvent
         {
             ((IEmit<TDomainEvent>) aggregateRootBase)
                 .Apply(domainEvent);

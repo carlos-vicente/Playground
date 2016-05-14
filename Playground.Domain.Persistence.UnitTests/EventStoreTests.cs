@@ -56,7 +56,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 currentStreamVersion);
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
-                .GetLastEvent(streamId))
+                .GetLast(streamId))
                 .Returns(Task.FromResult(lastStreamEvent));
 
             var event1Serialiazed = Fixture.Create<string>();
@@ -80,7 +80,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // act
             await Sut
-                .StoreEvents(streamId, currentStreamVersion, new IEvent[] { event1, event2 })
+                .StoreEvents(streamId, currentStreamVersion, new DomainEvent[] { event1, event2 })
                 .ConfigureAwait(false);
 
             // assert
@@ -108,7 +108,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Create();
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
-                .GetLastEvent(streamId))
+                .GetLast(streamId))
                 .Returns(Task.FromResult<StoredEvent>(null));
 
             var event1Serialiazed = Fixture.Create<string>();
@@ -132,7 +132,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // act
             await Sut
-                .StoreEvents(streamId, 0L, new IEvent[] { event1, event2 })
+                .StoreEvents(streamId, 0L, new DomainEvent[] { event1, event2 })
                 .ConfigureAwait(false);
 
             // assert
@@ -167,11 +167,11 @@ namespace Playground.Domain.Persistence.UnitTests
                 currentStreamVersion + 1);
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
-                .GetLastEvent(streamId))
+                .GetLast(streamId))
                 .Returns(Task.FromResult(lastStreamEvent));
 
             Func<Task> exceptionThrower = async () => await Sut
-                .StoreEvents(streamId, currentStreamVersion, new IEvent[] {event1, event2})
+                .StoreEvents(streamId, currentStreamVersion, new DomainEvent[] {event1, event2})
                 .ConfigureAwait(false);
 
             // act & assert
@@ -212,7 +212,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .With(e => e.Metadata, event2Metadata)
                 .Create();
 
-            var expectedEvents = new List<IEvent>
+            var expectedEvents = new List<DomainEvent>
             {
                 event1,
                 event2

@@ -29,10 +29,10 @@ namespace Playground.Domain.Persistence.Events
         public async Task StoreEvents(
             Guid streamId,
             long currentVersion,
-            ICollection<IEvent> eventsToStore)
+            ICollection<DomainEvent> eventsToStore)
         {
             var lastStoredEvent = await _repository
-                .GetLastEvent(streamId)
+                .GetLast(streamId)
                 .ConfigureAwait(false);
 
             if (lastStoredEvent != null && currentVersion < lastStoredEvent.EventId)
@@ -57,7 +57,7 @@ namespace Playground.Domain.Persistence.Events
                 .ConfigureAwait(false);
         }
 
-        public Task<ICollection<IEvent>> LoadSelectedEvents(
+        public Task<ICollection<DomainEvent>> LoadSelectedEvents(
             Guid streamId,
             long fromEventId,
             long toEventId)
@@ -65,7 +65,7 @@ namespace Playground.Domain.Persistence.Events
             throw new NotImplementedException();
         }
 
-        public async Task<ICollection<IEvent>> LoadAllEvents(Guid streamId)
+        public async Task<ICollection<DomainEvent>> LoadAllEvents(Guid streamId)
         {
             var doesStreamExist = await _repository
                 .CheckStream(streamId)
@@ -80,13 +80,15 @@ namespace Playground.Domain.Persistence.Events
 
             return storedEvents?
                 .Select(GetDomainEvent)
-                .ToList() ?? new List<IEvent>();
+                .ToList() ?? new List<DomainEvent>();
         }
 
-        private IEvent GetDomainEvent(StoredEvent storedEvent)
+        private DomainEvent GetDomainEvent(StoredEvent storedEvent)
         {
+            //TODO: i need to send the type for deserialization!!!! -> storedEvent.EventType
+
             return _serializer
-                .Deserialize(storedEvent.EventBody) as IEvent;
+                .Deserialize(storedEvent.EventBody) as DomainEvent;
         }
     }
 }
