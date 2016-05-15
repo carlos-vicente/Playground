@@ -2,10 +2,7 @@
     Layout = "~/Views/_Layout.cshtml";
 }
 
-
-<article id="theater"></article>
-
-@section Scripts
+@Html.React("MovieTheater", new
 {
-    <script src="@Url.Content("~/Scripts/Components/MovieTheater/MovieTheater.jsx")"></script>
-}
+    name = "Odivelas"
+}, "article")
