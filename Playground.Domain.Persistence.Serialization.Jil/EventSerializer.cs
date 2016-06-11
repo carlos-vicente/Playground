@@ -1,7 +1,7 @@
 ﻿using Jil;
 using Playground.Domain.Persistence.Events;
 
-namespace Playground.Serialization.Jil
+namespace Playground.Domain.Persistence.Serialization.Jil
 {
     public class EventSerializer : IEventSerializer
     {

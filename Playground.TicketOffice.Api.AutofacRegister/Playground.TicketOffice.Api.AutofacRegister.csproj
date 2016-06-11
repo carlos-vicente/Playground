@@ -86,6 +86,10 @@
       <Project>{BD5AB0DC-1289-4992-AB79-0665AF35C0F4}</Project>
       <Name>Playground.Domain.Persistence.PostgreSQL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Playground.Domain.Persistence.Serialization.Jil\Playground.Domain.Persistence.Serialization.Jil.csproj">
+      <Project>{D5436D18-0841-4D6F-BC9C-867E87B01979}</Project>
+      <Name>Playground.Domain.Persistence.Serialization.Jil</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Domain.Persistence\Playground.Domain.Persistence.csproj">
       <Project>{8D22C8A7-4C4F-472C-9DBA-43BD55DEB1E8}</Project>
       <Name>Playground.Domain.Persistence</Name>
@@ -101,10 +105,6 @@
     <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
       <Project>{a15462e6-1f1a-40ad-9ede-23127289cb6a}</Project>
       <Name>Playground.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Serialization.Jil\Playground.Serialization.Jil.csproj">
-      <Project>{D5436D18-0841-4D6F-BC9C-867E87B01979}</Project>
-      <Name>Playground.Serialization.Jil</Name>
     </ProjectReference>
     <ProjectReference Include="..\Playground.Validation.Fluent.Autofac\Playground.Validation.Fluent.Autofac.csproj">
       <Project>{BDDD9A1D-81DB-4330-8874-D0555AFEE318}</Project>

@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Playground.Domain.Persistence.Events;
 using Playground.Domain.Persistence.PostgreSQL;
-using Playground.Serialization.Jil;
+using Playground.Domain.Persistence.Serialization.Jil;
 
 namespace Playground.TicketOffice.Api.AutofacRegister
 {

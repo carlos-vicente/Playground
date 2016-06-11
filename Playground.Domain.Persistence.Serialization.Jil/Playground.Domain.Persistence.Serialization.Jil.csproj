@@ -7,8 +7,8 @@
     <ProjectGuid>{D5436D18-0841-4D6F-BC9C-867E87B01979}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.Serialization.Jil</RootNamespace>
-    <AssemblyName>Playground.Serialization.Jil</AssemblyName>
+    <RootNamespace>Playground.Domain.Persistence.Serialization.Jil</RootNamespace>
+    <AssemblyName>Playground.Domain.Persistence.Serialization.Jil</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
