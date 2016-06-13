@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
+using Npgsql;
+using NpgsqlTypes;
 using Playground.Core.Validation;
 using Playground.Data.Contracts;
 using Playground.Domain.Persistence.Events;
@@ -324,14 +328,67 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
     public class EventRepository : IEventRepository
     {
-        public Task CreateStream(Guid streamId)
+        private readonly NpgsqlConnectionStringBuilder _connectionStringBuilder;
+
+        public EventRepository(NpgsqlConnectionStringBuilder connectionStringBuilder)
         {
-            throw new NotImplementedException();
+            _connectionStringBuilder = connectionStringBuilder;
         }
 
-        public Task<bool> CheckStream(Guid streamId)
+        public async Task CreateStream(Guid streamId)
         {
-            throw new NotImplementedException();
+            if (streamId == default(Guid))
+                throw new ArgumentException("Pass in a valid Guid", nameof(streamId));
+
+            using (var connection = await OpenConnection().ConfigureAwait(false))
+            {
+                var trans = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (var command = CreateStoredProcedureCommand(
+                    connection,
+                    Commands.Scripts.CreateEventStream))
+                {
+
+                    command
+                        .Parameters
+                        .AddWithValue("streamid", NpgsqlDbType.Uuid, streamId);
+                    command
+                        .Parameters
+                        .AddWithValue("createdon", NpgsqlDbType.Timestamp, DateTime.UtcNow);
+
+                    await command
+                        .ExecuteNonQueryAsync()
+                        .ConfigureAwait(false);
+                }
+                await trans.CommitAsync();
+            }
+        }
+
+        public async Task<bool> CheckStream(Guid streamId)
+        {
+            if (streamId == default(Guid))
+                throw new ArgumentException("Pass in a valid Guid", nameof(streamId));
+
+            using (var connection = await OpenConnection().ConfigureAwait(false))
+            {
+                bool streamExists = false;
+                var trans = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+                using (var command = CreateStoredProcedureCommand(
+                    connection,
+                    Queries.Scripts.CheckIfStreamExists))
+                {
+                    command
+                        .Parameters
+                        .AddWithValue("streamid", NpgsqlDbType.Uuid, streamId);
+
+                    streamExists = (bool)(await command
+                        .ExecuteScalarAsync()
+                        .ConfigureAwait(false));
+                }
+
+                await trans.CommitAsync();
+                return streamExists;
+            }
         }
 
         public Task<IEnumerable<StoredEvent>> GetAll(Guid streamId)
@@ -367,6 +424,25 @@ namespace Playground.Domain.Persistence.PostgreSQL
         public Task Remove(Guid streamId)
         {
             throw new NotImplementedException();
+        }
+
+        private NpgsqlCommand CreateStoredProcedureCommand(
+            NpgsqlConnection connection,
+            string storedProcedure)
+        {
+            return new NpgsqlCommand(storedProcedure, connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+        }
+
+        private async Task<NpgsqlConnection> OpenConnection()
+        {
+            var conn = new NpgsqlConnection(_connectionStringBuilder);
+            await conn
+                .OpenAsync()
+                .ConfigureAwait(false);
+            return conn;
         }
     }
 }

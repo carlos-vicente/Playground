@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using FakeItEasy;
 using FluentAssertions;
+using Npgsql;
 using NUnit.Framework;
 using Playground.Core.Validation;
 using Playground.Data.Contracts;
 using Playground.Domain.Persistence.Events;
 using Playground.Domain.Persistence.PostgreSQL.Commands;
+using Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql;
 using Playground.Domain.Persistence.PostgreSQL.Queries;
 using Playground.Tests;
 using Ploeh.AutoFixture;
@@ -203,7 +207,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
     //            .Returns(fakeConnection);
 
     //        var streamId = Fixture.Create<Guid>();
-            
+
     //        var expectedEvent = Fixture
     //            .Create<StoredEvent>();
 
@@ -237,7 +241,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
     //            .Returns(fakeConnection);
 
     //        var streamId = Fixture.Create<Guid>();
-            
+
     //        A.CallTo(() => fakeConnection
     //            .ExecuteQuerySingle<StoredEvent>(
     //                A<string>._,
@@ -824,4 +828,112 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
     //            .ShouldThrow<ArgumentException>();
     //    }
     //}
+
+    public class EventRepositoryTests : SimpleTestBase
+    {
+        private EventRepository _sut;
+
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            _sut = new EventRepository(DatabaseHelper.GetConnectionStringBuilder());
+        }
+
+        [OneTimeSetUp]
+        public void CleanDatabase()
+        {
+            DatabaseHelper.CleanEvents();
+            DatabaseHelper.CleanEventStreams();
+        }
+
+        [Test]
+        public async Task CreateStream_WillCreateStream_WhenStreamIdIsValid()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            // act
+            await _sut
+                .CreateStream(streamId)
+                .ConfigureAwait(false);
+
+            // assert
+            var actual = await DatabaseHelper
+                .GetLatestStreamCreated()
+                .ConfigureAwait(false);
+
+            actual
+                .Should()
+                .Be(streamId);
+        }
+
+        [Test]
+        public void CreateStream_WillThrowException_WhenStreamIdIsInvalid()
+        {
+            // arrange
+            var streamId = Guid.Empty;
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .CreateStream(streamId)
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<ArgumentException>();
+        }
+
+        [Test]
+        public async Task CreateStream_WillThrowException_WhenStreamIdAlreadyExists()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            await DatabaseHelper
+                .CreateEventStream(streamId)
+                .ConfigureAwait(false);
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .CreateStream(streamId)
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<PostgresException>();
+        }
+
+        [Test]
+        public async Task CheckStream_WillReturnTrue_WhenStreamIdAlreadyExists()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            await DatabaseHelper
+                .CreateEventStream(streamId)
+                .ConfigureAwait(false);
+
+            // act
+            var streamExists = await _sut
+                .CheckStream(streamId)
+                .ConfigureAwait(false);
+
+            // assert
+            streamExists.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task CheckStream_WillReturnFalse_WhenStreamIdDoesNotExist()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            // act
+            var streamExists = await _sut
+                .CheckStream(streamId)
+                .ConfigureAwait(false);
+
+            // assert
+            streamExists.Should().BeFalse();
+        }
+    }
 }

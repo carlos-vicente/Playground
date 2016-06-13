@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Reflection;
 using DbUp;
+using Npgsql;
 
 namespace Playground.Domain.Persistence.PostgreSQL.Database
 {
@@ -8,7 +9,21 @@ namespace Playground.Domain.Persistence.PostgreSQL.Database
     {
         static void Main(string[] args)
         {
-            var connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+            var databaseName = args.Length > 0
+                ? args[0]
+                : null;
+
+            var connectionString = new NpgsqlConnectionStringBuilder
+            {
+                Host = ConfigurationManager.AppSettings["host"],
+                Database = databaseName ?? ConfigurationManager.AppSettings["database"],
+                Username = ConfigurationManager.AppSettings["user"],
+                Password = ConfigurationManager.AppSettings["password"],
+
+                SslMode = SslMode.Prefer,
+                TrustServerCertificate = true
+            }
+            .ConnectionString;
 
             var upgradeEngine = DeployChanges.To
                 .PostgresqlDatabase(connectionString)

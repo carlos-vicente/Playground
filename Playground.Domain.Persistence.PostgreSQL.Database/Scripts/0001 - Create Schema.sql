@@ -1,6 +1,7 @@
 ﻿CREATE TABLE public."EventStreams"
 (
   "EventStreamId" uuid NOT NULL,
+  "CreatedOn" timestamp without time zone NOT NULL,
   CONSTRAINT "EventStream_PK" PRIMARY KEY ("EventStreamId")
 );
 
