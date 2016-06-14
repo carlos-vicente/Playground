@@ -935,5 +935,40 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
             // assert
             streamExists.Should().BeFalse();
         }
+
+        [Test]
+        public async Task GetAll_WillReturnAllEvents_WhenThereAreEventsForStream()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            await DatabaseHelper
+                .CreateEventStream(streamId)
+                .ConfigureAwait(false);
+
+            var event1 = new StoredEvent("some type", DateTime.UtcNow, "{\"prop\":\"value\"}", 1L);
+            var event2 = new StoredEvent("some type", DateTime.UtcNow, "{}", 2L);
+
+            await DatabaseHelper
+                .CreateEvent(streamId, event1.EventId, event1.TypeName, event1.OccurredOn, event1.EventBody)
+                .ConfigureAwait(false);
+            await DatabaseHelper
+                .CreateEvent(streamId, event2.EventId, event2.TypeName, event2.OccurredOn, event2.EventBody)
+                .ConfigureAwait(false);
+
+            var expectedEvents = new List<StoredEvent>
+            {
+                event1,
+                event2
+            };
+
+            // act
+            var events = await _sut
+                .GetAll(streamId)
+                .ConfigureAwait(false);
+
+            // assert
+            events.ShouldAllBeEquivalentTo(expectedEvents);
+        }
     }
 }

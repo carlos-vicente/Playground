@@ -359,7 +359,9 @@ namespace Playground.Domain.Persistence.PostgreSQL
                         .ExecuteNonQueryAsync()
                         .ConfigureAwait(false);
                 }
-                await trans.CommitAsync();
+                await trans
+                    .CommitAsync()
+                    .ConfigureAwait(false);
             }
         }
 
@@ -386,7 +388,9 @@ namespace Playground.Domain.Persistence.PostgreSQL
                         .ConfigureAwait(false));
                 }
 
-                await trans.CommitAsync();
+                await trans
+                    .CommitAsync()
+                    .ConfigureAwait(false);
                 return streamExists;
             }
         }

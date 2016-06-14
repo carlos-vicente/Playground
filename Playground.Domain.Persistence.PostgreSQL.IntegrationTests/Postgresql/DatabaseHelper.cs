@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
 {
@@ -25,6 +26,8 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
 
         private const string SelectLatestStreamSql = "SELECT \"EventStreamId\", \"CreatedOn\" FROM public.\"EventStreams\" ORDER BY \"CreatedOn\" DESC LIMIT 1";
         private const string CreateEventStreamSql = "INSERT INTO public.\"EventStreams\" (\"EventStreamId\", \"CreatedOn\") values(@streamId, @createdOn);";
+        private const string CreateEventSql = "INSERT INTO public.\"Events\" (\"EventStreamId\", \"EventId\", \"TypeName\", \"OccurredOn\", \"EventBody\") values(@streamId, @eventId, @typeName, @occurredOn, @body);";
+
         private const string DeleteEventsSql = "DELETE FROM public.\"Events\";";
         private const string DeleteEventStreamsSql = "DELETE FROM public.\"EventStreams\";";
 
@@ -87,6 +90,36 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
                     command.CommandText = CreateEventStreamSql;
                     command.Parameters.AddWithValue("@streamId", streamId);
                     command.Parameters.AddWithValue("@createdOn", DateTime.UtcNow);
+
+                    await command
+                        .ExecuteNonQueryAsync()
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+
+        public static async Task CreateEvent(
+            Guid streamId,
+            long eventId,
+            string typeName,
+            DateTime occurredOn,
+            string body)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = CreateEventSql;
+
+                    command.Parameters.AddWithValue("@streamId", streamId);
+                    command.Parameters.AddWithValue("@eventId", eventId);
+                    command.Parameters.AddWithValue("@typeName", typeName);
+                    command.Parameters.AddWithValue("@occurredOn", occurredOn);
+                    command.Parameters.AddWithValue("@body", NpgsqlDbType.Json, body);
 
                     await command
                         .ExecuteNonQueryAsync()
