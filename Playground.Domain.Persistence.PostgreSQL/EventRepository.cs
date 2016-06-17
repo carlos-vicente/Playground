@@ -395,9 +395,30 @@ namespace Playground.Domain.Persistence.PostgreSQL
             }
         }
 
-        public Task<IEnumerable<StoredEvent>> GetAll(Guid streamId)
+        public async Task<IEnumerable<StoredEvent>> GetAll(Guid streamId)
         {
-            throw new NotImplementedException();
+            if (streamId == default(Guid))
+                throw new ArgumentException("Pass in a valid Guid", nameof(streamId));
+
+            using (var connection = await OpenConnection().ConfigureAwait(false))
+            {
+                var trans = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+                var events = (await connection
+                    .QueryAsync<StoredEvent>(
+                        Queries.Scripts.GetAllEvents,
+                        new {streamid = streamId},
+                        trans,
+                        commandType: CommandType.StoredProcedure)
+                    .ConfigureAwait(false))
+                    .OrderBy(se => se.EventId);
+
+                await trans
+                    .CommitAsync()
+                    .ConfigureAwait(false);
+
+                return events;
+            }
         }
 
         public Task<StoredEvent> Get(Guid streamId, long eventId)
