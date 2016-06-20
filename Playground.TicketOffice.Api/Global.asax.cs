@@ -50,6 +50,7 @@ namespace Playground.TicketOffice.Api
         private static void LoadHooks()
         {
             Domain.Write.Handlers.RegistrationHook.Load();
+            Domain.Read.Handlers.RegistrationHook.Load();
         }
 
         private static void SetupRebus(IContainer container)

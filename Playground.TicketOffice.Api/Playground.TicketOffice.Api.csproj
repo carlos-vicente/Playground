@@ -168,6 +168,14 @@
       <Project>{4981258e-7746-4d16-9194-0f7c813fe525}</Project>
       <Name>Playground.TicketOffice.Api.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Domain.Read.Handlers\Playground.TicketOffice.Domain.Read.Handlers.csproj">
+      <Project>{2a3092ec-8c64-49df-9f7d-4589392fc137}</Project>
+      <Name>Playground.TicketOffice.Domain.Read.Handlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Domain.Read\Playground.TicketOffice.Domain.Read.csproj">
+      <Project>{5968e154-4f71-41fa-8755-72dd615196c3}</Project>
+      <Name>Playground.TicketOffice.Domain.Read</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.TicketOffice.Domain.Write.Handlers\Playground.TicketOffice.Domain.Write.Handlers.csproj">
       <Project>{1c7c0dc4-201f-41e7-8db9-66f94d1f31eb}</Project>
       <Name>Playground.TicketOffice.Domain.Write.Handlers</Name>
