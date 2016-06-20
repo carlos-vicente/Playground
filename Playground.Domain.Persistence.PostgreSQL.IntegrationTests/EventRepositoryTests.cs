@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using FakeItEasy;
 using FluentAssertions;
 using Npgsql;
 using NUnit.Framework;
-using Playground.Core.Validation;
-using Playground.Data.Contracts;
 using Playground.Domain.Persistence.Events;
-using Playground.Domain.Persistence.PostgreSQL.Commands;
 using Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql;
-using Playground.Domain.Persistence.PostgreSQL.Queries;
 using Playground.Tests;
 using Ploeh.AutoFixture;
 
@@ -837,14 +829,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
         {
             base.SetUp();
 
-            _sut = new EventRepository(DatabaseHelper.GetConnectionStringBuilder());
-        }
-
-        [OneTimeSetUp]
-        public void CleanDatabase()
-        {
             DatabaseHelper.CleanEvents();
             DatabaseHelper.CleanEventStreams();
+
+            _sut = new EventRepository(DatabaseHelper.GetConnectionStringBuilder());
         }
 
         [Test]
@@ -937,17 +925,34 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
         }
 
         [Test]
+        public void CheckStream_WillThrowException_WhenStreamIdIsInvalid()
+        {
+            // arrange
+            var streamId = Guid.Empty;
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .CheckStream(streamId)
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<ArgumentException>();
+        }
+
+        [Test]
         public async Task GetAll_WillReturnAllEvents_WhenThereAreEventsForStream()
         {
             // arrange
             var streamId = Fixture.Create<Guid>();
 
+            var now = GetDateTimeToMillisecond(DateTime.UtcNow); 
+
             await DatabaseHelper
                 .CreateEventStream(streamId)
                 .ConfigureAwait(false);
 
-            var event1 = new StoredEvent("some type", DateTime.UtcNow, "{\"prop\":\"value\"}", 1L);
-            var event2 = new StoredEvent("some type", DateTime.UtcNow, "{}", 2L);
+            var event1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
+            var event2 = new StoredEvent("some type", now.AddSeconds(1), "{}", 2L);
 
             await DatabaseHelper
                 .CreateEvent(streamId, event1.EventId, event1.TypeName, event1.OccurredOn, event1.EventBody)
@@ -956,7 +961,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
                 .CreateEvent(streamId, event2.EventId, event2.TypeName, event2.OccurredOn, event2.EventBody)
                 .ConfigureAwait(false);
 
-            var expectedEvents = new List<StoredEvent>
+            var expectedEvents = new[]
             {
                 event1,
                 event2
@@ -968,7 +973,288 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
                 .ConfigureAwait(false);
 
             // assert
-            events.ShouldAllBeEquivalentTo(expectedEvents);
+            events
+                .Should()
+                .ContainInOrder(expectedEvents);
+        }
+
+        [Test]
+        public async Task GetAll_WillReturnEmptyList_WhenThereAreNoEventsForStream()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            await DatabaseHelper
+                .CreateEventStream(streamId)
+                .ConfigureAwait(false);
+
+            // act
+            var events = await _sut
+                .GetAll(streamId)
+                .ConfigureAwait(false);
+
+            // assert
+            events.Should().BeEmpty();
+        }
+
+        [Test]
+        public async Task GetAll_WillReturnEmptyList_WhenStreamDoesNotExist()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            // act
+            var events = await _sut
+                .GetAll(streamId)
+                .ConfigureAwait(false);
+
+            // assert
+            events.Should().BeEmpty();
+        }
+
+        [Test]
+        public void GetAll_WillThrowException_WhenStreamIdIsInvalid()
+        {
+            // arrange
+            var streamId = Guid.Empty;
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .GetAll(streamId)
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<ArgumentException>();
+        }
+
+        [Test]
+        public async Task GetLast_WillReturnLastEvent_WhenThereAreMultipleEvents()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            await DatabaseHelper
+                .CreateEventStream(streamId)
+                .ConfigureAwait(false);
+
+            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+
+            var event1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
+            var event2 = new StoredEvent("some type", now, "{}", 2L);
+
+            await DatabaseHelper
+                .CreateEvent(streamId, event1.EventId, event1.TypeName, event1.OccurredOn, event1.EventBody)
+                .ConfigureAwait(false);
+            await DatabaseHelper
+                .CreateEvent(streamId, event2.EventId, event2.TypeName, event2.OccurredOn, event2.EventBody)
+                .ConfigureAwait(false);
+
+            // act
+            var lastEvent = await _sut
+                .GetLast(streamId)
+                .ConfigureAwait(false);
+
+            // assert
+            lastEvent.ShouldBeEquivalentTo(event2);
+        }
+
+        [Test]
+        public async Task GetLast_WillReturnNull_WhenThereAreNoEvents()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            await DatabaseHelper
+                .CreateEventStream(streamId)
+                .ConfigureAwait(false);
+
+            // act
+            var lastEvent = await _sut
+                .GetLast(streamId)
+                .ConfigureAwait(false);
+
+            // assert
+            lastEvent.Should().BeNull();
+        }
+
+        [Test]
+        public void GetLast_WillThrowException_WhenStreamIdIsInvalid()
+        {
+            // arrange
+            var streamId = Guid.Empty;
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .GetLast(streamId)
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<ArgumentException>();
+        }
+
+        [Test]
+        public async Task Add_WillAddEvents_ToEmptyStream()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            await DatabaseHelper
+                .CreateEventStream(streamId)
+                .ConfigureAwait(false);
+
+            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+
+            var evt1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
+            var evt2 = new StoredEvent("some type2", now, "{\"prop\":\"value1\"}", 3L);
+            var evt3 = new StoredEvent("some type", now.AddMinutes(5), "{}", 4L);
+
+            var events = new[] {evt1, evt2, evt3};
+
+            // act
+            await _sut
+                .Add(streamId, events)
+                .ConfigureAwait(false);
+
+            // assert
+            var actualEvents = await DatabaseHelper
+                .GetStreamEvents(streamId)
+                .ConfigureAwait(false);
+
+            actualEvents
+                .Should()
+                .ContainInOrder(events);
+        }
+
+        [Test]
+        public async Task Add_WillAddEvents_ToStreamWithEvents()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            await DatabaseHelper
+                .CreateEventStream(streamId)
+                .ConfigureAwait(false);
+
+            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+
+            var evt1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
+            var evt2 = new StoredEvent("some type2", now, "{\"prop\":\"value1\"}", 2L);
+
+            await DatabaseHelper
+                .CreateEvent(streamId, evt1.EventId, evt1.TypeName, evt1.OccurredOn, evt1.EventBody)
+                .ConfigureAwait(false);
+            await DatabaseHelper
+                .CreateEvent(streamId, evt2.EventId, evt2.TypeName, evt2.OccurredOn, evt2.EventBody)
+                .ConfigureAwait(false);
+
+            var evtToAdd1 = new StoredEvent("some type", now.AddMinutes(2), "{\"prop\":\"value\"}", 5L);
+            var evtToAdd2 = new StoredEvent("some type2", now.AddMinutes(2), "{\"prop\":\"value1\"}", 6L);
+            var evtToAdd3 = new StoredEvent("some type", now.AddMinutes(5), "{}", 7L);
+
+            var eventsToAdd = new[] { evtToAdd1, evtToAdd2, evtToAdd3 };
+            var events = new[] {evt1, evt2, evtToAdd1, evtToAdd2, evtToAdd3};
+
+            // act
+            await _sut
+                .Add(streamId, eventsToAdd)
+                .ConfigureAwait(false);
+
+            // assert
+            var actualEvents = await DatabaseHelper
+                .GetStreamEvents(streamId)
+                .ConfigureAwait(false);
+
+            actualEvents
+                .Should()
+                .ContainInOrder(events);
+        }
+
+        [Test]
+        public void Add_WillThrowException_WhenStreamDoesNotExist()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+
+            var evt1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
+            var evt2 = new StoredEvent("some type2", now, "{\"prop\":\"value1\"}", 3L);
+            
+            var events = new[] { evt1, evt2 };
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .Add(streamId, events)
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<PostgresException>();
+        }
+
+        [Test]
+        public void Add_WillThrowException_WhenStreamIdIsInvalid()
+        {
+            // arrange
+            var streamId = Guid.Empty;
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .Add(streamId, new List<StoredEvent>())
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<ArgumentException>()
+                .And
+                .ParamName
+                .ShouldBeEquivalentTo("streamId");
+        }
+
+        [Test]
+        public void Add_WillThrowException_WhenEventsListIsEmpty()
+        {
+            // arrange
+            var streamId = Guid.NewGuid();
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .Add(streamId, new List<StoredEvent>())
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<ArgumentException>()
+                .And
+                .ParamName
+                .ShouldBeEquivalentTo("events");
+        }
+
+        [Test]
+        public void Add_WillThrowException_WhenEventsListIsNull()
+        {
+            // arrange
+            var streamId = Guid.NewGuid();
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .Add(streamId, new List<StoredEvent>())
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<ArgumentException>()
+                .And
+                .ParamName
+                .ShouldBeEquivalentTo("events");
+        }
+
+        private static DateTime GetDateTimeToMillisecond(DateTime current)
+        {
+            return new DateTime(
+                current.Year,
+                current.Month,
+                current.Day,
+                current.Hour,
+                current.Minute,
+                current.Second,
+                current.Millisecond);
         }
     }
 }

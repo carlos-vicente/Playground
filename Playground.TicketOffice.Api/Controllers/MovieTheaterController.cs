@@ -78,10 +78,11 @@ namespace Playground.TicketOffice.Api.Controllers
         [HttpPost]
         public async Task Create(CreateRequest request)
         {
-            var command = new CreateMovieTheaterCommand(
-                request.TheaterToCreate.Id,
-                request.TheaterToCreate.Name,
-                request.TheaterToCreate.RoomsNumber);
+            var command = new CreateMovieTheaterCommand(request.TheaterToCreate.Id)
+            {
+                Name = request.TheaterToCreate.Name,
+                RoomsNumber = request.TheaterToCreate.RoomsNumber
+            };
 
             await _messageBus
                 .SendCommand(command)

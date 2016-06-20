@@ -43,7 +43,7 @@ BEGIN
 	RETURN QUERY SELECT E."EventId", E."TypeName", E."OccurredOn", E."EventBody"
 		FROM public."Events" as E
 		WHERE E."EventStreamId" = streamId
-		ORDER BY E."OccurredOn" DESC
+		ORDER BY E."OccurredOn" DESC, E."EventId" DESC
 		LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -51,8 +51,20 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION save_events_in_stream(events event[], streamId uuid)
 RETURNS void AS $$
+DECLARE size int;
 BEGIN
+	IF(SELECT COUNT(*) 
+		FROM public."EventStreams"
+		WHERE "EventStreamId" = streamId) = 0 THEN
+		RAISE EXCEPTION 'Stream (%) does not exist', streamId;
+	END IF;
 	
+	size := array_length(events, 1);
+
+	FOR index IN 1..size LOOP
+		INSERT INTO public."Events" ("EventStreamId", "EventId", "TypeName", "OccurredOn", "EventBody")
+		VALUES (streamId, events[index].EventId, events[index].TypeName, events[index].OccurredOn, events[index].EventBody);
+	END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 

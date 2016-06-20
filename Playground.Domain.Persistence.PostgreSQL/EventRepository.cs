@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
 using NpgsqlTypes;
-using Playground.Core.Validation;
-using Playground.Data.Contracts;
 using Playground.Domain.Persistence.Events;
-using Playground.Domain.Persistence.PostgreSQL.Commands;
-using Playground.Domain.Persistence.PostgreSQL.Queries;
 
 namespace Playground.Domain.Persistence.PostgreSQL
 {
@@ -330,6 +326,11 @@ namespace Playground.Domain.Persistence.PostgreSQL
     {
         private readonly NpgsqlConnectionStringBuilder _connectionStringBuilder;
 
+        static EventRepository()
+        {
+            NpgsqlConnection.MapCompositeGlobally<Event>("event");
+        }
+
         public EventRepository(NpgsqlConnectionStringBuilder connectionStringBuilder)
         {
             _connectionStringBuilder = connectionStringBuilder;
@@ -347,7 +348,6 @@ namespace Playground.Domain.Persistence.PostgreSQL
                     connection,
                     Commands.Scripts.CreateEventStream))
                 {
-
                     command
                         .Parameters
                         .AddWithValue("streamid", NpgsqlDbType.Uuid, streamId);
@@ -359,6 +359,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
                         .ExecuteNonQueryAsync()
                         .ConfigureAwait(false);
                 }
+
                 await trans
                     .CommitAsync()
                     .ConfigureAwait(false);
@@ -411,7 +412,8 @@ namespace Playground.Domain.Persistence.PostgreSQL
                         trans,
                         commandType: CommandType.StoredProcedure)
                     .ConfigureAwait(false))
-                    .OrderBy(se => se.EventId);
+                    .OrderBy(se => se.OccurredOn)
+                    .ToArray();
 
                 await trans
                     .CommitAsync()
@@ -426,9 +428,30 @@ namespace Playground.Domain.Persistence.PostgreSQL
             throw new NotImplementedException();
         }
 
-        public Task<StoredEvent> GetLast(Guid streamId)
+        public async Task<StoredEvent> GetLast(Guid streamId)
         {
-            throw new NotImplementedException();
+            if (streamId == default(Guid))
+                throw new ArgumentException("Pass in a valid Guid", nameof(streamId));
+
+            using (var connection = await OpenConnection().ConfigureAwait(false))
+            {
+                var trans = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+                var lastEvent = (await connection
+                    .QueryAsync<StoredEvent>(
+                        Queries.Scripts.GetLastEvent,
+                        new {streamid = streamId},
+                        trans,
+                        commandType: CommandType.StoredProcedure)
+                    .ConfigureAwait(false))
+                    .SingleOrDefault();
+
+                await trans
+                    .CommitAsync()
+                    .ConfigureAwait(false);
+
+                return lastEvent;
+            }
         }
 
         public Task Add(Guid streamId, StoredEvent storedEvent)
@@ -436,9 +459,48 @@ namespace Playground.Domain.Persistence.PostgreSQL
             throw new NotImplementedException();
         }
 
-        public Task Add(Guid streamId, ICollection<StoredEvent> events)
+        public async Task Add(Guid streamId, ICollection<StoredEvent> events)
         {
-            throw new NotImplementedException();
+            if (streamId == default(Guid))
+                throw new ArgumentException("Pass in a valid Guid", nameof(streamId));
+
+            if (events == null || !events.Any())
+                throw new ArgumentException("Must have at least one event", nameof(events));
+
+            using (var connection = await OpenConnection().ConfigureAwait(false))
+            {
+                var trans = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+                using (var command = CreateStoredProcedureCommand(
+                    connection,
+                    Commands.Scripts.AddEvents))
+                {
+                    var eventArray = events
+                        .Select(e => new Event
+                        {
+                            eventid = e.EventId,
+                            occurredon = e.OccurredOn,
+                            typename = e.TypeName,
+                            eventbody = e.EventBody
+                        })
+                        .ToArray();
+
+                    command
+                        .Parameters
+                        .AddWithValue("streamid", NpgsqlDbType.Uuid, streamId);
+                    command
+                        .Parameters
+                        .AddWithValue("events", NpgsqlDbType.Array | NpgsqlDbType.Composite, eventArray);
+
+                    await command
+                        .ExecuteNonQueryAsync()
+                        .ConfigureAwait(false);
+                }
+
+                await trans
+                    .CommitAsync()
+                    .ConfigureAwait(false);
+            }
         }
 
         public Task Remove(Guid streamId, long eventId)

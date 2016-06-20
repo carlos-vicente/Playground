@@ -3,8 +3,6 @@ using System.Configuration;
 using System.Data;
 using Autofac;
 using Npgsql;
-using Playground.Data.Contracts;
-using Playground.Data.Dapper;
 
 namespace Playground.TicketOffice.Api.AutofacRegister
 {
@@ -23,31 +21,33 @@ namespace Playground.TicketOffice.Api.AutofacRegister
                 TrustServerCertificate = true
             };
 
-            builder
-                .RegisterType<NpgsqlConnection>()
-                .As<IDbConnection>()
-                .InstancePerDependency();
-            
-            builder
-                .Register<Func<string, IDbConnection>>(ctx =>
-                {
-                    var context = ctx.Resolve<IComponentContext>();
+            builder.RegisterInstance(connectionStringBuilder);
 
-                    return connectionString => context
-                        .Resolve<IDbConnection>(
-                            new NamedParameter("connectionString", connectionString));
-                });
+            //builder
+            //    .RegisterType<NpgsqlConnection>()
+            //    .As<IDbConnection>()
+            //    .InstancePerDependency();
 
-            builder
-                .RegisterType<Connection>()
-                .As<IConnection>()
-                .InstancePerLifetimeScope();
+            //builder
+            //    .Register<Func<string, IDbConnection>>(ctx =>
+            //    {
+            //        var context = ctx.Resolve<IComponentContext>();
 
-            builder
-                .RegisterType<ConnectionFactory>()
-                .As<IConnectionFactory>()
-                .InstancePerLifetimeScope()
-                .WithParameter("connectionString", connectionStringBuilder.ConnectionString);
+            //        return connectionString => context
+            //            .Resolve<IDbConnection>(
+            //                new NamedParameter("connectionString", connectionString));
+            //    });
+
+            //builder
+            //    .RegisterType<Connection>()
+            //    .As<IConnection>()
+            //    .InstancePerLifetimeScope();
+
+            //builder
+            //    .RegisterType<ConnectionFactory>()
+            //    .As<IConnectionFactory>()
+            //    .InstancePerLifetimeScope()
+            //    .WithParameter("connectionString", connectionStringBuilder.ConnectionString);
         }
     }
 }

@@ -45,20 +45,20 @@ namespace Playground.Domain.Persistence.UnitTests
 
             var event1Version = Fixture.Create<long>();
             var event2Version = Fixture.Create<long>();
-            var event1 = Faker.Resolve<DomainEvent>();
-            var event2 = Faker.Resolve<DomainEvent>();
-
-            A.CallTo(() => event1.Metadata)
-                .Returns(new Metadata
+            var event1 = Fixture
+                .Build<TestAggregateChanged>()
+                .With(de => de.Metadata, new Metadata
                 {
                     StorageVersion = event1Version
-                });
-
-            A.CallTo(() => event2.Metadata)
-                .Returns(new Metadata
+                })
+                .Create();
+            var event2 = Fixture
+                .Build<TestAggregateChanged>()
+                .With(de => de.Metadata, new Metadata
                 {
                     StorageVersion = event2Version
-                });
+                })
+                .Create();
 
             var events = new List<DomainEvent>
             {
@@ -68,7 +68,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
-                .Returns(Task.FromResult<ICollection<DomainEvent>>(events));
+                .Returns(events);
             
             // act
             var aggregate = await Sut
@@ -137,20 +137,20 @@ namespace Playground.Domain.Persistence.UnitTests
 
             var event1Version = Fixture.Create<long>();
             var event2Version = Fixture.Create<long>();
-            var event1 = Faker.Resolve<DomainEvent>();
-            var event2 = Faker.Resolve<DomainEvent>();
-
-            A.CallTo(() => event1.Metadata)
-                .Returns(new Metadata
+            var event1 = Fixture
+                .Build<TestAggregateChanged>()
+                .With(de => de.Metadata, new Metadata
                 {
                     StorageVersion = event1Version
-                });
-
-            A.CallTo(() => event2.Metadata)
-                .Returns(new Metadata
+                })
+                .Create();
+            var event2 = Fixture
+                .Build<TestAggregateChanged>()
+                .With(de => de.Metadata, new Metadata
                 {
                     StorageVersion = event2Version
-                });
+                })
+                .Create();
 
             var events = new List<DomainEvent>
             {

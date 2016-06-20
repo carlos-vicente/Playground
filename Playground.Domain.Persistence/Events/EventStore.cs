@@ -21,6 +21,13 @@ namespace Playground.Domain.Persistence.Events
 
         public async Task CreateEventStream(Guid streamId)
         {
+            var doesStreamAlreadyExists = await _repository
+                .CheckStream(streamId)
+                .ConfigureAwait(false);
+
+            if(doesStreamAlreadyExists)
+                throw new InvalidOperationException($"Stream with id {streamId} already exists!");
+
             await _repository
                 .CreateStream(streamId)
                 .ConfigureAwait(false);

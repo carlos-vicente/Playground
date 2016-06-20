@@ -16,10 +16,14 @@ namespace Playground.Domain.Persistence.UnitTests
     public class EventStoreTests : TestBaseWithSut<EventStore>
     {
         [Test]
-        public async Task CreateEventStream_WillCreateStream()
+        public async Task CreateEventStream_WillCreateStream_WhenStreamDoesNotExist()
         {
             // arrange
             var streamId = Guid.NewGuid();
+
+            A.CallTo(() => Faker.Resolve<IEventRepository>()
+                .CheckStream(streamId))
+                .Returns(false);
 
             // act
             await Sut
@@ -30,6 +34,25 @@ namespace Playground.Domain.Persistence.UnitTests
             A.CallTo(() => Faker.Resolve<IEventRepository>()
                 .CreateStream(streamId))
                 .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void CreateEventStream_ThrowsException_WhenStreamAlreadyExists()
+        {
+            // arrange
+            var streamId = Guid.NewGuid();
+
+            A.CallTo(() => Faker.Resolve<IEventRepository>()
+                .CheckStream(streamId))
+                .Returns(true);
+
+            Func<Task> expcetionThrower = async () => await Sut
+                .CreateEventStream(streamId)
+                .ConfigureAwait(false);
+
+            // act & assert
+            expcetionThrower
+                .ShouldThrow<InvalidOperationException>();
         }
 
         [Test]
@@ -74,8 +97,8 @@ namespace Playground.Domain.Persistence.UnitTests
 
             var expectedEvents = new List<StoredEvent>
             {
-                new StoredEvent(expectedEventName, event1.Metadata.OccorredOn, event1Serialiazed),
-                new StoredEvent(expectedEventName, event2.Metadata.OccorredOn, event2Serialiazed)
+                new StoredEvent(expectedEventName, event1.Metadata.OccorredOn, event1Serialiazed, currentStreamVersion + 1),
+                new StoredEvent(expectedEventName, event2.Metadata.OccorredOn, event2Serialiazed, currentStreamVersion + 2)
             };
 
             // act
@@ -126,8 +149,8 @@ namespace Playground.Domain.Persistence.UnitTests
 
             var expectedEvents = new List<StoredEvent>
             {
-                new StoredEvent(expectedEventName, event1.Metadata.OccorredOn, event1Serialiazed),
-                new StoredEvent(expectedEventName, event2.Metadata.OccorredOn, event2Serialiazed)
+                new StoredEvent(expectedEventName, event1.Metadata.OccorredOn, event1Serialiazed, 1),
+                new StoredEvent(expectedEventName, event2.Metadata.OccorredOn, event2Serialiazed, 2)
             };
 
             // act
@@ -228,6 +251,10 @@ namespace Playground.Domain.Persistence.UnitTests
             };
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
+                .CheckStream(streamId))
+                .Returns(true);
+
+            A.CallTo(() => Faker.Resolve<IEventRepository>()
                 .GetAll(streamId))
                 .Returns(storedEvents);
 
@@ -255,6 +282,10 @@ namespace Playground.Domain.Persistence.UnitTests
             var streamId = Guid.NewGuid();
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
+                .CheckStream(streamId))
+                .Returns(true);
+
+            A.CallTo(() => Faker.Resolve<IEventRepository>()
                 .GetAll(streamId))
                 .Returns(new List<StoredEvent>());
             
@@ -280,6 +311,10 @@ namespace Playground.Domain.Persistence.UnitTests
             var streamId = Guid.NewGuid();
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
+                .CheckStream(streamId))
+                .Returns(true);
+
+            A.CallTo(() => Faker.Resolve<IEventRepository>()
                 .GetAll(streamId))
                 .Returns(null as List<StoredEvent>);
 
@@ -296,6 +331,27 @@ namespace Playground.Domain.Persistence.UnitTests
             A.CallTo(() => Faker.Resolve<IEventSerializer>()
                 .Deserialize(A<string>._))
                 .MustNotHaveHappened();
+        }
+
+        [Test]
+        public async Task LoadAllEvents_WillReturnNull_WhenThereIsNoStream()
+        {
+            // arrange
+            var streamId = Guid.NewGuid();
+
+            A.CallTo(() => Faker.Resolve<IEventRepository>()
+                .CheckStream(streamId))
+                .Returns(false);
+
+            // act
+            var events = await Sut
+                .LoadAllEvents(streamId)
+                .ConfigureAwait(false);
+
+            // assert
+            events
+                .Should()
+                .BeNull();
         }
     }
 }

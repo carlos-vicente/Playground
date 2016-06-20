@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
 using NpgsqlTypes;
+using Playground.Domain.Persistence.Events;
 
 namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
 {
@@ -25,6 +27,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
         }
 
         private const string SelectLatestStreamSql = "SELECT \"EventStreamId\", \"CreatedOn\" FROM public.\"EventStreams\" ORDER BY \"CreatedOn\" DESC LIMIT 1";
+        private const string SelectStreamEventsSql = "SELECT \"EventId\", \"TypeName\", \"OccurredOn\", \"EventBody\" FROM public.\"Events\"";
         private const string CreateEventStreamSql = "INSERT INTO public.\"EventStreams\" (\"EventStreamId\", \"CreatedOn\") values(@streamId, @createdOn);";
         private const string CreateEventSql = "INSERT INTO public.\"Events\" (\"EventStreamId\", \"EventId\", \"TypeName\", \"OccurredOn\", \"EventBody\") values(@streamId, @eventId, @typeName, @occurredOn, @body);";
 
@@ -125,6 +128,22 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
                         .ExecuteNonQueryAsync()
                         .ConfigureAwait(false);
                 }
+            }
+        }
+
+        public static async Task<IEnumerable<StoredEvent>> GetStreamEvents(Guid streamId)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                var query = await connection
+                    .QueryAsync<StoredEvent>(SelectStreamEventsSql)
+                    .ConfigureAwait(false);
+
+                return query.ToList();
             }
         }
 
