@@ -15,7 +15,7 @@ namespace Playground.Domain.Persistence.Events
         /// If the stream already exists, it does not create another one, but it does not throw an exception
         /// </summary>
         /// <param name="streamId">The stream identifier to create</param>
-        Task CreateEventStream(Guid streamId);
+        Task CreateEventStream<TAggregateRoot>(Guid streamId);
 
         /// <summary>
         /// Stores events in a given stream

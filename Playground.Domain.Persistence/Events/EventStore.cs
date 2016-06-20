@@ -19,7 +19,7 @@ namespace Playground.Domain.Persistence.Events
             _repository = repository;
         }
 
-        public async Task CreateEventStream(Guid streamId)
+        public async Task CreateEventStream<TAggregateRoot>(Guid streamId)
         {
             var doesStreamAlreadyExists = await _repository
                 .CheckStream(streamId)
@@ -29,7 +29,7 @@ namespace Playground.Domain.Persistence.Events
                 throw new InvalidOperationException($"Stream with id {streamId} already exists!");
 
             await _repository
-                .CreateStream(streamId)
+                .CreateStream(streamId, typeof(TAggregateRoot).AssemblyQualifiedName)
                 .ConfigureAwait(false);
         }
 

@@ -9,7 +9,7 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION public.create_event_stream(streamid uuid, createdOn timestamp)
+CREATE OR REPLACE FUNCTION public.create_event_stream(streamid uuid, streamName text, createdOn timestamp)
   RETURNS void AS $$
 BEGIN
 	IF(SELECT COUNT(*) 
@@ -18,12 +18,10 @@ BEGIN
 		RAISE EXCEPTION 'Cannot create an event stream for (%) because it already exists', streamId;
 	END IF;
 
-	INSERT INTO public."EventStreams" ("EventStreamId", "CreatedOn")
-	values (streamId, createdOn);
+	INSERT INTO public."EventStreams" ("EventStreamId", "EventStreamName", "CreatedOn")
+	values (streamId, streamName, createdOn);
 END;
 $$ LANGUAGE plpgsql;
-ALTER FUNCTION public.create_event_stream(uuid, timestamp)
-  OWNER TO test_user;
 
 
 

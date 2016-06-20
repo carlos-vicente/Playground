@@ -12,8 +12,9 @@ namespace Playground.Domain.Persistence.Events
         /// <summary>
         /// Creates an event stream to store events
         /// </summary>
-        /// <param name="streamId">Stream identifier</param>
-        Task CreateStream(Guid streamId);
+        /// <param name="streamId">The stream's identifier</param>
+        /// <param name="streamName">The stream's name</param>
+        Task CreateStream(Guid streamId, string streamName);
 
         /// <summary>
         /// Checks if a stream exists

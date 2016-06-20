@@ -25,14 +25,16 @@ namespace Playground.Domain.Persistence.UnitTests
                 .CheckStream(streamId))
                 .Returns(false);
 
+            var aggregateTypeName = typeof (TestAggregateRoot).AssemblyQualifiedName;
+
             // act
             await Sut
-                .CreateEventStream(streamId)
+                .CreateEventStream<TestAggregateRoot>(streamId)
                 .ConfigureAwait(false);
 
             // assert
             A.CallTo(() => Faker.Resolve<IEventRepository>()
-                .CreateStream(streamId))
+                .CreateStream(streamId, aggregateTypeName))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -47,7 +49,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(true);
 
             Func<Task> expcetionThrower = async () => await Sut
-                .CreateEventStream(streamId)
+                .CreateEventStream<TestAggregateRoot>(streamId)
                 .ConfigureAwait(false);
 
             // act & assert

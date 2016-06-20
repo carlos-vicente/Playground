@@ -27,7 +27,7 @@ namespace Playground.Domain.Persistence.SQLServer
             throw new NotImplementedException();
         }
 
-        public Task CreateStream(Guid streamId)
+        public Task CreateStream(Guid streamId, string aggregateTypeName)
         {
             throw new NotImplementedException();
         }

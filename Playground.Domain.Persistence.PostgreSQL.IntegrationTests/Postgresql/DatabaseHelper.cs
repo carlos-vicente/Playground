@@ -26,9 +26,9 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
             };
         }
 
-        private const string SelectLatestStreamSql = "SELECT \"EventStreamId\", \"CreatedOn\" FROM public.\"EventStreams\" ORDER BY \"CreatedOn\" DESC LIMIT 1";
+        private const string SelectLatestStreamSql = "SELECT \"EventStreamId\", \"EventStreamName\" FROM public.\"EventStreams\" ORDER BY \"CreatedOn\" DESC LIMIT 1";
         private const string SelectStreamEventsSql = "SELECT \"EventId\", \"TypeName\", \"OccurredOn\", \"EventBody\" FROM public.\"Events\"";
-        private const string CreateEventStreamSql = "INSERT INTO public.\"EventStreams\" (\"EventStreamId\", \"CreatedOn\") values(@streamId, @createdOn);";
+        private const string CreateEventStreamSql = "INSERT INTO public.\"EventStreams\" (\"EventStreamId\", \"EventStreamName\", \"CreatedOn\") values(@streamId, @streamName, @createdOn);";
         private const string CreateEventSql = "INSERT INTO public.\"Events\" (\"EventStreamId\", \"EventId\", \"TypeName\", \"OccurredOn\", \"EventBody\") values(@streamId, @eventId, @typeName, @occurredOn, @body);";
 
         private const string DeleteEventsSql = "DELETE FROM public.\"Events\";";
@@ -62,7 +62,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
             }
         }
 
-        public static async Task<Guid> GetLatestStreamCreated()
+        public static async Task<EventStream> GetLatestStreamCreated()
         {
             using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
             {
@@ -75,12 +75,12 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
                     .ConfigureAwait(false);
 
                 return query.Any()
-                    ? query.Single().EventStreamId
-                    : Guid.Empty;
+                    ? query.Single()
+                    : default(EventStream);
             }
         }
 
-        public static async Task CreateEventStream(Guid streamId)
+        public static async Task CreateEventStream(Guid streamId, string streamName)
         {
             using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
             {
@@ -92,6 +92,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
                 {
                     command.CommandText = CreateEventStreamSql;
                     command.Parameters.AddWithValue("@streamId", streamId);
+                    command.Parameters.AddWithValue("@streamName", streamName);
                     command.Parameters.AddWithValue("@createdOn", DateTime.UtcNow);
 
                     await command
@@ -101,12 +102,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
             }
         }
 
-        public static async Task CreateEvent(
-            Guid streamId,
-            long eventId,
-            string typeName,
-            DateTime occurredOn,
-            string body)
+        public static async Task CreateEvent(Guid streamId, StoredEvent storedEvent)
         {
             using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
             {
@@ -119,10 +115,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
                     command.CommandText = CreateEventSql;
 
                     command.Parameters.AddWithValue("@streamId", streamId);
-                    command.Parameters.AddWithValue("@eventId", eventId);
-                    command.Parameters.AddWithValue("@typeName", typeName);
-                    command.Parameters.AddWithValue("@occurredOn", occurredOn);
-                    command.Parameters.AddWithValue("@body", NpgsqlDbType.Json, body);
+                    command.Parameters.AddWithValue("@eventId", storedEvent.EventId);
+                    command.Parameters.AddWithValue("@typeName", storedEvent.TypeName);
+                    command.Parameters.AddWithValue("@occurredOn", storedEvent.OccurredOn);
+                    command.Parameters.AddWithValue("@body", NpgsqlDbType.Json, storedEvent.EventBody);
 
                     await command
                         .ExecuteNonQueryAsync()
@@ -146,75 +142,5 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
                 return query.ToList();
             }
         }
-
-        //public static void CreateTestTable()
-        //{
-        //    using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
-        //    {
-        //        connection.Open();
-
-        //        using (var command = connection.CreateCommand())
-        //        {
-        //            command.CommandText = Scripts.Ddl.CreateTable;
-        //            command.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
-
-        //public static void CreateStoredProcedure()
-        //{
-        //    using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
-        //    {
-        //        connection.Open();
-
-        //        using (var command = connection.CreateCommand())
-        //        {
-        //            command.CommandText = Scripts.Ddl.CreateProdecure;
-        //            command.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
-
-        //public static void DropTestTable()
-        //{
-        //    using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
-        //    {
-        //        connection.Open();
-
-        //        using (var command = connection.CreateCommand())
-        //        {
-        //            command.CommandText = Scripts.Ddl.DropTable;
-        //            command.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
-
-        //public static void DropStoredProcedure()
-        //{
-        //    using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
-        //    {
-        //        connection.Open();
-
-        //        using (var command = connection.CreateCommand())
-        //        {
-        //            command.CommandText = Scripts.Ddl.DropProcedure;
-        //            command.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
-
-        //public static void InsertData(Test data)
-        //{
-        //    using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
-        //    {
-        //        connection.Open();
-
-        //        using (var command = connection.CreateCommand())
-        //        {
-        //            command.CommandText = Scripts.Ddl.DropTable;
-        //            command.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
     }
 }

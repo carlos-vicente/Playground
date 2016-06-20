@@ -24,7 +24,7 @@ namespace Playground.Domain.Persistence.UnitTests
             var aggregateRootId = Fixture.Create<Guid>();
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
-                .CreateEventStream(aggregateRootId))
+                .CreateEventStream<TestAggregateRoot>(aggregateRootId))
                 .Returns(Task.FromResult(true));
 
             // act

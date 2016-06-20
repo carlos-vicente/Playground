@@ -29,7 +29,7 @@ namespace Playground.Domain.Persistence
             where TAggregateRoot : AggregateRoot
         {
             await _eventStore
-                .CreateEventStream(aggregateRootId)
+                .CreateEventStream<TAggregateRoot>(aggregateRootId)
                 .ConfigureAwait(false);
 
             return GetAggregateInstance<TAggregateRoot>(aggregateRootId, null);
