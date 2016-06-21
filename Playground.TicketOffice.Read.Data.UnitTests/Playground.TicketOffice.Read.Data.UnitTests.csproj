@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5968E154-4F71-41FA-8755-72DD615196C3}</ProjectGuid>
+    <ProjectGuid>{DCE04EE5-B809-4FBF-8C8F-F57C5D91C5EF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.TicketOffice.Domain.Read</RootNamespace>
-    <AssemblyName>Playground.TicketOffice.Domain.Read</AssemblyName>
+    <RootNamespace>Playground.TicketOffice.Read.Data.UnitTests</RootNamespace>
+    <AssemblyName>Playground.TicketOffice.Read.Data.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,16 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Queries\GetAllMovieTheatersResult.cs" />
-    <Compile Include="Model\MovieTheater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Queries\GetAllMovieTheatersQuery.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Playground.QueryService.Contracts\Playground.QueryService.Contracts.csproj">
-      <Project>{A0E4096A-8D47-4167-9669-A7B8D2C1ADB8}</Project>
-      <Name>Playground.QueryService.Contracts</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

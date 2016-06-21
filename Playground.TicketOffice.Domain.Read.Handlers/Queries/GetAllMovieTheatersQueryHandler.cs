@@ -1,5 +1,4 @@
 ﻿using Playground.QueryService.Contracts;
-using Playground.TicketOffice.Domain.Read.Model;
 using Playground.TicketOffice.Domain.Read.Queries;
 
 namespace Playground.TicketOffice.Domain.Read.Handlers.Queries

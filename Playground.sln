@@ -139,6 +139,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Domain.Persisten
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Domain.Persistence.Serialization.Jil", "Playground.Domain.Persistence.Serialization.Jil\Playground.Domain.Persistence.Serialization.Jil.csproj", "{D5436D18-0841-4D6F-BC9C-867E87B01979}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.TicketOffice.Read.Data", "Playground.TicketOffice.Read.Data\Playground.TicketOffice.Read.Data.csproj", "{4ED7DABE-636C-49BE-966D-1831C31EEF3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.TicketOffice.Read.Data.Contracts", "Playground.TicketOffice.Read.Data.Contracts\Playground.TicketOffice.Read.Data.Contracts.csproj", "{BACECAD5-13E2-4958-BD91-065BDCD86D90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.TicketOffice.Domain.Write.UnitTests", "Playground.TicketOffice.Domain.Write.UnitTests\Playground.TicketOffice.Domain.Write.UnitTests.csproj", "{7ED887E3-785A-452F-9C72-42E2752E930A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.TicketOffice.Read.Data.UnitTests", "Playground.TicketOffice.Read.Data.UnitTests\Playground.TicketOffice.Read.Data.UnitTests.csproj", "{DCE04EE5-B809-4FBF-8C8F-F57C5D91C5EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.TicketOffice.Domain.Write.Handlers.UnitTests", "Playground.TicketOffice.Domain.Write.Handlers.UnitTests\Playground.TicketOffice.Domain.Write.Handlers.UnitTests.csproj", "{F65E4089-644B-4F4E-8C26-8F44E589283B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -301,6 +311,26 @@ Global
 		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED7DABE-636C-49BE-966D-1831C31EEF3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ED7DABE-636C-49BE-966D-1831C31EEF3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ED7DABE-636C-49BE-966D-1831C31EEF3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ED7DABE-636C-49BE-966D-1831C31EEF3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BACECAD5-13E2-4958-BD91-065BDCD86D90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BACECAD5-13E2-4958-BD91-065BDCD86D90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BACECAD5-13E2-4958-BD91-065BDCD86D90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BACECAD5-13E2-4958-BD91-065BDCD86D90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ED887E3-785A-452F-9C72-42E2752E930A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ED887E3-785A-452F-9C72-42E2752E930A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ED887E3-785A-452F-9C72-42E2752E930A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ED887E3-785A-452F-9C72-42E2752E930A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCE04EE5-B809-4FBF-8C8F-F57C5D91C5EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCE04EE5-B809-4FBF-8C8F-F57C5D91C5EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCE04EE5-B809-4FBF-8C8F-F57C5D91C5EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCE04EE5-B809-4FBF-8C8F-F57C5D91C5EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F65E4089-644B-4F4E-8C26-8F44E589283B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F65E4089-644B-4F4E-8C26-8F44E589283B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F65E4089-644B-4F4E-8C26-8F44E589283B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F65E4089-644B-4F4E-8C26-8F44E589283B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -371,5 +401,10 @@ Global
 		{6A140405-BC68-45CD-B583-4147552032B7} = {070B08F5-8AB8-4601-8521-089CE93EDC30}
 		{E3CF5A67-2889-4E0B-9AE8-D9AB141FCBA4} = {070B08F5-8AB8-4601-8521-089CE93EDC30}
 		{D5436D18-0841-4D6F-BC9C-867E87B01979} = {D55E4790-B548-449D-B3E0-DEEB162660A3}
+		{4ED7DABE-636C-49BE-966D-1831C31EEF3B} = {E3B354AC-EAB5-41A9-951F-F6E714099941}
+		{BACECAD5-13E2-4958-BD91-065BDCD86D90} = {E3B354AC-EAB5-41A9-951F-F6E714099941}
+		{7ED887E3-785A-452F-9C72-42E2752E930A} = {A7682F2F-E8F3-4C60-8CB7-C52A64A21A86}
+		{DCE04EE5-B809-4FBF-8C8F-F57C5D91C5EF} = {9347F4C6-E2FE-49F0-B359-BD9EB1F0DA3E}
+		{F65E4089-644B-4F4E-8C26-8F44E589283B} = {9347F4C6-E2FE-49F0-B359-BD9EB1F0DA3E}
 	EndGlobalSection
 EndGlobal

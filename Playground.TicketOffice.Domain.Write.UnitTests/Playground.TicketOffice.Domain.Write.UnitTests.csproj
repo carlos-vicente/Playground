@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1C7C0DC4-201F-41E7-8DB9-66F94D1F31EB}</ProjectGuid>
+    <ProjectGuid>{7ED887E3-785A-452F-9C72-42E2752E930A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.TicketOffice.Domain.Write.Handlers</RootNamespace>
-    <AssemblyName>Playground.TicketOffice.Domain.Write.Handlers</AssemblyName>
+    <RootNamespace>Playground.TicketOffice.Domain.Write.UnitTests</RootNamespace>
+    <AssemblyName>Playground.TicketOffice.Domain.Write.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,8 +30,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Rebus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rebus.0.99.62\lib\NET45\Rebus.dll</HintPath>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Autofac.Extras.FakeItEasy, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Extras.FakeItEasy.3.0.3\lib\net40\Autofac.Extras.FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FakeItEasy, Version=1.25.3.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <HintPath>..\packages\FakeItEasy.1.25.3\lib\net40\FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions, Version=4.9.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.9.0\lib\net45\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.9.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.9.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.2.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.2.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture, Version=3.47.8.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.3.47.8\lib\net40\Ploeh.AutoFixture.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -45,44 +68,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CreateMovieTheaterCommandHandler.cs" />
-    <Compile Include="Events\Projection\MovieTheaterCreatedHandler.cs" />
+    <Compile Include="MovieTheaterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegistrationHook.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Playground.Data.Contracts\Playground.Data.Contracts.csproj">
-      <Project>{DB5F5DBE-547B-424E-ABB9-EA63327C8615}</Project>
-      <Name>Playground.Data.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Domain.Persistence\Playground.Domain.Persistence.csproj">
-      <Project>{8d22c8a7-4c4f-472c-9dba-43bd55deb1e8}</Project>
-      <Name>Playground.Domain.Persistence</Name>
-    </ProjectReference>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Playground.Domain\Playground.Domain.csproj">
-      <Project>{66b417d5-a799-4dc8-bf29-904898ce2653}</Project>
+      <Project>{66B417D5-A799-4DC8-BF29-904898CE2653}</Project>
       <Name>Playground.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Playground.Messaging.Persistence\Playground.Messaging.Persistence.csproj">
-      <Project>{AE4EB9F1-9803-4D54-BFA7-DA0953A5DC99}</Project>
-      <Name>Playground.Messaging.Persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
-      <Project>{a15462e6-1f1a-40ad-9ede-23127289cb6a}</Project>
-      <Name>Playground.Messaging</Name>
+    <ProjectReference Include="..\Playground.Tests\Playground.Tests.csproj">
+      <Project>{128691bd-75ca-4303-947d-b8d7062510ec}</Project>
+      <Name>Playground.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\Playground.TicketOffice.Domain.Write\Playground.TicketOffice.Domain.Write.csproj">
       <Project>{724D8C2D-81D0-4C39-B4A1-9D5A708C8BE1}</Project>
       <Name>Playground.TicketOffice.Domain.Write</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Playground.TicketOffice.Read.Data.Contracts\Playground.TicketOffice.Read.Data.Contracts.csproj">
-      <Project>{BACECAD5-13E2-4958-BD91-065BDCD86D90}</Project>
-      <Name>Playground.TicketOffice.Read.Data.Contracts</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

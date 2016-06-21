@@ -20,6 +20,7 @@ namespace Playground.Domain.Model
         {
             Events.Add(domainEvent);
 
+            // TODO: should this be done here?
             ((IEmit<TDomainEvent>)this).Apply(domainEvent);
         }
     }
