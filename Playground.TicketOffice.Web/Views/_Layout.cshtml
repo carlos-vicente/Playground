@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
 
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="lib/materialize/css/materialize.css" media="screen,projection"/>
+
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="lib/materialize/js/materialize.js"></script>
+
     <script type="text/javascript" src="~/wwwroot/lib/react/react.js"></script>
     <script type="text/javascript" src="~/wwwroot/lib/react/react-dom.js"></script>
 </head>
-<body>
-    <div id="content">
+<body class="light-blue lighten-5">
+    <div id="content" class="container">
         @RenderBody()
     </div>
     @RenderSection("Scripts", false)
