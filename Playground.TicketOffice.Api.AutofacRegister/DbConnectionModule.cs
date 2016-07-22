@@ -22,32 +22,6 @@ namespace Playground.TicketOffice.Api.AutofacRegister
             };
 
             builder.RegisterInstance(connectionStringBuilder);
-
-            //builder
-            //    .RegisterType<NpgsqlConnection>()
-            //    .As<IDbConnection>()
-            //    .InstancePerDependency();
-
-            //builder
-            //    .Register<Func<string, IDbConnection>>(ctx =>
-            //    {
-            //        var context = ctx.Resolve<IComponentContext>();
-
-            //        return connectionString => context
-            //            .Resolve<IDbConnection>(
-            //                new NamedParameter("connectionString", connectionString));
-            //    });
-
-            //builder
-            //    .RegisterType<Connection>()
-            //    .As<IConnection>()
-            //    .InstancePerLifetimeScope();
-
-            //builder
-            //    .RegisterType<ConnectionFactory>()
-            //    .As<IConnectionFactory>()
-            //    .InstancePerLifetimeScope()
-            //    .WithParameter("connectionString", connectionStringBuilder.ConnectionString);
         }
     }
 }
