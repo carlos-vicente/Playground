@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FakeItEasy;
+using FluentAssertions;
 using NUnit.Framework;
 using Playground.Domain.Persistence;
 using Playground.Tests;
@@ -24,8 +25,8 @@ namespace Playground.Messaging.Persistence.UnitTests
         {
             // arrange
             var aggregateRootId = Fixture.Create<Guid>();
-            var command = Fixture.Create<Command>();
             var aggregateRoot = Fixture.Create<Aggregate>();
+            var command = new Command(aggregateRootId);
 
             A.CallTo(() => Faker.Resolve<IAggregateContext>()
                 .TryLoad<Aggregate>(aggregateRootId))
@@ -41,7 +42,83 @@ namespace Playground.Messaging.Persistence.UnitTests
                 .ConfigureAwait(false);
 
             // assert
-            
+            A.CallTo(() => Faker.Resolve<IAggregateContext>()
+                .Create<Aggregate>(aggregateRootId))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public async Task Handle_WillNotCreateANewAggregate_WhenThereIsOneWithTheGivenIdentifier()
+        {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
+            var aggregateRoot = Fixture.Create<Aggregate>();
+            var command = new Command(aggregateRootId);
+
+            A.CallTo(() => Faker.Resolve<IAggregateContext>()
+                .TryLoad<Aggregate>(aggregateRootId))
+                .Returns(aggregateRoot);
+
+            // act
+            await _sut
+                .Handle(command)
+                .ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => Faker.Resolve<IAggregateContext>()
+                .Create<Aggregate>(A<Guid>.Ignored))
+                .MustNotHaveHappened();
+        }
+
+        [Test]
+        public async Task Handle_WillProcessCommandOnAggregate()
+        {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
+            var aggregateRoot = Fixture.Create<Aggregate>();
+            var command = new Command(aggregateRootId);
+
+            A.CallTo(() => Faker.Resolve<IAggregateContext>()
+                .TryLoad<Aggregate>(aggregateRootId))
+                .Returns(aggregateRoot);
+
+            // act
+            await _sut
+                .Handle(command)
+                .ConfigureAwait(false);
+
+            // assert
+            _sut
+                .CalledWithCommand
+                .Should()
+                .Be(command);
+            _sut
+                .CalledWithAggregate
+                .Should()
+                .Be(aggregateRoot);
+        }
+
+        [Test]
+        public async Task Handle_WillSaveAggregate_WhenItHasBeenProcessed()
+        {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
+            var aggregateRoot = Fixture.Create<Aggregate>();
+            var command = new Command(aggregateRootId);
+
+            A.CallTo(() => Faker.Resolve<IAggregateContext>()
+                .TryLoad<Aggregate>(aggregateRootId))
+                .Returns(aggregateRoot);
+
+            // act
+            await _sut
+                .Handle(command)
+                .ConfigureAwait(false);
+
+            // assert
+            A.CallTo(() => Faker.Resolve<IAggregateContext>()
+                .Save<Aggregate>(aggregateRoot))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
