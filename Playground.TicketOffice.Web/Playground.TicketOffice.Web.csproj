@@ -146,6 +146,7 @@
     <Content Include="gulp\tasks\default.js" />
     <Content Include="gulp\tasks\jquery-task.js" />
     <Content Include="gulp\tasks\materialize-task.js" />
+    <Content Include="gulp\tasks\react-task.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

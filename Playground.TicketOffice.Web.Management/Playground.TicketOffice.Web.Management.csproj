@@ -158,8 +158,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="gulpfile.js" />
+    <Content Include="gulp\tasks\default.js" />
+    <Content Include="gulp\tasks\jquery-task.js" />
+    <Content Include="gulp\tasks\materialize-task.js" />
+    <Content Include="gulp\tasks\react-task.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -181,6 +185,15 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bower.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".bowerrc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
