@@ -2,7 +2,10 @@
     Layout = "~/Views/_Layout.cshtml";
 }
 
-@Html.React("MovieTheater", new
+@model List<Theater>
+
+@foreach (var theater in Model)
 {
-    name = "Odivelas"
-}, "article")
+    @Html.React("MovieTheater", theater, "article");
+}
+

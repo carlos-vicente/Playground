@@ -1,3 +1,6 @@
+using System.IO;
+using System.Linq;
+using System.Web;
 using React;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Playground.TicketOffice.Web.ReactConfig), "Configure")]
@@ -13,9 +16,20 @@ namespace Playground.TicketOffice.Web
             // your components as well as all of their dependencies.
             // See http://reactjs.net/ for more information. Example:
 
-            ReactSiteConfiguration
-                .Configuration
-                .AddScript("~/Scripts/Components/MovieTheater/MovieTheater.jsx");
+		    string path = $"{HttpRuntime.AppDomainAppPath}Scripts\\Components";
+
+            var entries = Directory
+		        .GetFileSystemEntries(path, "*.jsx", SearchOption.AllDirectories);
+
+		    var configuration = ReactSiteConfiguration.Configuration;
+
+		    var virtualPaths = entries
+		        .Select(e => e.Replace(HttpRuntime.AppDomainAppPath, "~\\"));
+
+		    foreach (var component in virtualPaths)
+		    {
+                configuration.AddScript(component);
+		    }
 
             // If you use an external build too (for example, Babel, Webpack,
             // Browserify or Gulp), you can improve performance by disabling 

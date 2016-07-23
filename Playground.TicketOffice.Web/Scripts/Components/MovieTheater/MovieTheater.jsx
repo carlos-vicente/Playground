@@ -1,7 +1,9 @@
 ﻿var MovieTheater = React.createClass({
-    render: function() {
+    render: function () {
         return (
-            <div className="movie-theater">Hello, world! I am the Movie Theater on {this.props.name}.</div>
+            <span className="movie-theater">
+                Hello, world! I am the Movie Theater on {this.props.Name}.
+            </span>
         );
     }
 });
