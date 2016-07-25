@@ -1,4 +1,15 @@
 ﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Home Page";
 }
 
+@model List<Playground.TicketOffice.Web.Management.Models.Theater>
+
+@foreach (var theater in Model)
+{
+    @Html.React("MovieTheater", theater, "article");
+}
+
+@section Scripts {
+   @Scripts.Render("~/bundles/theater")
+}
