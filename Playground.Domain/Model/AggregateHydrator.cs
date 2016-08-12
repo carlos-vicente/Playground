@@ -40,4 +40,39 @@ namespace Playground.Domain.Model
                 .Apply(domainEvent);
         }
     }
+
+    public class AggregateHydratorV2 : IAggregateHydratorV2
+    {
+        /// <summary>
+        /// Apply all the events in <paramref name="domainEvents"/> to <paramref name="aggregateRootBase"/>
+        /// </summary>
+        /// <typeparam name="TAggregateRoot">The aggregate type</typeparam>
+        /// <typeparam name="TAggregateRootState">The aggregate state type, which will have all the apply methods</typeparam>
+        /// <param name="aggregateRootBase">The aggregate to apply the domain events (it should be a clean instance)</param>
+        /// <param name="domainEvents">The list of domain events to apply on to the aggregate</param>
+        /// <returns>The aggregate instance with the events applied</returns>
+        public TAggregateRoot HydrateAggregateWithEvents<TAggregateRoot, TAggregateRootState>(
+            TAggregateRoot aggregateRootBase,
+            ICollection<DomainEvent> domainEvents)
+            where TAggregateRoot : AggregateRootWithState<TAggregateRootState>
+            where TAggregateRootState : new()
+        {
+            foreach (var domainEvent in domainEvents)
+            {
+                // the dynamic cast makes sure the right method is called
+                Apply(aggregateRootBase.State, (dynamic)domainEvent);
+            }
+
+            return aggregateRootBase;
+        }
+
+        private static void Apply<TAggregateRootState, TDomainEvent>(
+            TAggregateRootState aggregateRootState,
+            TDomainEvent domainEvent)
+            where TAggregateRootState : new()
+            where TDomainEvent : DomainEvent
+        {
+            ((IEmit<TDomainEvent>)aggregateRootState).Apply(domainEvent);
+        }
+    }
 }

@@ -1,13 +1,11 @@
-﻿using System;
+using System;
 using Playground.Domain.Events;
 
 namespace Playground.Domain.UnitTests
 {
-    public class Event1 : DomainEvent
+    public class GotDone : DomainEvent
     {
-        public string Name { get; set; }
-
-        public Event1(Guid aggregateRootId) 
+        public GotDone(Guid aggregateRootId) 
             : base(aggregateRootId)
         {
         }

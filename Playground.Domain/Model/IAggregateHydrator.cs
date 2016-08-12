@@ -21,4 +21,20 @@ namespace Playground.Domain.Model
             ICollection<DomainEvent> domainEvents)
             where TAggregateRoot : AggregateRoot;
     }
+
+    public interface IAggregateHydratorV2
+    {
+        /// <summary>
+        /// Apply all the events in <paramref name="domainEvents"/> to <paramref name="aggregateRootBase"/>
+        /// </summary>
+        /// <typeparam name="TAggregateRoot">The aggregate type</typeparam>
+        /// <param name="aggregateRootBase">The aggregate to apply the domain events (it should be a clean instance)</param>
+        /// <param name="domainEvents">The list of domain events to apply on to the aggregate</param>
+        /// <returns>The aggregate instance with the events applied</returns>
+        TAggregateRoot HydrateAggregateWithEvents<TAggregateRoot, TAggregateRootState>(
+            TAggregateRoot aggregateRootBase,
+            ICollection<DomainEvent> domainEvents)
+            where TAggregateRoot : AggregateRootWithState<TAggregateRootState>
+            where TAggregateRootState : new();
+    }
 }

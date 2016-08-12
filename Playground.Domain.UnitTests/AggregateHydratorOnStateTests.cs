@@ -10,9 +10,10 @@ using Ploeh.AutoFixture;
 namespace Playground.Domain.UnitTests
 {
     [TestFixture]
-    public class AggregateHydratorSimpleTests : SimpleTestBase
+    public class AggregateHydratorOnStateTests : SimpleTestBase
     {
         [Test]
+        [Ignore("Not yet done")]
         public void HydrateAggregateWithEvents_InvokesApplyForAllEvents()
         {
             // arrange

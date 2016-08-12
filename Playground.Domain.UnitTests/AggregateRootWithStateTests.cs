@@ -9,27 +9,29 @@ using Ploeh.AutoFixture;
 
 namespace Playground.Domain.UnitTests
 {
-    public class AggregateRootSimpleTests : SimpleTestBase
+    public class AggregateRootWithStateTests : SimpleTestBase
     {
-        public class TestAggregateRoot 
-            : AggregateRoot,
-            IEmit<ItHappened>
+        public class TestAggregateState : IEmit<ItHappened>
         {
             public bool ApplyCalled { get; set; }
 
-            public TestAggregateRoot(Guid id) 
-                : base(id)
+            void IEmit<ItHappened>.Apply(ItHappened e)
             {
-                ApplyCalled = false;
-            }
-
-            void IEmit<ItHappened>.Apply(ItHappened evt)
-            {
-                // do something to apply the event to the aggregate root
                 ApplyCalled = true;
             }
+        }
 
-            public void ItHappened(string name)
+        public class TestAggregateRootWithState
+            : AggregateRootWithState<TestAggregateState>
+        {
+
+            public TestAggregateRootWithState(Guid id) 
+                : base(id)
+            {
+
+            }
+
+            public void DoIt(string name)
             {
                 When(new ItHappened(Id)
                 {
@@ -38,13 +40,13 @@ namespace Playground.Domain.UnitTests
             }
         }
 
-        private TestAggregateRoot _sut;
+        private TestAggregateRootWithState _sut;
 
         public override void SetUp()
         {
             base.SetUp();
 
-            _sut = new TestAggregateRoot(Guid.NewGuid());
+            _sut = new TestAggregateRootWithState(Guid.NewGuid());
         }
 
         [Test]
@@ -59,7 +61,7 @@ namespace Playground.Domain.UnitTests
             };
 
             // act
-            _sut.ItHappened(name);
+            _sut.DoIt(name);
 
             // assert
             _sut
@@ -76,6 +78,7 @@ namespace Playground.Domain.UnitTests
                         .Excluding(de => de.Metadata.StorageVersion));
 
             _sut
+                .State
                 .ApplyCalled
                 .Should()
                 .BeTrue();
