@@ -8,6 +8,7 @@ using Playground.TicketOffice.Domain.Write.Commands;
 using Rebus.Auditing.Messages;
 using Rebus.Autofac;
 using Rebus.Config;
+using Rebus.Persistence.SqlServer;
 using Rebus.Retry.Simple;
 using Rebus.Routing.TypeBased;
 using Rebus.Serilog;
@@ -60,6 +61,7 @@ namespace Playground.TicketOffice.Api
             Configure
                 .With(new AutofacContainerAdapter(container))
                 .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), queueName))
+                //.Timeouts(t => t.StoreInSqlServer("timeoutConnection", "DeferedMessages", true))
                 .Routing(r => r.TypeBased().MapAssemblyOf<CreateMovieTheaterCommand>(queueName))
                 .Logging(rebusConfig => rebusConfig.Serilog(Log.Logger))
                 .Options(o => o.EnableMessageAuditing("ticketoffice.audit"))
