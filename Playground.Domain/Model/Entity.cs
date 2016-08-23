@@ -4,7 +4,7 @@ namespace Playground.Domain.Model
 {
     public abstract class Entity : IEquatable<Entity>
     {
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
         protected Entity(Guid id)
         {
