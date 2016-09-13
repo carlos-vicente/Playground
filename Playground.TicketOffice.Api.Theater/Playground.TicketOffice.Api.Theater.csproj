@@ -31,6 +31,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Playground.TicketOffice.Api.Theater.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -84,6 +85,14 @@
     </Reference>
     <Reference Include="Serilog.Settings.AppSettings, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.Settings.AppSettings.2.0.0\lib\net45\Serilog.Settings.AppSettings.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.Sinks.File, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.File.2.0.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.Sinks.RollingFile, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.RollingFile.2.1.0\lib\net45\Serilog.Sinks.RollingFile.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Sigil, Version=4.7.0.0, Culture=neutral, PublicKeyToken=2d06c3494341c8ab, processorArchitecture=MSIL">
@@ -161,6 +170,18 @@
       <Project>{6BCA599F-A8C2-46F8-BF0D-3EB9DD1ABAEA}</Project>
       <Name>Playground.DependencyResolver.Autofac</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
+      <Project>{A15462E6-1F1A-40AD-9EDE-23127289CB6A}</Project>
+      <Name>Playground.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.QueryService.Contracts\Playground.QueryService.Contracts.csproj">
+      <Project>{A0E4096A-8D47-4167-9669-A7B8D2C1ADB8}</Project>
+      <Name>Playground.QueryService.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.QueryService.InMemory.Autofac\Playground.QueryService.InMemory.Autofac.csproj">
+      <Project>{ED175880-ECF4-4696-ABD0-B39AD38C27BB}</Project>
+      <Name>Playground.QueryService.InMemory.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.TicketOffice.Api.AutofacRegister\Playground.TicketOffice.Api.AutofacRegister.csproj">
       <Project>{6D233D87-B613-4FE8-83B0-D87437E0CD8B}</Project>
       <Name>Playground.TicketOffice.Api.AutofacRegister</Name>
@@ -169,9 +190,33 @@
       <Project>{48028973-f859-4f6c-8ccb-1a2586a371bf}</Project>
       <Name>Playground.TicketOffice.Api.Theater.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Playground.TicketOffice.Domain.Theater.Handlers\Playground.TicketOffice.Domain.Theater.Handlers.csproj">
-      <Project>{ccfbf1b2-6592-4f23-974b-a491e54fcd1a}</Project>
-      <Name>Playground.TicketOffice.Domain.Theater.Handlers</Name>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Data.Contracts\Playground.TicketOffice.Theater.Data.Contracts.csproj">
+      <Project>{79af13d9-d9e5-41b7-921f-8c3ac65d4430}</Project>
+      <Name>Playground.TicketOffice.Theater.Data.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Data\Playground.TicketOffice.Theater.Data.csproj">
+      <Project>{d2b50e7e-7284-4566-9524-44ec055e9ae9}</Project>
+      <Name>Playground.TicketOffice.Theater.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Domain\Playground.TicketOffice.Theater.Domain.csproj">
+      <Project>{B4E65A34-F1BA-49E9-AB71-61A37C57AAAF}</Project>
+      <Name>Playground.TicketOffice.Theater.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Read.Handlers\Playground.TicketOffice.Theater.Read.Handlers.csproj">
+      <Project>{8e83f16a-4582-428e-842f-636d7d6700f3}</Project>
+      <Name>Playground.TicketOffice.Theater.Read.Handlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Read.Queries\Playground.TicketOffice.Theater.Read.Queries.csproj">
+      <Project>{02b9f09e-b519-4072-824d-eaa067ca921c}</Project>
+      <Name>Playground.TicketOffice.Theater.Read.Queries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Write.Handlers\Playground.TicketOffice.Theater.Write.Handlers.csproj">
+      <Project>{f3ebdc4f-c4f6-47ec-8dcb-d2b00fb1fb5b}</Project>
+      <Name>Playground.TicketOffice.Theater.Write.Handlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Write.Messages\Playground.TicketOffice.Theater.Write.Messages.csproj">
+      <Project>{c6c47635-ab98-4067-b527-b5164ba0f407}</Project>
+      <Name>Playground.TicketOffice.Theater.Write.Messages</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

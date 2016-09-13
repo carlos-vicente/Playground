@@ -1,3 +1,4 @@
+using System;
 using System.Web.Http;
 using WebActivatorEx;
 using Playground.TicketOffice.Api.Theater;
@@ -9,6 +10,14 @@ namespace Playground.TicketOffice.Api.Theater
 {
     public class SwaggerConfig
     {
+        private static string GetXmlCommentsPath()
+        {
+            var path = String.Format(
+                @"{0}bin\Playground.TicketOffice.Api.Theater.XML",
+                AppDomain.CurrentDomain.BaseDirectory);
+            return path;
+        }
+
         public static void Register()
         {
             var thisAssembly = typeof(SwaggerConfig).Assembly;
@@ -57,7 +66,7 @@ namespace Playground.TicketOffice.Api.Theater
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")
@@ -96,8 +105,8 @@ namespace Playground.TicketOffice.Api.Theater
                         // Xml comments (http://msdn.microsoft.com/en-us/library/b2s063f7(v=vs.110).aspx), you can incorporate
                         // those comments into the generated docs and UI. You can enable this by providing the path to one or
                         // more Xml comment files.
-                        //
-                        //c.IncludeXmlComments(GetXmlCommentsPath());
+
+                        c.IncludeXmlComments(GetXmlCommentsPath());
 
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.
@@ -132,14 +141,14 @@ namespace Playground.TicketOffice.Api.Theater
 
                         // Set this flag to omit schema property descriptions for any type properties decorated with the
                         // Obsolete attribute 
-                        //c.IgnoreObsoleteProperties();
+                        c.IgnoreObsoleteProperties();
 
                         // In accordance with the built in JsonSerializer, Swashbuckle will, by default, describe enums as integers.
                         // You can change the serializer behavior by configuring the StringToEnumConverter globally or for a given
                         // enum type. Swashbuckle will honor this change out-of-the-box. However, if you use a different
                         // approach to serialize enums as strings, you can also force Swashbuckle to describe them as strings.
                         // 
-                        //c.DescribeAllEnumsAsStrings();
+                        c.DescribeAllEnumsAsStrings();
 
                         // Similar to Schema filters, Swashbuckle also supports Operation and Document filters:
                         //

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{48028973-F859-4F6C-8CCB-1A2586A371BF}</ProjectGuid>
+    <ProjectGuid>{C6C47635-AB98-4067-B527-B5164BA0F407}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.TicketOffice.Api.Theater.Contracts</RootNamespace>
-    <AssemblyName>Playground.TicketOffice.Api.Theater.Contracts</AssemblyName>
+    <RootNamespace>Playground.TicketOffice.Theater.Write.Messages</RootNamespace>
+    <AssemblyName>Playground.TicketOffice.Theater.Write.Messages</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,10 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\MovieTheater.cs" />
-    <Compile Include="Requests\CreateNewMovieTheater.cs" />
-    <Compile Include="Responses\GetAllResult.cs" />
+    <Compile Include="CreateNewMovieTheaterCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
+      <Project>{A15462E6-1F1A-40AD-9EDE-23127289CB6A}</Project>
+      <Name>Playground.Messaging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -54,9 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandModule.cs" />
-    <Compile Include="DbConnectionModule.cs" />
+    <Compile Include="EventStoreConnectionModule.cs" />
     <Compile Include="DomainModule.cs" />
     <Compile Include="EventStoreModule.cs" />
+    <Compile Include="ReadModelConnectionModule.cs" />
     <Compile Include="RebusModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidationModule.cs" />
@@ -105,6 +106,14 @@
     <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
       <Project>{a15462e6-1f1a-40ad-9ede-23127289cb6a}</Project>
       <Name>Playground.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Data.Contracts\Playground.TicketOffice.Theater.Data.Contracts.csproj">
+      <Project>{79af13d9-d9e5-41b7-921f-8c3ac65d4430}</Project>
+      <Name>Playground.TicketOffice.Theater.Data.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Data\Playground.TicketOffice.Theater.Data.csproj">
+      <Project>{d2b50e7e-7284-4566-9524-44ec055e9ae9}</Project>
+      <Name>Playground.TicketOffice.Theater.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Playground.Validation.Fluent.Autofac\Playground.Validation.Fluent.Autofac.csproj">
       <Project>{BDDD9A1D-81DB-4330-8874-D0555AFEE318}</Project>
