@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Playground.Messaging;
 using Playground.QueryService.Contracts;
 using Playground.TicketOffice.Api.Theater.Contracts.Data;
@@ -12,9 +14,9 @@ using Playground.TicketOffice.Theater.Write.Messages;
 namespace Playground.TicketOffice.Api.Theater.Controllers
 {
     /// <summary>
-    /// 
+    /// The controller to manage the movie theater resource
     /// </summary>
-    [RoutePrefix("theater")]
+    [RoutePrefix("theaters")]
     public class TheaterController : ApiController
     {
         private readonly IMessageBus _messageBus;
@@ -36,10 +38,12 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
         /// <summary>
         /// Gets all movie theaters available
         /// </summary>
-        /// <returns>A collection of movie theaters</returns>
+        /// <returns >A collection of movie theaters</returns>
+        /// <response code="200">The request was processed correctly, the data will be in the response body</response>
         [Route("")]
         [HttpGet]
-        public async Task<GetAllResult> GetAll()
+        [ResponseType(typeof(GetAllResult))]
+        public async Task<IHttpActionResult> GetAll()
         {
             var query = new GetAllMovieTheatersQuery();
 
@@ -47,7 +51,7 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
                 .QueryAsync<GetAllMovieTheatersQuery, GetAllMovieTheatersQueryResult>(query)
                 .ConfigureAwait(false);
 
-            return new GetAllResult
+            return Ok(new GetAllResult
             {
                 Theaters = theatersResult
                     .Theaters
@@ -57,18 +61,18 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
                         Name = mt.Name
                     })
                     .ToList()
-            };
+            });
         }
 
         /// <summary>
         /// Creates a new movie theater
         /// </summary>
         /// <param name="createRequest">The new movie theater's information</param>
-        /// <response code="201">The new movie theater was created</response>
+        /// <response code="200">The request was processed correctly</response>
         /// <response code="500">An error occurred while creating the movie theater</response>
         [Route("")]
         [HttpPost]
-        public async Task Create(CreateNewMovieTheater createRequest)
+        public async Task<IHttpActionResult> Create(CreateNewMovieTheater createRequest)
         {
             await _messageBus
                 .SendCommand(new CreateNewMovieTheaterCommand
@@ -76,6 +80,47 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
                     Name = createRequest.Name
                 })
                 .ConfigureAwait(false);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Gets a movie theater that matches a given identifier
+        /// </summary>
+        /// <param name="theaterId">The identifier to search for</param>
+        /// <returns></returns>
+        /// <response code="200">The request was processed correctly, the data will be in the response body</response>
+        [Route("{theaterId}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetById(Guid theaterId)
+        {
+            return Ok(theaterId);
+        }
+
+        /// <summary>
+        /// Gets all movies currently showing at the theater
+        /// </summary>
+        /// <param name="theaterId">The theater's identifier</param>
+        /// <returns></returns>
+        /// <response code="200">The request was processed correctly, the data will be in the response body</response>
+        [Route("{theaterId}/movies")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetTheaterMovies(Guid theaterId)
+        {
+            return Ok(theaterId);
+        }
+
+        /// <summary>
+        /// Gets all rooms available at the theater
+        /// </summary>
+        /// <param name="theaterId">The theater's identifier</param>
+        /// <returns></returns>
+        /// <response code="200">The request was processed correctly, the data will be in the response body</response>
+        [Route("{theaterId}/rooms")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetTheaterRooms(Guid theaterId)
+        {
+            return Ok(theaterId);
         }
     }
 }
