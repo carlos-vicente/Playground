@@ -30,6 +30,34 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.1.0\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Autofac.Extras.FakeItEasy, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Extras.FakeItEasy.4.0.0\lib\net451\Autofac.Extras.FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FakeItEasy, Version=2.2.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <HintPath>..\packages\FakeItEasy.2.2.0\lib\net40\FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions, Version=4.14.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.14.0\lib\net45\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.14.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.14.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.3.50.2\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +70,36 @@
   <ItemGroup>
     <Compile Include="GetAllMovieTheatersQueryHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Playground.QueryService.Contracts\Playground.QueryService.Contracts.csproj">
+      <Project>{A0E4096A-8D47-4167-9669-A7B8D2C1ADB8}</Project>
+      <Name>Playground.QueryService.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Tests\Playground.Tests.csproj">
+      <Project>{128691BD-75CA-4303-947D-B8D7062510EC}</Project>
+      <Name>Playground.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Data.Contracts\Playground.TicketOffice.Theater.Data.Contracts.csproj">
+      <Project>{79AF13D9-D9E5-41B7-921F-8C3AC65D4430}</Project>
+      <Name>Playground.TicketOffice.Theater.Data.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Domain\Playground.TicketOffice.Theater.Domain.csproj">
+      <Project>{B4E65A34-F1BA-49E9-AB71-61A37C57AAAF}</Project>
+      <Name>Playground.TicketOffice.Theater.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Read.Handlers\Playground.TicketOffice.Theater.Read.Handlers.csproj">
+      <Project>{8E83F16A-4582-428E-842F-636D7D6700F3}</Project>
+      <Name>Playground.TicketOffice.Theater.Read.Handlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Read.Queries\Playground.TicketOffice.Theater.Read.Queries.csproj">
+      <Project>{02B9F09E-B519-4072-824D-EAA067CA921C}</Project>
+      <Name>Playground.TicketOffice.Theater.Read.Queries</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

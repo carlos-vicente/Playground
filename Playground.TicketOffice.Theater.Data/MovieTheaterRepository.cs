@@ -19,6 +19,9 @@ namespace Playground.TicketOffice.Theater.Data
 
         public async Task Create(MovieTheater movieTheater)
         {
+            if (movieTheater == null)
+                throw new ArgumentNullException(nameof(movieTheater));
+
             using (var connection = _connectionFactory.CreateConnection())
             {
                 await connection
@@ -33,12 +36,15 @@ namespace Playground.TicketOffice.Theater.Data
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
-                return (await connection
+                var theaters = await connection
                     .ExecuteQueryMultiple<dynamic>(
                         "SELECT Id, Name FROM [MovieTheater].[Theater]",
                         new {})
-                    .ConfigureAwait(false))
-                    .Select(mt => new MovieTheater(mt.Id, mt.Name));
+                    .ConfigureAwait(false);
+
+                return theaters
+                    ?.Select(mt => new MovieTheater(mt.Id, mt.Name))
+                       ?? new List<MovieTheater>();
             }
         }
 
@@ -52,7 +58,9 @@ namespace Playground.TicketOffice.Theater.Data
                         new { Id = id })
                     .ConfigureAwait(false);
 
-                return new MovieTheater(mt.Id, mt.Name);
+                return mt == null 
+                    ? null 
+                    : new MovieTheater(mt.Id, mt.Name);
             }
         }
     }

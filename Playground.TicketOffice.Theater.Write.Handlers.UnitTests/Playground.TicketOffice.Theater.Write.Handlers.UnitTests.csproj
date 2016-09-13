@@ -30,6 +30,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.1.0\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Autofac.Extras.FakeItEasy, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Extras.FakeItEasy.4.0.0\lib\net451\Autofac.Extras.FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FakeItEasy, Version=2.2.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <HintPath>..\packages\FakeItEasy.2.2.0\lib\net40\FakeItEasy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions, Version=4.14.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.14.0\lib\net45\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.14.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.14.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.3.50.2\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rebus">
+      <HintPath>..\Playground.TicketOffice.Api.Theater\Bin\Rebus.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +73,36 @@
   <ItemGroup>
     <Compile Include="CreateNewMovieTheaterCommandHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
+      <Project>{A15462E6-1F1A-40AD-9EDE-23127289CB6A}</Project>
+      <Name>Playground.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Tests\Playground.Tests.csproj">
+      <Project>{128691bd-75ca-4303-947d-b8d7062510ec}</Project>
+      <Name>Playground.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Data.Contracts\Playground.TicketOffice.Theater.Data.Contracts.csproj">
+      <Project>{79AF13D9-D9E5-41B7-921F-8C3AC65D4430}</Project>
+      <Name>Playground.TicketOffice.Theater.Data.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Domain\Playground.TicketOffice.Theater.Domain.csproj">
+      <Project>{B4E65A34-F1BA-49E9-AB71-61A37C57AAAF}</Project>
+      <Name>Playground.TicketOffice.Theater.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Write.Handlers\Playground.TicketOffice.Theater.Write.Handlers.csproj">
+      <Project>{F3EBDC4F-C4F6-47EC-8DCB-D2B00FB1FB5B}</Project>
+      <Name>Playground.TicketOffice.Theater.Write.Handlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.TicketOffice.Theater.Write.Messages\Playground.TicketOffice.Theater.Write.Messages.csproj">
+      <Project>{C6C47635-AB98-4067-B527-B5164BA0F407}</Project>
+      <Name>Playground.TicketOffice.Theater.Write.Messages</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

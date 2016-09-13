@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Playground.Messaging.Commands;
 using Playground.TicketOffice.Theater.Data.Contracts;
 using Playground.TicketOffice.Theater.Domain;

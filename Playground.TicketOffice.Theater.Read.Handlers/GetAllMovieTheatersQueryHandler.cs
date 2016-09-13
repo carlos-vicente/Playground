@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Playground.QueryService.Contracts;
 using Playground.TicketOffice.Theater.Data.Contracts;
+using Playground.TicketOffice.Theater.Domain;
 using Playground.TicketOffice.Theater.Read.Queries;
 
 namespace Playground.TicketOffice.Theater.Read.Handlers
@@ -24,7 +26,7 @@ namespace Playground.TicketOffice.Theater.Read.Handlers
 
             return new GetAllMovieTheatersQueryResult
             {
-                Theaters = theaters
+                Theaters = theaters ?? new List<MovieTheater>()
             };
         }
     }
