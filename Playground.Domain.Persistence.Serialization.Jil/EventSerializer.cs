@@ -14,12 +14,12 @@ namespace Playground.Domain.Persistence.Serialization.Jil
 
         public string Serialize(object obj)
         {
-            return JSON.SerializeDynamic(obj);
+            return JSON.SerializeDynamic(obj, Options);
         }
 
         public string Serialize<TObject>(TObject obj)
         {
-            return JSON.Serialize<TObject>(obj, Options);
+            return JSON.Serialize(obj, Options);
         }
 
         public object Deserialize(string rep)

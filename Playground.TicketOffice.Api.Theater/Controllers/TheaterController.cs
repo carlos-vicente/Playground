@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Playground.Messaging;
 using Playground.QueryService.Contracts;
+using Playground.TicketOffice.Api.Theater.Contracts;
 using Playground.TicketOffice.Api.Theater.Contracts.Data;
 using Playground.TicketOffice.Api.Theater.Contracts.Requests;
 using Playground.TicketOffice.Api.Theater.Contracts.Responses;
@@ -16,7 +17,6 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
     /// <summary>
     /// The controller to manage the movie theater resource
     /// </summary>
-    [RoutePrefix("theaters")]
     public class TheaterController : ApiController
     {
         private readonly IMessageBus _messageBus;
@@ -40,9 +40,9 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
         /// </summary>
         /// <returns >A collection of movie theaters</returns>
         /// <response code="200">The request was processed correctly, the data will be in the response body</response>
-        [Route("")]
+        [Route(Routes.GetAllMovieTheaters)]
         [HttpGet]
-        [ResponseType(typeof(GetAllResult))]
+        [ResponseType(typeof(GetAllMovieTheatersResult))]
         public async Task<IHttpActionResult> GetAll()
         {
             var query = new GetAllMovieTheatersQuery();
@@ -51,7 +51,7 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
                 .QueryAsync<GetAllMovieTheatersQuery, GetAllMovieTheatersQueryResult>(query)
                 .ConfigureAwait(false);
 
-            return Ok(new GetAllResult
+            return Ok(new GetAllMovieTheatersResult
             {
                 Theaters = theatersResult
                     .Theaters
@@ -70,7 +70,7 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
         /// <param name="createRequest">The new movie theater's information</param>
         /// <response code="200">The request was processed correctly</response>
         /// <response code="500">An error occurred while creating the movie theater</response>
-        [Route("")]
+        [Route(Routes.CreateNewMovieTheater)]
         [HttpPost]
         public async Task<IHttpActionResult> Create(CreateNewMovieTheater createRequest)
         {
@@ -90,8 +90,9 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
         /// <param name="theaterId">The identifier to search for</param>
         /// <returns></returns>
         /// <response code="200">The request was processed correctly, the data will be in the response body</response>
-        [Route("{theaterId}")]
+        [Route(Routes.GetMovieTheaterById)]
         [HttpGet]
+        [ResponseType(typeof(GetMovieTheaterByIdResult))]
         public async Task<IHttpActionResult> GetById(Guid theaterId)
         {
             return Ok(theaterId);
@@ -103,9 +104,10 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
         /// <param name="theaterId">The theater's identifier</param>
         /// <returns></returns>
         /// <response code="200">The request was processed correctly, the data will be in the response body</response>
-        [Route("{theaterId}/movies")]
+        [Route(Routes.GetMovieTheaterMovies)]
         [HttpGet]
-        public async Task<IHttpActionResult> GetTheaterMovies(Guid theaterId)
+        [ResponseType(typeof(GetMovieTheaterMoviesResult))]
+        public async Task<IHttpActionResult> GetMovies(Guid theaterId)
         {
             return Ok(theaterId);
         }
@@ -116,9 +118,10 @@ namespace Playground.TicketOffice.Api.Theater.Controllers
         /// <param name="theaterId">The theater's identifier</param>
         /// <returns></returns>
         /// <response code="200">The request was processed correctly, the data will be in the response body</response>
-        [Route("{theaterId}/rooms")]
+        [Route(Routes.GetMovieTheaterRooms)]
         [HttpGet]
-        public async Task<IHttpActionResult> GetTheaterRooms(Guid theaterId)
+        [ResponseType(typeof(GetMovieTheaterRoomsResult))]
+        public async Task<IHttpActionResult> GetRooms(Guid theaterId)
         {
             return Ok(theaterId);
         }

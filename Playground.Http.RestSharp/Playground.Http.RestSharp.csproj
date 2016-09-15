@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{48028973-F859-4F6C-8CCB-1A2586A371BF}</ProjectGuid>
+    <ProjectGuid>{7258B888-B807-42CA-8BD0-B064A1375F5A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playground.TicketOffice.Api.Theater.Contracts</RootNamespace>
-    <AssemblyName>Playground.TicketOffice.Api.Theater.Contracts</AssemblyName>
+    <RootNamespace>Playground.Http.RestSharp</RootNamespace>
+    <AssemblyName>Playground.Http.RestSharp</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,23 +44,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\MovieTheater.cs" />
-    <Compile Include="Requests\CreateNewMovieTheater.cs" />
-    <Compile Include="Requests\GetAllMovieTheaters.cs" />
-    <Compile Include="Requests\GetMovieTheaterById.cs" />
-    <Compile Include="Requests\GetMovieTheaterMovies.cs" />
-    <Compile Include="Requests\GetMovieTheaterRooms.cs" />
-    <Compile Include="Responses\GetAllMovieTheatersResult.cs" />
+    <Compile Include="HttpClient.cs" />
+    <Compile Include="HttpRequestFactory.cs" />
+    <Compile Include="IHttpRequestFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Responses\GetMovieTheaterByIdResult.cs" />
-    <Compile Include="Responses\GetMovieTheaterMoviesResult.cs" />
-    <Compile Include="Responses\GetMovieTheaterRoomsResult.cs" />
-    <Compile Include="Routes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Playground.Api.Contracts\Playground.Api.Contracts.csproj">
       <Project>{25FF72BA-BF25-4E87-9312-9843D314D9CD}</Project>
       <Name>Playground.Api.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Http\Playground.Http.csproj">
+      <Project>{368AE9C9-D0CE-4093-A06B-B92E4F319869}</Project>
+      <Name>Playground.Http</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Serialization.Json\Playground.Serialization.Json.csproj">
+      <Project>{26D09033-3B33-4369-B74F-B143DE7B93B7}</Project>
+      <Name>Playground.Serialization.Json</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

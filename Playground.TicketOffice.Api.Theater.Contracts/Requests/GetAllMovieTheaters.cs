@@ -2,13 +2,11 @@
 
 namespace Playground.TicketOffice.Api.Theater.Contracts.Requests
 {
-    public class CreateNewMovieTheater : IRequest
+    public class GetAllMovieTheaters : IRequest
     {
-        public string Name { get; set; }
-
         public string GetRelativeUrl()
         {
-            return Routes.CreateNewMovieTheater;
+            return Routes.GetAllMovieTheaters;
         }
     }
 }

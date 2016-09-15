@@ -166,6 +166,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Playground.Api.Contracts\Playground.Api.Contracts.csproj">
+      <Project>{25FF72BA-BF25-4E87-9312-9843D314D9CD}</Project>
+      <Name>Playground.Api.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.DependencyResolver.Autofac\Playground.DependencyResolver.Autofac.csproj">
       <Project>{6BCA599F-A8C2-46F8-BF0D-3EB9DD1ABAEA}</Project>
       <Name>Playground.DependencyResolver.Autofac</Name>
