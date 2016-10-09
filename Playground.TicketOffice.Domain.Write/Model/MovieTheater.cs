@@ -8,7 +8,7 @@ namespace Playground.TicketOffice.Domain.Write.Model
 {
     public class MovieTheater 
         : AggregateRoot,
-        IEmit<MovieTheaterCreated>
+        IGetAppliedWith<MovieTheaterCreated>
     {
         public string Name { get; set; }
 
@@ -29,7 +29,7 @@ namespace Playground.TicketOffice.Domain.Write.Model
 
         #region Events Apply
 
-        void IEmit<MovieTheaterCreated>.Apply(MovieTheaterCreated e)
+        void IGetAppliedWith<MovieTheaterCreated>.Apply(MovieTheaterCreated e)
         {
             Name = e.Name;
             Rooms = new TheaterRoom[e.RoomsNumber];

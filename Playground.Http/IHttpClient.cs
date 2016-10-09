@@ -6,10 +6,10 @@ namespace Playground.Http
 {
     public interface IHttpClient
     {
-        Task<TResponse> Get<TRequest, TResponse>(TRequest request)
+        Task<TResponse> Get<TRequest, TResponse>(string baseUrl, TRequest request)
             where TRequest : IRequest;
 
-        Task Post<TRequest>(TRequest request, params HttpStatusCode[] acceptedStatusCodes)
+        Task Post<TRequest>(string baseUrl, TRequest request, params HttpStatusCode[] acceptedStatusCodes)
             where TRequest : IRequest;
     }
 }

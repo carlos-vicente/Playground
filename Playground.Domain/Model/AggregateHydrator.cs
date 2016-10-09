@@ -36,7 +36,7 @@ namespace Playground.Domain.Model
             where TAggregateRoot : AggregateRoot
             where TDomainEvent : DomainEvent
         {
-            ((IEmit<TDomainEvent>) aggregateRootBase)
+            ((IGetAppliedWith<TDomainEvent>) aggregateRootBase)
                 .Apply(domainEvent);
         }
     }
@@ -72,7 +72,7 @@ namespace Playground.Domain.Model
             where TAggregateRootState : new()
             where TDomainEvent : DomainEvent
         {
-            ((IEmit<TDomainEvent>)aggregateRootState).Apply(domainEvent);
+            ((IGetAppliedWith<TDomainEvent>)aggregateRootState).Apply(domainEvent);
         }
     }
 }

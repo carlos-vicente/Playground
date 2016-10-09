@@ -67,11 +67,11 @@ namespace Playground.Domain.Persistence
             where TAggregateRoot : AggregateRoot
         {
             await _eventStore
-                .StoreEvents(aggregateRoot.Id, aggregateRoot.CurrentVersion, aggregateRoot.Events)
+                .StoreEvents(aggregateRoot.Id, aggregateRoot.CurrentVersion, aggregateRoot.UncommittedEvents)
                 .ConfigureAwait(false);
 
             // everything worked correctly so lets dispatch the events
-            foreach (var domainEvent in aggregateRoot.Events)
+            foreach (var domainEvent in aggregateRoot.UncommittedEvents)
             {
                 await _eventDispatcher
                     .RaiseEvent(domainEvent)

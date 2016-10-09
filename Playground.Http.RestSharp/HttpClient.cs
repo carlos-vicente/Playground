@@ -21,13 +21,15 @@ namespace Playground.Http.RestSharp
             _requestFactory = requestFactory;
         }
 
-        public async Task<TResponse> Get<TRequest, TResponse>(TRequest request)
+        public async Task<TResponse> Get<TRequest, TResponse>(
+            string baseUrl,
+            TRequest request)
             where TRequest : IRequest
         {
             var url = request.GetRelativeUrl();
 
             var restRequest = _requestFactory
-                .CreateGetRequest(url, request);
+                .CreateGetRequest(baseUrl, url, request);
 
             var response = await _restClient
                 .ExecuteGetTaskAsync<TResponse>(restRequest)
@@ -42,13 +44,16 @@ namespace Playground.Http.RestSharp
             throw new ApplicationException(errorMessage, response.ErrorException);
         }
 
-        public async Task Post<TRequest>(TRequest request, params HttpStatusCode[] acceptedStatusCodes) 
+        public async Task Post<TRequest>(
+            string baseUrl,
+            TRequest request,
+            params HttpStatusCode[] acceptedStatusCodes) 
             where TRequest : IRequest
         {
             var url = request.GetRelativeUrl();
 
             var restRequest = _requestFactory
-                .CreatePostRequest(url, request);
+                .CreatePostRequest(baseUrl, url, request);
 
             var response = await _restClient
                 .ExecutePostTaskAsync(restRequest)

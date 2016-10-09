@@ -1,22 +1,31 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using RestSharp;
 
 namespace Playground.Http.RestSharp
 {
     public class HttpRequestFactory : IHttpRequestFactory
     {
-        public IRestRequest CreateGetRequest<TRequest>(string urlFormat, TRequest request)
+        public IRestRequest CreateGetRequest<TRequest>(
+            string baseUrl,
+            string urlFormat,
+            TRequest request)
         {
-            var finalUrl = GetFormattedUrl(urlFormat, request);
+            var resourceUrl = GetFormattedUrl(urlFormat, request);
+            var resource = new Uri(new Uri(baseUrl), resourceUrl);
 
-            return new RestRequest(finalUrl, Method.GET);
+            return new RestRequest(resource, Method.GET);
         }
 
-        public IRestRequest CreatePostRequest<TRequest>(string urlFormat, TRequest request)
+        public IRestRequest CreatePostRequest<TRequest>(
+            string baseUrl,
+            string urlFormat,
+            TRequest request)
         {
-            var finalUrl = GetFormattedUrl(urlFormat, request);
+            var resourceUrl = GetFormattedUrl(urlFormat, request);
+            var resource = new Uri(new Uri(baseUrl), resourceUrl);
 
-            var restRequest = new RestRequest(finalUrl, Method.GET);
+            var restRequest = new RestRequest(resource, Method.GET);
 
             restRequest.AddJsonBody(request);
 

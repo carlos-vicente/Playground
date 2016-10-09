@@ -13,7 +13,7 @@ namespace Playground.Domain.UnitTests
     {
         public class TestAggregateRoot 
             : AggregateRoot,
-            IEmit<ItHappened>
+            IGetAppliedWith<ItHappened>
         {
             public bool ApplyCalled { get; set; }
 
@@ -23,13 +23,13 @@ namespace Playground.Domain.UnitTests
                 ApplyCalled = false;
             }
 
-            void IEmit<ItHappened>.Apply(ItHappened evt)
+            void IGetAppliedWith<ItHappened>.Apply(ItHappened evt)
             {
                 // do something to apply the event to the aggregate root
                 ApplyCalled = true;
             }
 
-            public void ItHappened(string name)
+            public void MakeItHappen(string name)
             {
                 When(new ItHappened(Id)
                 {
@@ -59,11 +59,11 @@ namespace Playground.Domain.UnitTests
             };
 
             // act
-            _sut.ItHappened(name);
+            _sut.MakeItHappen(name);
 
             // assert
             _sut
-                .Events
+                .UncommittedEvents
                 .Should()
                 .ContainSingle()
                 .And

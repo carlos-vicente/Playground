@@ -11,11 +11,11 @@ namespace Playground.Domain.UnitTests
 {
     public class AggregateRootWithStateTests : SimpleTestBase
     {
-        public class TestAggregateState : IEmit<ItHappened>
+        public class TestAggregateState : IGetAppliedWith<ItHappened>
         {
             public bool ApplyCalled { get; set; }
 
-            void IEmit<ItHappened>.Apply(ItHappened e)
+            void IGetAppliedWith<ItHappened>.Apply(ItHappened e)
             {
                 ApplyCalled = true;
             }
@@ -65,7 +65,7 @@ namespace Playground.Domain.UnitTests
 
             // assert
             _sut
-                .Events
+                .UncommittedEvents
                 .Should()
                 .ContainSingle()
                 .And

@@ -229,8 +229,8 @@ namespace Playground.Domain.Persistence.UnitTests
             var event2 = Faker.Resolve<DomainEvent>();
 
             var aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.Events.Add(event1);
-            aggregateRoot.Events.Add(event2);
+            aggregateRoot.UncommittedEvents.Add(event1);
+            aggregateRoot.UncommittedEvents.Add(event2);
 
             var expectedEvents = new List<DomainEvent>
             {
@@ -260,8 +260,8 @@ namespace Playground.Domain.Persistence.UnitTests
             var event2 = Fixture.Create<TestAggregateChanged>();
 
             var aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.Events.Add(event1);
-            aggregateRoot.Events.Add(event2);
+            aggregateRoot.UncommittedEvents.Add(event1);
+            aggregateRoot.UncommittedEvents.Add(event2);
 
             // act
             await Sut
@@ -286,8 +286,8 @@ namespace Playground.Domain.Persistence.UnitTests
             var event2 = Fixture.Create<TestAggregateChanged>();
 
             var aggregateRoot = new TestAggregateRoot(Guid.NewGuid());
-            aggregateRoot.Events.Add(event1);
-            aggregateRoot.Events.Add(event2);
+            aggregateRoot.UncommittedEvents.Add(event1);
+            aggregateRoot.UncommittedEvents.Add(event2);
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .StoreEvents(

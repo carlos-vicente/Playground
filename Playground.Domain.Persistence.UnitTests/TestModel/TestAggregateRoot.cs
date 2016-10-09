@@ -6,17 +6,17 @@ namespace Playground.Domain.Persistence.UnitTests.TestModel
 {
     internal class TestAggregateRoot 
         : AggregateRoot,
-        IEmit<TestAggregateCreated>,
-        IEmit<TestAggregateChanged>
+        IGetAppliedWith<TestAggregateCreated>,
+        IGetAppliedWith<TestAggregateChanged>
     {
         public TestAggregateRoot(Guid id) : base(id) { }
 
-        void IEmit<TestAggregateCreated>.Apply(TestAggregateCreated e)
+        void IGetAppliedWith<TestAggregateCreated>.Apply(TestAggregateCreated e)
         {
             throw new NotImplementedException();
         }
 
-        void IEmit<TestAggregateChanged>.Apply(TestAggregateChanged e)
+        void IGetAppliedWith<TestAggregateChanged>.Apply(TestAggregateChanged e)
         {
             throw new NotImplementedException();
         }

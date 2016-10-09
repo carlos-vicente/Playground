@@ -1,30 +1,43 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Playground.Http;
+using Playground.TicketOffice.Api.Theater.Contracts.Requests;
+using Playground.TicketOffice.Api.Theater.Contracts.Responses;
+using Playground.TicketOffice.Web.Configuration;
 using Playground.TicketOffice.Web.Models;
-using RestSharp;
 
 namespace Playground.TicketOffice.Web.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IHttpClient _client;
+        private readonly IEndpointsConfiguration _endpointsConfiguration;
 
-        public HomeController(IHttpClient client)
+        public HomeController(
+            IHttpClient client,
+            IEndpointsConfiguration endpointsConfiguration)
         {
             _client = client;
+            _endpointsConfiguration = endpointsConfiguration;
         }
 
         // GET: Home
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            _client.Get<>()
+            var result = await _client
+                .Get<GetAllMovieTheaters, GetAllMovieTheatersResult>(
+                    _endpointsConfiguration.MovieTheaterEndpoint,
+                    new GetAllMovieTheaters())
+                .ConfigureAwait(false);
 
-            var theaters = new List<Theater>
-            {
-                new Theater { Name = "Colombo" },
-                new Theater { Name = "Odivelas" }
-            };
+            var theaters = result
+                .Theaters
+                .Select(t => new Theater
+                {
+                    Name = t.Name
+                })
+                .ToList();
 
             return View(theaters);
         }

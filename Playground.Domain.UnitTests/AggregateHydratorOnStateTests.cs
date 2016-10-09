@@ -19,8 +19,8 @@ namespace Playground.Domain.UnitTests
             // arrange
             var fakeAggregate = A.Fake<AggregateRoot>(builder => builder
                 .WithArgumentsForConstructor(new List<object> {Guid.NewGuid()})
-                .Implements(typeof (IEmit<ItHappened>))
-                .Implements(typeof (IEmit<GotDone>)));
+                .Implements(typeof (IGetAppliedWith<ItHappened>))
+                .Implements(typeof (IGetAppliedWith<GotDone>)));
 
             var event1 = Fixture.Create<ItHappened>();
             var event2 = Fixture.Create<GotDone>();
@@ -37,11 +37,11 @@ namespace Playground.Domain.UnitTests
                 .HydrateAggregateWithEvents(fakeAggregate, events);
 
             // assert
-            A.CallTo(() => ((IEmit<ItHappened>) fakeAggregate)
+            A.CallTo(() => ((IGetAppliedWith<ItHappened>) fakeAggregate)
                 .Apply(event1))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => ((IEmit<GotDone>) fakeAggregate)
+            A.CallTo(() => ((IGetAppliedWith<GotDone>) fakeAggregate)
                 .Apply(event2))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
