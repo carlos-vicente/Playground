@@ -41,11 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CreateMovieTheaterCommand.cs" />
-    <Compile Include="Events\MovieTheaterCreated.cs" />
-    <Compile Include="Model\MovieTheater.cs" />
-    <Compile Include="Model\Seat.cs" />
-    <Compile Include="Model\TheaterRoom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +52,11 @@
       <Project>{a15462e6-1f1a-40ad-9ede-23127289cb6a}</Project>
       <Name>Playground.Messaging</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\" />
+    <Folder Include="Events\" />
+    <Folder Include="Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

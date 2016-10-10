@@ -14,4 +14,17 @@ namespace Playground.Messaging.Commands
             AggregateRootId = aggregateRootId;
         }
     }
+
+    public abstract class StatedDomainCommand<TAggregateRoot, TAggregateState>
+        : ICommand
+        where TAggregateRoot : AggregateRootWithState<TAggregateState> 
+        where TAggregateState : new()
+    {
+        public Guid AggregateRootId { get; private set; }
+
+        protected StatedDomainCommand(Guid aggregateRootId)
+        {
+            AggregateRootId = aggregateRootId;
+        }
+    }
 }

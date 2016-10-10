@@ -45,7 +45,7 @@
     <Compile Include="Model\AggregateRoot.cs" />
     <Compile Include="Events\DomainEvent.cs" />
     <Compile Include="Model\Entity.cs" />
-    <Compile Include="Events\IEmit.cs" />
+    <Compile Include="Events\IGetAppliedWith.cs" />
     <Compile Include="Events\Metadata.cs" />
     <Compile Include="Model\IAggregateHydrator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -41,7 +41,7 @@ namespace Playground.Domain.Model
         }
     }
 
-    public class AggregateHydratorV2 : IAggregateHydratorV2
+    public class AggregateStateHydrator : IAggregateHydratorV2
     {
         /// <summary>
         /// Apply all the events in <paramref name="domainEvents"/> to <paramref name="aggregateRootBase"/>
