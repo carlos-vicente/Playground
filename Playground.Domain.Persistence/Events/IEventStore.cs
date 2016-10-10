@@ -41,5 +41,8 @@ namespace Playground.Domain.Persistence.Events
         /// <param name="toEventId">The last event identifier to load (inclusive)</param>
         /// <returns>The batch list of domain events for the stream; An empty list if the stream exists but has no events; Null if the stream does not exists</returns>
         Task<ICollection<DomainEvent>> LoadSelectedEvents(Guid streamId, long fromEventId, long toEventId);
+
+        //TODO: create new metod for selecting all events from a specific version
+        // Task<ICollection<DomainEvent>> LoadSelectedEvents(Guid streamId, long fromEventId);
     }
 }

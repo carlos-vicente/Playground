@@ -4,8 +4,10 @@ using Playground.Domain.Model;
 
 namespace Playground.Domain.Persistence.UnitTests.TestModel
 {
+    internal class TestAggregateState { }
+
     internal class TestAggregateRoot 
-        : AggregateRoot,
+        : AggregateRoot<TestAggregateState>,
         IGetAppliedWith<TestAggregateCreated>,
         IGetAppliedWith<TestAggregateChanged>
     {

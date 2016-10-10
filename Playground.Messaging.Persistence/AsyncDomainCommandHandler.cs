@@ -5,10 +5,11 @@ using Playground.Messaging.Commands;
 
 namespace Playground.Messaging.Persistence
 {
-    public abstract class AsyncDomainCommandHandler<TCommand, TAggregate>
-        : IAsyncCommandHandler<TCommand> 
-        where TAggregate: AggregateRoot 
-        where TCommand : DomainCommand<TAggregate>
+    public abstract class AsyncDomainCommandHandler<TCommand, TAggregate, TAggregateState>
+        : IAsyncCommandHandler<TCommand>
+        where TCommand : DomainCommand<TAggregate, TAggregateState>
+        where TAggregate : AggregateRoot<TAggregateState>
+        where TAggregateState : class, new()
     {
         private readonly IAggregateContext _aggregateContext;
 
@@ -20,13 +21,13 @@ namespace Playground.Messaging.Persistence
         public async Task Handle(TCommand command)
         {
             var aggregate = await _aggregateContext
-                .TryLoad<TAggregate>(command.AggregateRootId)
+                .TryLoad<TAggregate, TAggregateState>(command.AggregateRootId)
                 .ConfigureAwait(false);
 
             if (aggregate == null)
             {
                 aggregate = await _aggregateContext
-                    .Create<TAggregate>(command.AggregateRootId)
+                    .Create<TAggregate, TAggregateState>(command.AggregateRootId)
                     .ConfigureAwait(false);
             }
 
@@ -34,13 +35,13 @@ namespace Playground.Messaging.Persistence
                 .ConfigureAwait(false);
 
             await _aggregateContext
-                .Save(aggregate)
+                .Save<TAggregate, TAggregateState>(aggregate)
                 .ConfigureAwait(false);
         }
 
         public override string ToString()
         {
-            return $"{GetType().Name} => {typeof (TAggregate).Name}";
+            return $"{GetType().Name} => {typeof(TAggregate).Name}";
         }
 
         protected abstract Task HandleOnAggregate(TCommand command, TAggregate aggregate);

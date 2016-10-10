@@ -29,11 +29,11 @@ namespace Playground.Messaging.Persistence.UnitTests
             var command = new Command(aggregateRootId);
 
             A.CallTo(() => Faker.Resolve<IAggregateContext>()
-                .TryLoad<Aggregate>(aggregateRootId))
+                .TryLoad<Aggregate, AggregateState>(aggregateRootId))
                 .Returns(null as Aggregate);
 
             A.CallTo(() => Faker.Resolve<IAggregateContext>()
-                .Create<Aggregate>(aggregateRootId))
+                .Create<Aggregate, AggregateState>(aggregateRootId))
                 .Returns(aggregateRoot);
 
             // act
@@ -43,7 +43,7 @@ namespace Playground.Messaging.Persistence.UnitTests
 
             // assert
             A.CallTo(() => Faker.Resolve<IAggregateContext>()
-                .Create<Aggregate>(aggregateRootId))
+                .Create<Aggregate, AggregateState>(aggregateRootId))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -56,7 +56,7 @@ namespace Playground.Messaging.Persistence.UnitTests
             var command = new Command(aggregateRootId);
 
             A.CallTo(() => Faker.Resolve<IAggregateContext>()
-                .TryLoad<Aggregate>(aggregateRootId))
+                .TryLoad<Aggregate, AggregateState>(aggregateRootId))
                 .Returns(aggregateRoot);
 
             // act
@@ -66,7 +66,7 @@ namespace Playground.Messaging.Persistence.UnitTests
 
             // assert
             A.CallTo(() => Faker.Resolve<IAggregateContext>()
-                .Create<Aggregate>(A<Guid>.Ignored))
+                .Create<Aggregate, AggregateState>(A<Guid>.Ignored))
                 .MustNotHaveHappened();
         }
 
@@ -79,7 +79,7 @@ namespace Playground.Messaging.Persistence.UnitTests
             var command = new Command(aggregateRootId);
 
             A.CallTo(() => Faker.Resolve<IAggregateContext>()
-                .TryLoad<Aggregate>(aggregateRootId))
+                .TryLoad<Aggregate, AggregateState>(aggregateRootId))
                 .Returns(aggregateRoot);
 
             // act
@@ -107,7 +107,7 @@ namespace Playground.Messaging.Persistence.UnitTests
             var command = new Command(aggregateRootId);
 
             A.CallTo(() => Faker.Resolve<IAggregateContext>()
-                .TryLoad<Aggregate>(aggregateRootId))
+                .TryLoad<Aggregate, AggregateState>(aggregateRootId))
                 .Returns(aggregateRoot);
 
             // act
@@ -117,7 +117,7 @@ namespace Playground.Messaging.Persistence.UnitTests
 
             // assert
             A.CallTo(() => Faker.Resolve<IAggregateContext>()
-                .Save<Aggregate>(aggregateRoot))
+                .Save<Aggregate, AggregateState>(aggregateRoot))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
     }

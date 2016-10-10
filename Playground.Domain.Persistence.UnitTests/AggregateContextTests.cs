@@ -29,7 +29,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // act
             var aggregateRoot = await Sut
-                .Create<TestAggregateRoot>(aggregateRootId)
+                .Create<TestAggregateRoot, TestAggregateState>(aggregateRootId)
                 .ConfigureAwait(true);
 
             // assert
@@ -72,7 +72,7 @@ namespace Playground.Domain.Persistence.UnitTests
             
             // act
             var aggregate = await Sut
-                .TryLoad<TestAggregateRoot>(aggregateRootId)
+                .TryLoad<TestAggregateRoot, TestAggregateState>(aggregateRootId)
                 .ConfigureAwait(false);
 
             // assert
@@ -81,7 +81,7 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(event2Version);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents(aggregate, events))
+                .HydrateAggregateWithEvents<TestAggregateState>(events))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -97,7 +97,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // act
             var aggregate = await Sut
-                .TryLoad<TestAggregateRoot>(aggregateRootId)
+                .TryLoad<TestAggregateRoot, TestAggregateState>(aggregateRootId)
                 .ConfigureAwait(false);
 
             // assert
@@ -106,7 +106,7 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(0);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<DomainEvent>>._))
+                .HydrateAggregateWithEvents<TestAggregateState>(A<ICollection<DomainEvent>>._))
                 .MustHaveHappened(Repeated.Never);
         }
 
@@ -122,7 +122,7 @@ namespace Playground.Domain.Persistence.UnitTests
             
             // act
             var aggregate = await Sut
-                .TryLoad<TestAggregateRoot>(aggregateRootId)
+                .TryLoad<TestAggregateRoot, TestAggregateState>(aggregateRootId)
                 .ConfigureAwait(false);
 
             // assert
@@ -164,7 +164,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // act
             var aggregate = await Sut
-                .Load<TestAggregateRoot>(aggregateRootId)
+                .Load<TestAggregateRoot, TestAggregateState>(aggregateRootId)
                 .ConfigureAwait(false);
 
             // assert
@@ -173,7 +173,7 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(event2Version);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents(aggregate, events))
+                .HydrateAggregateWithEvents<TestAggregateState>(events))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -189,7 +189,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // act
             var aggregate = await Sut
-                .Load<TestAggregateRoot>(aggregateRootId)
+                .Load<TestAggregateRoot, TestAggregateState>(aggregateRootId)
                 .ConfigureAwait(false);
 
             // assert
@@ -198,7 +198,7 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(0);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents(A<TestAggregateRoot>._, A<ICollection<DomainEvent>>._))
+                .HydrateAggregateWithEvents<TestAggregateState>(A<ICollection<DomainEvent>>._))
                 .MustHaveHappened(Repeated.Never);
         }
 
@@ -213,7 +213,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(Task.FromResult<ICollection<DomainEvent>>(null));
 
             Func<Task> exceptionThrower = async () => await Sut
-                .Load<TestAggregateRoot>(aggregateRootId)
+                .Load<TestAggregateRoot, TestAggregateState>(aggregateRootId)
                 .ConfigureAwait(false);
 
             // act/assert
@@ -240,7 +240,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // act
             await Sut
-                .Save(aggregateRoot)
+                .Save<TestAggregateRoot, TestAggregateState>(aggregateRoot)
                 .ConfigureAwait(false);
 
             // assert
@@ -265,7 +265,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             // act
             await Sut
-                .Save(aggregateRoot)
+                .Save<TestAggregateRoot, TestAggregateState>(aggregateRoot)
                 .ConfigureAwait(false);
 
             // assert
@@ -298,7 +298,7 @@ namespace Playground.Domain.Persistence.UnitTests
 
             Func<Task> expectionThrower = async () =>
                 await Sut
-                    .Save(aggregateRoot)
+                    .Save<TestAggregateRoot, TestAggregateState>(aggregateRoot)
                     .ConfigureAwait(false);
 
             // act & assert

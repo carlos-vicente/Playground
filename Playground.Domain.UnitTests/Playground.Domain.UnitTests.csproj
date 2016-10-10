@@ -76,12 +76,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregateHydratorOnStateTests.cs" />
-    <Compile Include="AggregateHydratorSimpleTests.cs" />
-    <Compile Include="AggregateRootWithStateTests.cs" />
-    <Compile Include="AggregateRootSimpleTests.cs" />
-    <Compile Include="ItHappened.cs" />
-    <Compile Include="GotDone.cs" />
+    <Compile Include="AggregateHydratorTests.cs" />
+    <Compile Include="AggregateRootTests.cs" />
+    <Compile Include="AggregateState.cs" />
+    <Compile Include="Events\ItHappened.cs" />
+    <Compile Include="Events\GotDone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

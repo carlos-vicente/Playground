@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Playground.Domain.Persistence;
 
 namespace Playground.Messaging.Persistence.UnitTests
 {
-    internal class TestHandler : AsyncDomainCommandHandler<Command, Aggregate>
+    internal class TestHandler : AsyncDomainCommandHandler<Command, Aggregate, AggregateState>
     {
         public Aggregate CalledWithAggregate { get; set; }
         public Command CalledWithCommand { get; set; }

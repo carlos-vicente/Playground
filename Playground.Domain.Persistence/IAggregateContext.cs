@@ -16,8 +16,9 @@ namespace Playground.Domain.Persistence
         /// <exception cref="ArgumentException">Thrown if <paramref name="aggregateRootId"/> is Guid's default value</exception>
         /// </summary>
         /// <returns>An empty aggregate</returns>
-        Task<TAggregateRoot> Create<TAggregateRoot>(Guid aggregateRootId) 
-            where TAggregateRoot : AggregateRoot;
+        Task<TAggregateRoot> Create<TAggregateRoot, TAggregateState>(Guid aggregateRootId) 
+            where TAggregateRoot : AggregateRoot<TAggregateState>
+            where TAggregateState : class, new();
 
         /// <summary>
         /// Attempts to load the given aggregate root
@@ -25,8 +26,9 @@ namespace Playground.Domain.Persistence
         /// <exception cref="ArgumentException">Thrown if <paramref name="aggregateRootId"/> is Guid's default value</exception>
         /// </summary>
         /// <returns>Returns the aggregate instance with it's entire stream of events applied if the stream exists. An empty aggregate if the stream exists, but has no events. Null if the stream does not exists.</returns>
-        Task<TAggregateRoot> TryLoad<TAggregateRoot>(Guid aggregateRootId) 
-            where TAggregateRoot : AggregateRoot;
+        Task<TAggregateRoot> TryLoad<TAggregateRoot, TAggregateState>(Guid aggregateRootId) 
+            where TAggregateRoot : AggregateRoot<TAggregateState>
+            where TAggregateState : class, new();
 
         /// <summary>
         /// Attempts to load the given aggregate root
@@ -34,8 +36,9 @@ namespace Playground.Domain.Persistence
         /// <exception cref="InvalidOperationException">Thrown if the stream does not exist</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="aggregateRootId"/> is Guid's default value</exception>
         /// </summary>
-        Task<TAggregateRoot> Load<TAggregateRoot>(Guid aggregateRootId) 
-            where TAggregateRoot : AggregateRoot;
+        Task<TAggregateRoot> Load<TAggregateRoot, TAggregateState>(Guid aggregateRootId) 
+            where TAggregateRoot : AggregateRoot<TAggregateState>
+            where TAggregateState : class, new();
 
         /// <summary>
         /// Saves the given aggregate
@@ -43,7 +46,8 @@ namespace Playground.Domain.Persistence
         /// <typeparam name="TAggregateRoot">The aggregate root type</typeparam>
         /// <param name="aggregateRoot">The aggregate root</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="aggregateRoot"/> is null</exception>
-        Task Save<TAggregateRoot>(TAggregateRoot aggregateRoot)
-            where TAggregateRoot : AggregateRoot;
+        Task Save<TAggregateRoot, TAggregateState>(TAggregateRoot aggregateRoot)
+            where TAggregateRoot : AggregateRoot<TAggregateState>
+            where TAggregateState : class, new();
     }
 }

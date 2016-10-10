@@ -10,66 +10,30 @@ namespace Playground.Domain.Model
     public class AggregateHydrator : IAggregateHydrator
     {
         /// <summary>
-        /// Apply all the events in <paramref name="domainEvents"/> to <paramref name="aggregateRootBase"/>
+        /// Apply all the events in <paramref name="domainEvents"/> to a newly created instance of <typeparamref name="TAggregateState"/>
         /// </summary>
-        /// <typeparam name="TAggregateRoot">The aggregate type</typeparam>
-        /// <param name="aggregateRootBase">The aggregate to apply the domain events (it should be a clean instance)</param>
+        /// <typeparam name="TAggregateState">The type to use when creating the state object</typeparam>
         /// <param name="domainEvents">The list of domain events to apply on to the aggregate</param>
         /// <returns>The aggregate instance with the events applied</returns>
-        public TAggregateRoot HydrateAggregateWithEvents<TAggregateRoot>(
-            TAggregateRoot aggregateRootBase, 
-            ICollection<DomainEvent> domainEvents) 
-            where TAggregateRoot : AggregateRoot
-        {
-            foreach (var domainEvent in domainEvents)
-            {
-                // the dynamic cast makes sure the right method is called
-                Apply(aggregateRootBase, (dynamic)domainEvent);
-            }
-
-            return aggregateRootBase;
-        }
-
-        private static void Apply<TAggregateRoot, TDomainEvent>(
-            TAggregateRoot aggregateRootBase,
-            TDomainEvent domainEvent)
-            where TAggregateRoot : AggregateRoot
-            where TDomainEvent : DomainEvent
-        {
-            ((IGetAppliedWith<TDomainEvent>) aggregateRootBase)
-                .Apply(domainEvent);
-        }
-    }
-
-    public class AggregateStateHydrator : IAggregateHydratorV2
-    {
-        /// <summary>
-        /// Apply all the events in <paramref name="domainEvents"/> to <paramref name="aggregateRootBase"/>
-        /// </summary>
-        /// <typeparam name="TAggregateRoot">The aggregate type</typeparam>
-        /// <typeparam name="TAggregateRootState">The aggregate state type, which will have all the apply methods</typeparam>
-        /// <param name="aggregateRootBase">The aggregate to apply the domain events (it should be a clean instance)</param>
-        /// <param name="domainEvents">The list of domain events to apply on to the aggregate</param>
-        /// <returns>The aggregate instance with the events applied</returns>
-        public TAggregateRoot HydrateAggregateWithEvents<TAggregateRoot, TAggregateRootState>(
-            TAggregateRoot aggregateRootBase,
+        public TAggregateState HydrateAggregateWithEvents<TAggregateState>(
             ICollection<DomainEvent> domainEvents)
-            where TAggregateRoot : AggregateRootWithState<TAggregateRootState>
-            where TAggregateRootState : new()
+            where TAggregateState : class, new()
         {
+            var state = new TAggregateState();
+
             foreach (var domainEvent in domainEvents)
             {
                 // the dynamic cast makes sure the right method is called
-                Apply(aggregateRootBase.State, (dynamic)domainEvent);
+                Apply(state, (dynamic)domainEvent);
             }
 
-            return aggregateRootBase;
+            return state;
         }
 
-        private static void Apply<TAggregateRootState, TDomainEvent>(
-            TAggregateRootState aggregateRootState,
+        private static void Apply<TAggregateState, TDomainEvent>(
+            TAggregateState aggregateRootState,
             TDomainEvent domainEvent)
-            where TAggregateRootState : new()
+            where TAggregateState : class, new()
             where TDomainEvent : DomainEvent
         {
             ((IGetAppliedWith<TDomainEvent>)aggregateRootState).Apply(domainEvent);
