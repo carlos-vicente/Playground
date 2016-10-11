@@ -174,8 +174,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
                 .CreateEventStream(streamId, streamName)
                 .ConfigureAwait(false);
 
-            var event1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
-            var event2 = new StoredEvent("some type", now.AddSeconds(1), "{}", 2L);
+            var batchId = Guid.NewGuid();
+
+            var event1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", batchId, 1L);
+            var event2 = new StoredEvent("some type", now.AddSeconds(1), "{}", batchId, 2L);
 
             await DatabaseHelper
                 .CreateEvent(streamId, event1)
@@ -264,8 +266,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
 
             var now = GetDateTimeToMillisecond(DateTime.UtcNow);
 
-            var event1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
-            var event2 = new StoredEvent("some type", now, "{}", 2L);
+            var batchId = Guid.NewGuid();
+
+            var event1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", batchId, 1L);
+            var event2 = new StoredEvent("some type", now, "{}", batchId, 2L);
 
             await DatabaseHelper
                 .CreateEvent(streamId, event1)
@@ -331,9 +335,11 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
 
             var now = GetDateTimeToMillisecond(DateTime.UtcNow);
 
-            var evt1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
-            var evt2 = new StoredEvent("some type2", now, "{\"prop\":\"value1\"}", 3L);
-            var evt3 = new StoredEvent("some type", now.AddMinutes(5), "{}", 4L);
+            var batchId = Guid.NewGuid();
+
+            var evt1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", batchId, 1L);
+            var evt2 = new StoredEvent("some type2", now, "{\"prop\":\"value1\"}", batchId, 3L);
+            var evt3 = new StoredEvent("some type", now.AddMinutes(5), "{}", batchId, 4L);
 
             var events = new[] {evt1, evt2, evt3};
 
@@ -365,8 +371,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
 
             var now = GetDateTimeToMillisecond(DateTime.UtcNow);
 
-            var evt1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
-            var evt2 = new StoredEvent("some type2", now, "{\"prop\":\"value1\"}", 2L);
+            var batchId = Guid.NewGuid();
+
+            var evt1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", batchId, 1L);
+            var evt2 = new StoredEvent("some type2", now, "{\"prop\":\"value1\"}", batchId, 2L);
 
             await DatabaseHelper
                 .CreateEvent(streamId, evt1)
@@ -375,9 +383,11 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
                 .CreateEvent(streamId, evt2)
                 .ConfigureAwait(false);
 
-            var evtToAdd1 = new StoredEvent("some type", now.AddMinutes(2), "{\"prop\":\"value\"}", 5L);
-            var evtToAdd2 = new StoredEvent("some type2", now.AddMinutes(2), "{\"prop\":\"value1\"}", 6L);
-            var evtToAdd3 = new StoredEvent("some type", now.AddMinutes(5), "{}", 7L);
+            var batchId2 = Guid.NewGuid();
+
+            var evtToAdd1 = new StoredEvent("some type", now.AddMinutes(2), "{\"prop\":\"value\"}", batchId2, 5L);
+            var evtToAdd2 = new StoredEvent("some type2", now.AddMinutes(2), "{\"prop\":\"value1\"}", batchId2, 6L);
+            var evtToAdd3 = new StoredEvent("some type", now.AddMinutes(5), "{}", batchId2, 7L);
 
             var eventsToAdd = new[] { evtToAdd1, evtToAdd2, evtToAdd3 };
             var events = new[] {evt1, evt2, evtToAdd1, evtToAdd2, evtToAdd3};
@@ -405,8 +415,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
 
             var now = GetDateTimeToMillisecond(DateTime.UtcNow);
 
-            var evt1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", 1L);
-            var evt2 = new StoredEvent("some type2", now, "{\"prop\":\"value1\"}", 3L);
+            var batchId = Guid.NewGuid();
+
+            var evt1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", batchId, 1L);
+            var evt2 = new StoredEvent("some type2", now, "{\"prop\":\"value1\"}", batchId, 3L);
             
             var events = new[] { evt1, evt2 };
 

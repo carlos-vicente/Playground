@@ -10,6 +10,8 @@ namespace Playground.Domain.Persistence.Events
 
         public DateTime OccurredOn { get; set; }
 
+        public Guid BatchId { get; set; }
+
         public string EventBody { get; set; }
 
         public Type EventType
@@ -26,11 +28,13 @@ namespace Playground.Domain.Persistence.Events
             string typeName,
             DateTime occurredOn,
             string eventBody,
+            Guid batchId,
             long eventId = -1L)
         {
             TypeName = typeName;
             OccurredOn = occurredOn;
             EventBody = eventBody;
+            BatchId = batchId;
             EventId = eventId;
         }
 

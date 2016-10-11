@@ -8,7 +8,7 @@ namespace Playground.Domain.Model
         where TAggregateState : class, new()
     {
         internal ICollection<DomainEvent> UncommittedEvents { get; private set; }
-        public TAggregateState State { get; private set; }
+        internal TAggregateState State { get; private set; }
         public long CurrentVersion { get; private set; }
 
         protected AggregateRoot(Guid id)

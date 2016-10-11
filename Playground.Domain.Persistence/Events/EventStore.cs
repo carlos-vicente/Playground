@@ -47,6 +47,8 @@ namespace Playground.Domain.Persistence.Events
                 throw new InvalidOperationException($"Cant add new events on version {currentVersion} as current storage version is {lastStoredEvent.EventId}");
             }
 
+            var batchId = Guid.NewGuid();
+
             var lastStoredEventId = 0L;
             if (lastStoredEvent != null)
                 lastStoredEventId = lastStoredEvent.EventId;
@@ -56,6 +58,7 @@ namespace Playground.Domain.Persistence.Events
                     e.GetType().AssemblyQualifiedName,
                     e.Metadata.OccorredOn,
                     _serializer.Serialize(e as object),
+                    batchId,
                     ++lastStoredEventId))
                 .ToList();
 
