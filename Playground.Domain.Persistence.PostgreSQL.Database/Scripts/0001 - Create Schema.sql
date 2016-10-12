@@ -13,6 +13,7 @@ CREATE TABLE public."Events"
   "EventId" bigint NOT NULL,
   "TypeName" text NOT NULL,
   "OccurredOn" timestamp without time zone NOT NULL,
+  "BatchId" uuid NOT NULL,
   "EventBody" json NOT NULL,
   CONSTRAINT "EventPK" PRIMARY KEY ("EventStreamId", "EventId"),
   CONSTRAINT "Events_EventStreams_FK" FOREIGN KEY ("EventStreamId")
@@ -23,6 +24,7 @@ CREATE TABLE public."Events"
 CREATE TYPE event AS (
 	EventId bigint, 
 	TypeName text, 
-	OccurredOn timestamp without time zone, 
+	OccurredOn timestamp without time zone,
+	BatchId uuid,
 	EventBody json
 );

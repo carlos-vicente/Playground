@@ -10,13 +10,16 @@ namespace Playground.Domain.Persistence.Events
     {
         private readonly IEventSerializer _serializer;
         private readonly IEventRepository _repository;
+        private readonly Func<Guid> _batchIdProviderFunc;
 
         public EventStore(
             IEventSerializer serializer,
-            IEventRepository repository)
+            IEventRepository repository,
+            Func<Guid> batchIdProviderFunc)
         {
             _serializer = serializer;
             _repository = repository;
+            _batchIdProviderFunc = batchIdProviderFunc;
         }
 
         public async Task CreateEventStream<TAggregateRoot>(Guid streamId)
@@ -47,7 +50,7 @@ namespace Playground.Domain.Persistence.Events
                 throw new InvalidOperationException($"Cant add new events on version {currentVersion} as current storage version is {lastStoredEvent.EventId}");
             }
 
-            var batchId = Guid.NewGuid();
+            var batchId = _batchIdProviderFunc();
 
             var lastStoredEventId = 0L;
             if (lastStoredEvent != null)

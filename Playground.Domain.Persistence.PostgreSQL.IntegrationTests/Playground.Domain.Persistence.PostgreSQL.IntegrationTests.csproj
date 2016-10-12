@@ -79,7 +79,6 @@
   <ItemGroup>
     <Compile Include="EventRepositoryTests.cs" />
     <Compile Include="Postgresql\DatabaseHelper.cs" />
-    <Compile Include="Postgresql\Scripts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

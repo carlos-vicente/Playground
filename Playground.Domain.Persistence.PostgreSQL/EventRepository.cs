@@ -175,6 +175,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
                             eventid = e.EventId,
                             occurredon = e.OccurredOn,
                             typename = e.TypeName,
+                            batchid = e.BatchId,
                             eventbody = e.EventBody
                         })
                         .ToArray();

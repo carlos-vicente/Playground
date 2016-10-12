@@ -27,9 +27,9 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
         }
 
         private const string SelectLatestStreamSql = "SELECT \"EventStreamId\", \"EventStreamName\" FROM public.\"EventStreams\" ORDER BY \"CreatedOn\" DESC LIMIT 1";
-        private const string SelectStreamEventsSql = "SELECT \"EventId\", \"TypeName\", \"OccurredOn\", \"EventBody\" FROM public.\"Events\"";
+        private const string SelectStreamEventsSql = "SELECT \"EventId\", \"TypeName\", \"OccurredOn\", \"BatchId\", \"EventBody\" FROM public.\"Events\"";
         private const string CreateEventStreamSql = "INSERT INTO public.\"EventStreams\" (\"EventStreamId\", \"EventStreamName\", \"CreatedOn\") values(@streamId, @streamName, @createdOn);";
-        private const string CreateEventSql = "INSERT INTO public.\"Events\" (\"EventStreamId\", \"EventId\", \"TypeName\", \"OccurredOn\", \"EventBody\") values(@streamId, @eventId, @typeName, @occurredOn, @body);";
+        private const string CreateEventSql = "INSERT INTO public.\"Events\" (\"EventStreamId\", \"EventId\", \"TypeName\", \"OccurredOn\", \"BatchId\", \"EventBody\") values(@streamId, @eventId, @typeName, @occurredOn, @batchId, @body);";
 
         private const string DeleteEventsSql = "DELETE FROM public.\"Events\";";
         private const string DeleteEventStreamsSql = "DELETE FROM public.\"EventStreams\";";
@@ -118,6 +118,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql
                     command.Parameters.AddWithValue("@eventId", storedEvent.EventId);
                     command.Parameters.AddWithValue("@typeName", storedEvent.TypeName);
                     command.Parameters.AddWithValue("@occurredOn", storedEvent.OccurredOn);
+                    command.Parameters.AddWithValue("@batchId", storedEvent.BatchId);
                     command.Parameters.AddWithValue("@body", NpgsqlDbType.Json, storedEvent.EventBody);
 
                     await command

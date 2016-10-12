@@ -1,7 +1,7 @@
 ﻿CREATE OR REPLACE FUNCTION get_events_for_stream(streamId UUID)
-RETURNS TABLE ("EventId" bigint, "TypeName" text, "OccurredOn" timestamp without time zone, "EventBody" json) AS $$
+RETURNS TABLE ("EventId" bigint, "TypeName" text, "OccurredOn" timestamp without time zone, "BatchId" uuid, "EventBody" json) AS $$
 BEGIN
-	RETURN QUERY SELECT E."EventId", E."TypeName", E."OccurredOn", E."EventBody"
+	RETURN QUERY SELECT E."EventId", E."TypeName", E."OccurredOn", E."BatchId", E."EventBody"
 		FROM public."Events" as E
 		WHERE E."EventStreamId" = streamId;
 END;
@@ -36,9 +36,9 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION get_last_event_for_stream(streamId UUID)
-RETURNS TABLE ("EventId" bigint, "TypeName" text, "OccurredOn" timestamp without time zone, "EventBody" json) AS $$
+RETURNS TABLE ("EventId" bigint, "TypeName" text, "OccurredOn" timestamp without time zone, "BatchId" uuid, "EventBody" json) AS $$
 BEGIN
-	RETURN QUERY SELECT E."EventId", E."TypeName", E."OccurredOn", E."EventBody"
+	RETURN QUERY SELECT E."EventId", E."TypeName", E."OccurredOn", E."BatchId", E."EventBody"
 		FROM public."Events" as E
 		WHERE E."EventStreamId" = streamId
 		ORDER BY E."OccurredOn" DESC, E."EventId" DESC
@@ -60,8 +60,8 @@ BEGIN
 	size := array_length(events, 1);
 
 	FOR index IN 1..size LOOP
-		INSERT INTO public."Events" ("EventStreamId", "EventId", "TypeName", "OccurredOn", "EventBody")
-		VALUES (streamId, events[index].EventId, events[index].TypeName, events[index].OccurredOn, events[index].EventBody);
+		INSERT INTO public."Events" ("EventStreamId", "EventId", "TypeName", "OccurredOn", "BatchId", "EventBody")
+		VALUES (streamId, events[index].EventId, events[index].TypeName, events[index].OccurredOn, events[index].BatchId, events[index].EventBody);
 	END LOOP;
 END;
 $$ LANGUAGE plpgsql;

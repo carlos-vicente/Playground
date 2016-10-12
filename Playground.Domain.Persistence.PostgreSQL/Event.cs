@@ -10,6 +10,8 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public DateTime occurredon { get; set; }
 
+        public Guid batchid { get; set; }
+
         public string eventbody { get; set; }
     }
 }

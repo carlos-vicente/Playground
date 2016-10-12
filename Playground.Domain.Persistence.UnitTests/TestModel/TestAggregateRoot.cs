@@ -13,6 +13,12 @@ namespace Playground.Domain.Persistence.UnitTests.TestModel
     {
         public TestAggregateRoot(Guid id) : base(id) { }
 
+        public TestAggregateRoot(Guid id, TestAggregateState hydratedState, long currentVersion)
+            : base(id, hydratedState, currentVersion)
+        {
+            
+        }
+
         void IGetAppliedWith<TestAggregateCreated>.Apply(TestAggregateCreated e)
         {
             throw new NotImplementedException();

@@ -13,7 +13,7 @@ using Ploeh.AutoFixture;
 
 namespace Playground.Domain.Persistence.UnitTests
 {
-    public class EventStoreTests : TestBaseWithSut<EventStore>
+    public class EventStoreTests : SimpleTestBase
     {
         [Test]
         public async Task CreateEventStream_WillCreateStream_WhenStreamDoesNotExist()
@@ -27,8 +27,12 @@ namespace Playground.Domain.Persistence.UnitTests
 
             var aggregateTypeName = typeof (TestAggregateRoot).AssemblyQualifiedName;
 
+            Faker.Provide<Func<Guid>>(Guid.NewGuid);
+
+            var sut = Faker.Resolve<EventStore>();
+
             // act
-            await Sut
+            await sut
                 .CreateEventStream<TestAggregateRoot>(streamId)
                 .ConfigureAwait(false);
 
@@ -48,7 +52,11 @@ namespace Playground.Domain.Persistence.UnitTests
                 .CheckStream(streamId))
                 .Returns(true);
 
-            Func<Task> expcetionThrower = async () => await Sut
+            Faker.Provide<Func<Guid>>(Guid.NewGuid);
+
+            var sut = Faker.Resolve<EventStore>();
+
+            Func<Task> expcetionThrower = async () => await sut
                 .CreateEventStream<TestAggregateRoot>(streamId)
                 .ConfigureAwait(false);
 
@@ -78,6 +86,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 typeof (TestAggregateCreated).AssemblyQualifiedName,
                 Fixture.Create<DateTime>(),
                 Fixture.Create<string>(),
+                Guid.NewGuid(),
                 currentStreamVersion);
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
@@ -95,16 +104,22 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Serialize(event2))
                 .Returns(event2Serialiazed);
 
+            var batchId = Guid.NewGuid();
+
+            Faker.Provide<Func<Guid>>(() => batchId);
+
             var expectedEventName = typeof (TestAggregateChanged).AssemblyQualifiedName;
 
             var expectedEvents = new List<StoredEvent>
             {
-                new StoredEvent(expectedEventName, event1.Metadata.OccorredOn, event1Serialiazed, currentStreamVersion + 1),
-                new StoredEvent(expectedEventName, event2.Metadata.OccorredOn, event2Serialiazed, currentStreamVersion + 2)
+                new StoredEvent(expectedEventName, event1.Metadata.OccorredOn, event1Serialiazed, batchId, currentStreamVersion + 1),
+                new StoredEvent(expectedEventName, event2.Metadata.OccorredOn, event2Serialiazed, batchId, currentStreamVersion + 2)
             };
 
+            var sut = Faker.Resolve<EventStore>();
+
             // act
-            await Sut
+            await sut
                 .StoreEvents(streamId, currentStreamVersion, new DomainEvent[] { event1, event2 })
                 .ConfigureAwait(false);
 
@@ -122,7 +137,7 @@ namespace Playground.Domain.Persistence.UnitTests
             // arrange
             var streamId = Guid.NewGuid();
             var eventMetadata = new Metadata(streamId, typeof(TestAggregateChanged));
-            
+
             var event1 = Fixture
                 .Build<TestAggregateChanged>()
                 .With(e => e.Metadata, eventMetadata)
@@ -147,16 +162,22 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Serialize(event2))
                 .Returns(event2Serialiazed);
 
+            var batchId = Guid.NewGuid();
+
+            Faker.Provide<Func<Guid>>(() => batchId);
+
             var expectedEventName = typeof(TestAggregateChanged).AssemblyQualifiedName;
 
             var expectedEvents = new List<StoredEvent>
             {
-                new StoredEvent(expectedEventName, event1.Metadata.OccorredOn, event1Serialiazed, 1),
-                new StoredEvent(expectedEventName, event2.Metadata.OccorredOn, event2Serialiazed, 2)
+                new StoredEvent(expectedEventName, event1.Metadata.OccorredOn, event1Serialiazed, batchId, 1),
+                new StoredEvent(expectedEventName, event2.Metadata.OccorredOn, event2Serialiazed, batchId, 2)
             };
 
+            var sut = Faker.Resolve<EventStore>();
+
             // act
-            await Sut
+            await sut
                 .StoreEvents(streamId, 0L, new DomainEvent[] { event1, event2 })
                 .ConfigureAwait(false);
 
@@ -189,14 +210,18 @@ namespace Playground.Domain.Persistence.UnitTests
                 typeof(TestAggregateCreated).AssemblyQualifiedName,
                 Fixture.Create<DateTime>(),
                 Fixture.Create<string>(),
+                Guid.NewGuid(),
                 currentStreamVersion + 1);
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
                 .GetLast(streamId))
                 .Returns(Task.FromResult(lastStreamEvent));
 
-            Func<Task> exceptionThrower = async () => await Sut
-                .StoreEvents(streamId, currentStreamVersion, new DomainEvent[] {event1, event2})
+            Faker.Provide<Func<Guid>>(Guid.NewGuid);
+            var sut = Faker.Resolve<EventStore>();
+
+            Func<Task> exceptionThrower = async () => await sut
+                .StoreEvents(streamId, currentStreamVersion, new DomainEvent[] { event1, event2 })
                 .ConfigureAwait(false);
 
             // act & assert
@@ -226,7 +251,7 @@ namespace Playground.Domain.Persistence.UnitTests
             {
                 StorageVersion = 2L
             };
-            var typeName = typeof (TestAggregateChanged).AssemblyQualifiedName;
+            var typeName = typeof(TestAggregateChanged).AssemblyQualifiedName;
 
             var event1 = Fixture
                 .Build<TestAggregateChanged>()
@@ -246,10 +271,11 @@ namespace Playground.Domain.Persistence.UnitTests
             var event1Serialized = Fixture.Create<string>();
             var event2Serialized = Fixture.Create<string>();
 
+            var batchId = Guid.NewGuid();
             var storedEvents = new List<StoredEvent>
             {
-                new StoredEvent(typeName, event1Metadata.OccorredOn, event1Serialized, event1Metadata.StorageVersion),
-                new StoredEvent(typeName, event2Metadata.OccorredOn, event2Serialized, event2Metadata.StorageVersion)
+                new StoredEvent(typeName, event1Metadata.OccorredOn, event1Serialized, batchId, event1Metadata.StorageVersion),
+                new StoredEvent(typeName, event2Metadata.OccorredOn, event2Serialized, batchId, event2Metadata.StorageVersion)
             };
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
@@ -267,8 +293,11 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Deserialize(event2Serialized))
                 .Returns(event2);
 
+            Faker.Provide<Func<Guid>>(Guid.NewGuid);
+            var sut = Faker.Resolve<EventStore>();
+
             // act
-            var events = await Sut
+            var events = await sut
                 .LoadAllEvents(streamId)
                 .ConfigureAwait(false);
 
@@ -290,9 +319,12 @@ namespace Playground.Domain.Persistence.UnitTests
             A.CallTo(() => Faker.Resolve<IEventRepository>()
                 .GetAll(streamId))
                 .Returns(new List<StoredEvent>());
-            
+
+            Faker.Provide<Func<Guid>>(Guid.NewGuid);
+            var sut = Faker.Resolve<EventStore>();
+
             // act
-            var events = await Sut
+            var events = await sut
                 .LoadAllEvents(streamId)
                 .ConfigureAwait(false);
 
@@ -320,8 +352,11 @@ namespace Playground.Domain.Persistence.UnitTests
                 .GetAll(streamId))
                 .Returns(null as List<StoredEvent>);
 
+            Faker.Provide<Func<Guid>>(Guid.NewGuid);
+            var sut = Faker.Resolve<EventStore>();
+
             // act
-            var events = await Sut
+            var events = await sut
                 .LoadAllEvents(streamId)
                 .ConfigureAwait(false);
 
@@ -345,8 +380,11 @@ namespace Playground.Domain.Persistence.UnitTests
                 .CheckStream(streamId))
                 .Returns(false);
 
+            Faker.Provide<Func<Guid>>(Guid.NewGuid);
+            var sut = Faker.Resolve<EventStore>();
+
             // act
-            var events = await Sut
+            var events = await sut
                 .LoadAllEvents(streamId)
                 .ConfigureAwait(false);
 

@@ -12,7 +12,7 @@ namespace Playground.Domain.Model
         public long CurrentVersion { get; private set; }
 
         protected AggregateRoot(Guid id)
-            : this(id, null, -1L)
+            : this(id, null, 0L)
         {
         }
 
