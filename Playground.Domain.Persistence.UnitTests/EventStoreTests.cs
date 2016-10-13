@@ -287,10 +287,10 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(storedEvents);
 
             A.CallTo(() => Faker.Resolve<IEventSerializer>()
-                .Deserialize(event1Serialized))
+                .Deserialize(event1Serialized, typeof(TestAggregateChanged)))
                 .Returns(event1);
             A.CallTo(() => Faker.Resolve<IEventSerializer>()
-                .Deserialize(event2Serialized))
+                .Deserialize(event2Serialized, typeof(TestAggregateChanged)))
                 .Returns(event2);
 
             Faker.Provide<Func<Guid>>(Guid.NewGuid);
@@ -334,7 +334,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .BeEmpty();
 
             A.CallTo(() => Faker.Resolve<IEventSerializer>()
-                .Deserialize(A<string>._))
+                .Deserialize(A<string>._, A<Type>._))
                 .MustNotHaveHappened();
         }
 
@@ -366,7 +366,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .BeEmpty();
 
             A.CallTo(() => Faker.Resolve<IEventSerializer>()
-                .Deserialize(A<string>._))
+                .Deserialize(A<string>._, A<Type>._))
                 .MustNotHaveHappened();
         }
 

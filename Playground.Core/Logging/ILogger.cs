@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace Playground.Core.Logging
 {
     public interface ILogger
     {
-        Task Information(string message, params object[] propertyValues);
-        Task Debug(string message, params object[] propertyValues);
-        Task Warning(string message, params object[] propertyValues);
-        Task Warning(Exception ex, string message, params object[] propertyValues);
-        Task Error(string message, params object[] propertyValues);
-        Task Error(Exception ex, string message, params object[] propertyValues);
+        void Information(string message, params object[] propertyValues);
+        void Debug(string message, params object[] propertyValues);
+        void Warning(string message, params object[] propertyValues);
+        void Warning(Exception ex, string message, params object[] propertyValues);
+        void Error(string message, params object[] propertyValues);
+        void Error(Exception ex, string message, params object[] propertyValues);
     }
 }

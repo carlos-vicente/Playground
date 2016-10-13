@@ -26,7 +26,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model
             if (State.Status >= OrderStatus.Shipped)
                 throw new CannotChangeOrderAddressException($"Cannot change address on order {Id} because it is {State.Status}");
 
-            When(new OrderChanged(Id, address));
+            When(new OrderShippingAddressChanged(Id, address));
         }
 
         public void StartFulfilling()

@@ -6,7 +6,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model
 {
     public class OrderState
         : IGetAppliedWith<OrderCreated>,
-        IGetAppliedWith<OrderChanged>,
+        IGetAppliedWith<OrderShippingAddressChanged>,
         IGetAppliedWith<StartedFulfilment>,
         IGetAppliedWith<ShipOrder>,
         IGetAppliedWith<OrderDelivered>
@@ -27,7 +27,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model
             Status = OrderStatus.Created;
         }
 
-        void IGetAppliedWith<OrderChanged>.Apply(OrderChanged e)
+        void IGetAppliedWith<OrderShippingAddressChanged>.Apply(OrderShippingAddressChanged e)
         {
             ShippingAddress = e.NewAddress;
         }

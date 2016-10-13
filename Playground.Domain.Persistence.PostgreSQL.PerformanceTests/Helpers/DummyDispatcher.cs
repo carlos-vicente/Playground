@@ -2,7 +2,7 @@
 using Playground.Domain.Events;
 using Playground.Messaging;
 
-namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
+namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
 {
     internal class DummyDispatcher : IEventDispatcher
     {

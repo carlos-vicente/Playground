@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Playground.Core.Logging;
 using Playground.Domain.Events;
 
 namespace Playground.Domain.Persistence.Events
@@ -10,20 +11,26 @@ namespace Playground.Domain.Persistence.Events
     {
         private readonly IEventSerializer _serializer;
         private readonly IEventRepository _repository;
+        private readonly ILogger _logger;
         private readonly Func<Guid> _batchIdProviderFunc;
 
         public EventStore(
             IEventSerializer serializer,
             IEventRepository repository,
+            ILogger logger,
             Func<Guid> batchIdProviderFunc)
         {
             _serializer = serializer;
             _repository = repository;
+            _logger = logger;
             _batchIdProviderFunc = batchIdProviderFunc;
         }
 
         public async Task CreateEventStream<TAggregateRoot>(Guid streamId)
         {
+            var type = typeof(TAggregateRoot);
+            _logger.Debug($"Creating event stream with identifier {streamId} for type {type.FullName}");
+
             var doesStreamAlreadyExists = await _repository
                 .CheckStream(streamId)
                 .ConfigureAwait(false);
@@ -31,9 +38,12 @@ namespace Playground.Domain.Persistence.Events
             if(doesStreamAlreadyExists)
                 throw new InvalidOperationException($"Stream with id {streamId} already exists!");
 
+            _logger.Debug($"Creating event stream with identifier {streamId} has it does not exist");
             await _repository
-                .CreateStream(streamId, typeof(TAggregateRoot).AssemblyQualifiedName)
+                .CreateStream(streamId, type.AssemblyQualifiedName)
                 .ConfigureAwait(false);
+
+            _logger.Debug($"Done creating event stream with identifier {streamId}");
         }
 
         public async Task StoreEvents(
@@ -41,6 +51,8 @@ namespace Playground.Domain.Persistence.Events
             long currentVersion,
             ICollection<DomainEvent> eventsToStore)
         {
+            _logger.Debug($"Storing {eventsToStore.Count} events on stream {streamId} with current version {currentVersion}");
+
             var lastStoredEvent = await _repository
                 .GetLast(streamId)
                 .ConfigureAwait(false);
@@ -56,6 +68,8 @@ namespace Playground.Domain.Persistence.Events
             if (lastStoredEvent != null)
                 lastStoredEventId = lastStoredEvent.EventId;
 
+            _logger.Debug($"Current stored version for stream {streamId} is {lastStoredEventId}");
+
             var events = eventsToStore
                 .Select(e => new StoredEvent(
                     e.GetType().AssemblyQualifiedName,
@@ -65,9 +79,13 @@ namespace Playground.Domain.Persistence.Events
                     ++lastStoredEventId))
                 .ToList();
 
+            _logger.Debug("Sending events to repository");
+
             await _repository
                 .Add(streamId, events)
                 .ConfigureAwait(false);
+
+            _logger.Debug("All events stored");
         }
 
         public Task<ICollection<DomainEvent>> LoadSelectedEvents(
@@ -80,6 +98,8 @@ namespace Playground.Domain.Persistence.Events
 
         public async Task<ICollection<DomainEvent>> LoadAllEvents(Guid streamId)
         {
+            _logger.Debug($"Loading entire event stream for {streamId}");
+
             var doesStreamExist = await _repository
                 .CheckStream(streamId)
                 .ConfigureAwait(false);
@@ -87,21 +107,29 @@ namespace Playground.Domain.Persistence.Events
             if (!doesStreamExist)
                 return null;
 
+            _logger.Debug($"Get all stored events for stream {streamId}");
+
             var storedEvents = await _repository
                 .GetAll(streamId)
                 .ConfigureAwait(false);
 
-            return storedEvents?
+            _logger.Debug("Convert all stored events to domain events");
+
+            var domainEvents = storedEvents?
                 .Select(GetDomainEvent)
                 .ToList() ?? new List<DomainEvent>();
+
+            _logger.Debug($"Returning all domain events for stream {streamId}");
+
+            return domainEvents;
         }
 
         private DomainEvent GetDomainEvent(StoredEvent storedEvent)
         {
-            //TODO: i need to send the type for deserialization!!!! -> storedEvent.EventType
+            var deserialized = _serializer
+                .Deserialize(storedEvent.EventBody, storedEvent.EventType);
 
-            return _serializer
-                .Deserialize(storedEvent.EventBody) as DomainEvent;
+            return deserialized as DomainEvent;
         }
     }
 }

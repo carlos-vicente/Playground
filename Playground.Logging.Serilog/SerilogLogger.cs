@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Playground.Core.Logging;
 
 namespace Playground.Logging.Serilog
@@ -13,40 +12,34 @@ namespace Playground.Logging.Serilog
             _logger = logger;
         }
 
-        public Task Information(string message, params object[] propertyValues)
+        public void Information(string message, params object[] propertyValues)
         {
             _logger.Information(message, propertyValues);
-            return Task.FromResult(1);
         }
 
-        public Task Debug(string message, params object[] propertyValues)
+        public void Debug(string message, params object[] propertyValues)
         {
             _logger.Debug(message, propertyValues);
-            return Task.FromResult(1);
         }
 
-        public Task Warning(string message, params object[] propertyValues)
+        public void Warning(string message, params object[] propertyValues)
         {
             _logger.Warning(message, propertyValues);
-            return Task.FromResult(1);
         }
 
-        public Task Warning(Exception ex, string message, params object[] propertyValues)
+        public void Warning(Exception ex, string message, params object[] propertyValues)
         {
             _logger.Warning(ex, message, propertyValues);
-            return Task.FromResult(1);
         }
 
-        public Task Error(string message, params object[] propertyValues)
+        public void Error(string message, params object[] propertyValues)
         {
             _logger.Error(message, propertyValues);
-            return Task.FromResult(1);
         }
 
-        public Task Error(Exception ex, string message, params object[] propertyValues)
+        public void Error(Exception ex, string message, params object[] propertyValues)
         {
             _logger.Error(ex, message, propertyValues);
-            return Task.FromResult(1);
         }
     }
 }

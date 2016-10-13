@@ -1,4 +1,5 @@
-﻿using Jil;
+﻿using System;
+using Jil;
 using Playground.Domain.Persistence.Events;
 
 namespace Playground.Domain.Persistence.Serialization.Jil
@@ -9,7 +10,7 @@ namespace Playground.Domain.Persistence.Serialization.Jil
 
         static EventSerializer()
         {
-           Options = Options.IncludeInheritedUtcCamelCase;
+           Options = Options.UtcCamelCase;
         }
 
         public string Serialize(object obj)
@@ -22,9 +23,9 @@ namespace Playground.Domain.Persistence.Serialization.Jil
             return JSON.Serialize(obj, Options);
         }
 
-        public object Deserialize(string rep)
+        public object Deserialize(string rep, Type objectType)
         {
-            return JSON.DeserializeDynamic(rep, Options);
+            return JSON.Deserialize(rep, objectType, Options);
         }
 
         public TObject Deserialize<TObject>(string rep)

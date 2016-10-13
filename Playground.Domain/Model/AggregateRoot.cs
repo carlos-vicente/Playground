@@ -7,8 +7,8 @@ namespace Playground.Domain.Model
     public abstract class AggregateRoot<TAggregateState> : Entity
         where TAggregateState : class, new()
     {
-        internal ICollection<DomainEvent> UncommittedEvents { get; private set; }
-        protected TAggregateState State { get; private set; }
+        public ICollection<DomainEvent> UncommittedEvents { get; private set; }
+        public TAggregateState State { get; private set; }
         public long CurrentVersion { get; private set; }
 
         protected AggregateRoot(Guid id)
