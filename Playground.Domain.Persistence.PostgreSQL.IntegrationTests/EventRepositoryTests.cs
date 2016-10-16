@@ -254,6 +254,132 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
         }
 
         [Test]
+        public async Task GetSelected_WillReturnSelectedEvents_WhenThereAreEventsForSelectedBitOfStream()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+            var streamName = Fixture.Create<string>();
+
+            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+
+            await DatabaseHelper
+                .CreateEventStream(streamId, streamName)
+                .ConfigureAwait(false);
+
+            var batchId = Guid.NewGuid();
+
+            var event1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", batchId, 1L);
+            var event2 = new StoredEvent("some type", now.AddSeconds(1), "{}", batchId, 2L);
+            var event3 = new StoredEvent("some type", now.AddSeconds(1), "{}", batchId, 3L);
+
+            await DatabaseHelper
+                .CreateEvent(streamId, event1)
+                .ConfigureAwait(false);
+            await DatabaseHelper
+                .CreateEvent(streamId, event2)
+                .ConfigureAwait(false);
+            await DatabaseHelper
+                .CreateEvent(streamId, event3)
+                .ConfigureAwait(false);
+
+            var expectedEvents = new[]
+            {
+                event2,
+                event3
+            };
+
+            // act
+            var events = await _sut
+                .GetSelected(streamId, 2L)
+                .ConfigureAwait(false);
+
+            // assert
+            events
+                .Should()
+                .ContainInOrder(expectedEvents);
+        }
+
+        [Test]
+        public async Task GetSelected_WillReturnEmptyList_WhenThereAreNoEventsForSelectedBitOfStream()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+            var streamName = Fixture.Create<string>();
+
+            await DatabaseHelper
+                .CreateEventStream(streamId, streamName)
+                .ConfigureAwait(false);
+
+            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+            var batchId = Guid.NewGuid();
+
+            var event1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", batchId, 1L);
+            var event2 = new StoredEvent("some type", now.AddSeconds(1), "{}", batchId, 2L);
+
+            await DatabaseHelper
+                .CreateEvent(streamId, event1)
+                .ConfigureAwait(false);
+            await DatabaseHelper
+                .CreateEvent(streamId, event2)
+                .ConfigureAwait(false);
+
+            // act
+            var events = await _sut
+                .GetSelected(streamId, 3L)
+                .ConfigureAwait(false);
+
+            // assert
+            events.Should().BeEmpty();
+        }
+
+        [Test]
+        public async Task GetSelected_WillReturnEmptyList_WhenStreamDoesNotExist()
+        {
+            // arrange
+            var streamId = Fixture.Create<Guid>();
+
+            // act
+            var events = await _sut
+                .GetSelected(streamId, 0L)
+                .ConfigureAwait(false);
+
+            // assert
+            events.Should().BeEmpty();
+        }
+
+        [Test]
+        public void GetSelected_WillThrowException_WhenStreamIdIsInvalid()
+        {
+            // arrange
+            var streamId = Guid.Empty;
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .GetSelected(streamId, 0L)
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<ArgumentException>();
+        }
+
+        [TestCase(-3L)]
+        [TestCase(-30L)]
+        [TestCase(-24L)]
+        public void GetSelected_WillThrowException_WhenFromEventIdIsInvalid(long invalidEventId)
+        {
+            // arrange
+            var streamId = Guid.NewGuid();
+
+            Func<Task> exceptionThrower = async () => await _sut
+                .GetSelected(streamId, invalidEventId)
+                .ConfigureAwait(false);
+
+            // act/assert
+            exceptionThrower
+                .ShouldThrow<ArgumentException>();
+        }
+
+        [Test]
         public async Task GetLast_WillReturnLastEvent_WhenThereAreMultipleEvents()
         {
             // arrange

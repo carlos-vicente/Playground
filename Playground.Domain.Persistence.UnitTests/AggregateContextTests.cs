@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Playground.Domain.Events;
 using Playground.Domain.Model;
 using Playground.Domain.Persistence.Events;
+using Playground.Domain.Persistence.Snapshots;
 using Playground.Domain.Persistence.UnitTests.TestModel;
 using Playground.Messaging;
 using Playground.Tests;
@@ -81,7 +82,45 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(event2Version);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents<TestAggregateState>(events))
+                .HydrateAggregateWithEvents<TestAggregateState>(events, null))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public async Task TryLoad_LoadsAggregateFromSnapshot_WhenThereIsASnapshotAvailable()
+        {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
+            var snapshotVersion = Fixture.Create<long>();
+            var snapshotTakenOn = Fixture.Create<DateTime>();
+            var snapshotData = Fixture.Create<TestAggregateState>();
+            var snapshot = new Snapshot<TestAggregateState>(
+                snapshotVersion,
+                snapshotTakenOn,
+                snapshotData);
+
+            A.CallTo(() => Faker.Resolve<ISnapshotStore>()
+                    .GetLastestSnaptshot<TestAggregateState>(aggregateRootId))
+                .Returns(snapshot);
+
+            var events = new List<DomainEvent>();
+
+            A.CallTo(() => Faker.Resolve<IEventStore>()
+                .LoadAllEvents(aggregateRootId))
+                .Returns(events);
+
+            // act
+            var aggregate = await Sut
+                .TryLoad<TestAggregateRoot, TestAggregateState>(aggregateRootId)
+                .ConfigureAwait(false);
+
+            // assert
+            aggregate.Should().NotBeNull();
+            aggregate.Id.Should().Be(aggregateRootId);
+            aggregate.CurrentVersion.Should().Be(snapshotVersion);
+
+            A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
+                .HydrateAggregateWithEvents<TestAggregateState>(events, snapshotData))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -106,7 +145,9 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(0);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents<TestAggregateState>(A<ICollection<DomainEvent>>._))
+                    .HydrateAggregateWithEvents<TestAggregateState>(
+                        A<ICollection<DomainEvent>>._,
+                        A<TestAggregateState>._))
                 .MustHaveHappened(Repeated.Never);
         }
 
@@ -173,7 +214,7 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(event2Version);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents<TestAggregateState>(events))
+                .HydrateAggregateWithEvents<TestAggregateState>(events, null))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -198,7 +239,9 @@ namespace Playground.Domain.Persistence.UnitTests
             aggregate.CurrentVersion.Should().Be(0);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
-                .HydrateAggregateWithEvents<TestAggregateState>(A<ICollection<DomainEvent>>._))
+                .HydrateAggregateWithEvents<TestAggregateState>(
+                A<ICollection<DomainEvent>>._,
+                A<TestAggregateState>._))
                 .MustHaveHappened(Repeated.Never);
         }
 

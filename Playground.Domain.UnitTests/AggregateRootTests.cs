@@ -12,7 +12,9 @@ namespace Playground.Domain.UnitTests
 {
     public class AggregateRootTests : SimpleTestBase
     {
-        public class TestAggregateState : IGetAppliedWith<ItHappened>
+        public class TestAggregateState 
+            : IAggregateState, 
+            IGetAppliedWith<ItHappened>
         {
             public bool ApplyCalled { get; set; }
 

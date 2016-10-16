@@ -88,6 +88,36 @@ namespace Playground.Domain.Persistence.Events
             _logger.Debug("All events stored");
         }
 
+        public async Task<ICollection<DomainEvent>> LoadSelectedEvents(
+            Guid streamId,
+            long fromEventId)
+        {
+            _logger.Debug($"Loading selected event stream for {streamId} after version {fromEventId}");
+
+            var doesStreamExist = await _repository
+                .CheckStream(streamId)
+                .ConfigureAwait(false);
+
+            if (!doesStreamExist)
+                return null;
+
+            _logger.Debug($"Get selected stored events for stream {streamId}");
+
+            var storedEvents = await _repository
+                .GetSelected(streamId, fromEventId)
+                .ConfigureAwait(false);
+
+            _logger.Debug("Convert selected stored events to domain events");
+
+            var domainEvents = storedEvents?
+                .Select(GetDomainEvent)
+                .ToList() ?? new List<DomainEvent>();
+
+            _logger.Debug($"Returning selected domain events for stream {streamId}");
+
+            return domainEvents;
+        }
+
         public Task<ICollection<DomainEvent>> LoadSelectedEvents(
             Guid streamId,
             long fromEventId,

@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Reflection;
 using DbUp;
 using Npgsql;
@@ -32,6 +33,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.Database
                 .Build();
 
             var result = upgradeEngine.PerformUpgrade();
+            if (!result.Successful)
+            {
+                Console.ReadLine();
+            }
         }
     }
 }

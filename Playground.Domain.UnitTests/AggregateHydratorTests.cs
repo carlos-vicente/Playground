@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using FakeItEasy;
+﻿using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using Playground.Domain.Events;
@@ -30,7 +28,7 @@ namespace Playground.Domain.UnitTests
             // act
             var fakeState = Faker
                 .Resolve<AggregateHydrator>()
-                .HydrateAggregateWithEvents<AggregateState>(events);
+                .HydrateAggregateWithEvents<AggregateState>(events, null);
 
             // assert
             fakeState

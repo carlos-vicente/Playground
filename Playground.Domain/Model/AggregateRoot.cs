@@ -5,7 +5,7 @@ using Playground.Domain.Events;
 namespace Playground.Domain.Model
 {
     public abstract class AggregateRoot<TAggregateState> : Entity
-        where TAggregateState : class, new()
+        where TAggregateState : class, IAggregateState, new()
     {
         public ICollection<DomainEvent> UncommittedEvents { get; private set; }
         public TAggregateState State { get; private set; }

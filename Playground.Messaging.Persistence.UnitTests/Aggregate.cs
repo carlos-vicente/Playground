@@ -3,7 +3,7 @@ using Playground.Domain.Model;
 
 namespace Playground.Messaging.Persistence.UnitTests
 {
-    internal class AggregateState
+    internal class AggregateState : IAggregateState
     {
         
     }

@@ -6,7 +6,7 @@ namespace Playground.Messaging.Commands
     public abstract class DomainCommand<TAggregateRoot, TAggregateState>
         : ICommand
         where TAggregateRoot : AggregateRoot<TAggregateState> 
-        where TAggregateState : class, new()
+        where TAggregateState : class, IAggregateState, new()
     {
         public Guid AggregateRootId { get; private set; }
 

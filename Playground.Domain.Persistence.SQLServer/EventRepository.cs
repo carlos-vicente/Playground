@@ -17,6 +17,11 @@ namespace Playground.Domain.Persistence.SQLServer
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<StoredEvent>> GetSelected(Guid streamId, long fromEventId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<StoredEvent> Get(Guid streamId, long eventId)
         {
             throw new NotImplementedException();

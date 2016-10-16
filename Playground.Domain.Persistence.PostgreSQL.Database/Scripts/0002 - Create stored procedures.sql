@@ -9,6 +9,18 @@ $$ LANGUAGE plpgsql;
 
 
 
+
+CREATE OR REPLACE FUNCTION get_selected_events_for_stream(streamId UUID, fromEventId bigint)
+RETURNS TABLE ("EventId" bigint, "TypeName" text, "OccurredOn" timestamp without time zone, "BatchId" uuid, "EventBody" json) AS $$
+BEGIN
+	RETURN QUERY SELECT E."EventId", E."TypeName", E."OccurredOn", E."BatchId", E."EventBody"
+		FROM public."Events" as E
+		WHERE E."EventStreamId" = streamId AND E."EventId" >= fromEventId;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
 CREATE OR REPLACE FUNCTION public.create_event_stream(streamid uuid, streamName text, createdOn timestamp)
   RETURNS void AS $$
 BEGIN

@@ -48,6 +48,8 @@
     <Compile Include="Events\IGetAppliedWith.cs" />
     <Compile Include="Events\Metadata.cs" />
     <Compile Include="Model\IAggregateHydrator.cs" />
+    <Compile Include="Model\IAggregateState.cs" />
+    <Compile Include="Model\Snapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\ValueObject.cs" />
   </ItemGroup>

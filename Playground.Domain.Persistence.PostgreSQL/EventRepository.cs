@@ -117,6 +117,36 @@ namespace Playground.Domain.Persistence.PostgreSQL
             }
         }
 
+        public async Task<IEnumerable<StoredEvent>> GetSelected(Guid streamId, long fromEventId)
+        {
+            if (streamId == default(Guid))
+                throw new ArgumentException("Pass in a valid Guid", nameof(streamId));
+
+            if (fromEventId < 0L)
+                throw new ArgumentException("Pass in a valid event identifier, minimum value is 0", nameof(fromEventId));
+
+            using (var connection = await OpenConnection().ConfigureAwait(false))
+            {
+                var trans = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+                var events = (await connection
+                    .QueryAsync<StoredEvent>(
+                        Queries.Scripts.GetSelectedEvents,
+                        new { streamid = streamId, fromeventid = fromEventId },
+                        trans,
+                        commandType: CommandType.StoredProcedure)
+                    .ConfigureAwait(false))
+                    .OrderBy(se => se.OccurredOn)
+                    .ToArray();
+
+                await trans
+                    .CommitAsync()
+                    .ConfigureAwait(false);
+
+                return events;
+            }
+        }
+
         public Task<StoredEvent> Get(Guid streamId, long eventId)
         {
             throw new NotImplementedException();

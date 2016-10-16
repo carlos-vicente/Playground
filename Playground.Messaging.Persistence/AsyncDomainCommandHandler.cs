@@ -9,7 +9,7 @@ namespace Playground.Messaging.Persistence
         : IAsyncCommandHandler<TCommand>
         where TCommand : DomainCommand<TAggregate, TAggregateState>
         where TAggregate : AggregateRoot<TAggregateState>
-        where TAggregateState : class, new()
+        where TAggregateState : class, IAggregateState, new()
     {
         private readonly IAggregateContext _aggregateContext;
 

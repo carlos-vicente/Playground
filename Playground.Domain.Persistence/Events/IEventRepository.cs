@@ -31,6 +31,14 @@ namespace Playground.Domain.Persistence.Events
         Task<IEnumerable<StoredEvent>> GetAll(Guid streamId);
 
         /// <summary>
+        /// Gets all the events for the specified stream identifier
+        /// </summary>
+        /// <param name="streamId">Stream identifier</param>
+        /// <param name="fromEventId">First event's identifier to retrieve</param>
+        /// <returns>Complete list of stored events</returns>
+        Task<IEnumerable<StoredEvent>> GetSelected(Guid streamId, long fromEventId);
+
+        /// <summary>
         /// Gets the specified event in a specified stream
         /// </summary>
         /// <param name="streamId">Stream identifier</param>

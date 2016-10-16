@@ -18,7 +18,7 @@ namespace Playground.Domain.Persistence
         /// <returns>An empty aggregate</returns>
         Task<TAggregateRoot> Create<TAggregateRoot, TAggregateState>(Guid aggregateRootId) 
             where TAggregateRoot : AggregateRoot<TAggregateState>
-            where TAggregateState : class, new();
+            where TAggregateState : class, IAggregateState, new();
 
         /// <summary>
         /// Attempts to load the given aggregate root
@@ -28,7 +28,7 @@ namespace Playground.Domain.Persistence
         /// <returns>Returns the aggregate instance with it's entire stream of events applied if the stream exists. An empty aggregate if the stream exists, but has no events. Null if the stream does not exists.</returns>
         Task<TAggregateRoot> TryLoad<TAggregateRoot, TAggregateState>(Guid aggregateRootId) 
             where TAggregateRoot : AggregateRoot<TAggregateState>
-            where TAggregateState : class, new();
+            where TAggregateState : class, IAggregateState, new();
 
         /// <summary>
         /// Attempts to load the given aggregate root
@@ -38,7 +38,7 @@ namespace Playground.Domain.Persistence
         /// </summary>
         Task<TAggregateRoot> Load<TAggregateRoot, TAggregateState>(Guid aggregateRootId) 
             where TAggregateRoot : AggregateRoot<TAggregateState>
-            where TAggregateState : class, new();
+            where TAggregateState : class, IAggregateState, new();
 
         /// <summary>
         /// Saves the given aggregate
@@ -48,6 +48,6 @@ namespace Playground.Domain.Persistence
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="aggregateRoot"/> is null</exception>
         Task Save<TAggregateRoot, TAggregateState>(TAggregateRoot aggregateRoot)
             where TAggregateRoot : AggregateRoot<TAggregateState>
-            where TAggregateState : class, new();
+            where TAggregateState : class, IAggregateState, new();
     }
 }

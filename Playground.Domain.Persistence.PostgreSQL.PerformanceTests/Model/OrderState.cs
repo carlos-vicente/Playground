@@ -1,11 +1,13 @@
 ﻿using System;
 using Playground.Domain.Events;
+using Playground.Domain.Model;
 using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model.Events;
 
 namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model
 {
     public class OrderState
-        : IGetAppliedWith<OrderCreated>,
+        : IAggregateState,
+        IGetAppliedWith<OrderCreated>,
         IGetAppliedWith<OrderShippingAddressChanged>,
         IGetAppliedWith<StartedFulfilment>,
         IGetAppliedWith<ShipOrder>,

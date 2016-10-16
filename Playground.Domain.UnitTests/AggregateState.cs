@@ -1,10 +1,12 @@
 ﻿using Playground.Domain.Events;
+using Playground.Domain.Model;
 using Playground.Domain.UnitTests.Events;
 
 namespace Playground.Domain.UnitTests
 {
     public class AggregateState
-        : IGetAppliedWith<ItHappened>,
+        : IAggregateState,
+        IGetAppliedWith<ItHappened>,
         IGetAppliedWith<GotDone>
     {
         public bool AppliedItHappened { get; private set; }

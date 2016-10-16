@@ -16,8 +16,9 @@ namespace Playground.Domain.Model
         /// <param name="domainEvents">The list of domain events to apply on to the aggregate</param>
         /// <returns>The aggregate instance with the events applied</returns>
         public TAggregateState HydrateAggregateWithEvents<TAggregateState>(
-            ICollection<DomainEvent> domainEvents)
-            where TAggregateState : class, new()
+            ICollection<DomainEvent> domainEvents,
+            TAggregateState snapshot)
+            where TAggregateState : class, IAggregateState, new()
         {
             var state = new TAggregateState();
 

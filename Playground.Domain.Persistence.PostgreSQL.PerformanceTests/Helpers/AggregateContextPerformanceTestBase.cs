@@ -52,6 +52,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
 
             AggregateContext = new AggregateContext(
                 eventStore,
+                null, // TODO: replace with actual SnapshotStore
                 new AggregateHydrator(),
                 new DummyDispatcher());
         }
