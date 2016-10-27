@@ -21,6 +21,17 @@ CREATE TABLE public."Events"
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+
+CREATE TABLE public."Snaphots"
+(
+	"EventStreamId" uuid NOT NULL,
+	"Version" bigint,
+	"TakenOn" timestamp without time zone NOT NULL,
+	"Data" json,
+	CONSTRAINT "Snaphots_PK" PRIMARY KEY ("EventStreamId")
+);
+
+
 CREATE TYPE event AS (
 	EventId bigint, 
 	TypeName text, 

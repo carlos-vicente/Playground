@@ -80,3 +80,28 @@ $$ LANGUAGE plpgsql;
 
 
 
+CREATE OR REPLACE FUNCTION upsert_snapshot(streamId uuid, version bigint, takenOn timestamp without time zone, data json)
+RETURNS void AS $$
+BEGIN
+	IF(SELECT COUNT(*) 
+		FROM public."Snaphots"
+		WHERE "EventStreamId" = streamId) = 0 THEN		
+		UPDATE public."Snaphots"
+		SET "Version" = version, "TakenOn" = takenOn, "Data" = data;
+	ELSE
+		INSERT INTO public."Snaphots" ("EventStreamId", "Version", "Data")
+		VALUES (streamId, version, data);
+	END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION get_snapshot_for_stream(streamId UUID)
+RETURNS TABLE ("Version" bigint, "TakenOn" timestamp without time zone, "Data" json) AS $$
+BEGIN
+	RETURN QUERY SELECT "Version", "Data"
+		FROM public."Snaphots" as E
+		WHERE E."EventStreamId" = streamId;
+END;
+$$ LANGUAGE plpgsql;
