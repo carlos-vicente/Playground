@@ -22,13 +22,16 @@ CREATE TABLE public."Events"
 );
 
 
-CREATE TABLE public."Snaphots"
+CREATE TABLE public."Snapshots"
 (
 	"EventStreamId" uuid NOT NULL,
-	"Version" bigint,
+	"Version" bigint NOT NULL,
 	"TakenOn" timestamp without time zone NOT NULL,
-	"Data" json,
-	CONSTRAINT "Snaphots_PK" PRIMARY KEY ("EventStreamId")
+	"Data" json NOT NULL,
+	CONSTRAINT "Snapshots_PK" PRIMARY KEY ("EventStreamId"),
+	CONSTRAINT "Snapshots_EventStreams_FK" FOREIGN KEY ("EventStreamId")
+      REFERENCES public."EventStreams" ("EventStreamId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 

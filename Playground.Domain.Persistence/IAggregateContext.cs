@@ -44,6 +44,7 @@ namespace Playground.Domain.Persistence
         /// Saves the given aggregate
         /// </summary>
         /// <typeparam name="TAggregateRoot">The aggregate root type</typeparam>
+        /// <typeparam name="TAggregateState"></typeparam>
         /// <param name="aggregateRoot">The aggregate root</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="aggregateRoot"/> is null</exception>
         Task Save<TAggregateRoot, TAggregateState>(TAggregateRoot aggregateRoot)

@@ -84,13 +84,13 @@ CREATE OR REPLACE FUNCTION upsert_snapshot(streamId uuid, version bigint, takenO
 RETURNS void AS $$
 BEGIN
 	IF(SELECT COUNT(*) 
-		FROM public."Snaphots"
+		FROM public."Snapshots"
 		WHERE "EventStreamId" = streamId) = 0 THEN		
-		UPDATE public."Snaphots"
+		UPDATE public."Snapshots"
 		SET "Version" = version, "TakenOn" = takenOn, "Data" = data;
 	ELSE
-		INSERT INTO public."Snaphots" ("EventStreamId", "Version", "Data")
-		VALUES (streamId, version, data);
+		INSERT INTO public."Snapshots" ("EventStreamId", "Version", "TakenOn", "Data")
+		VALUES (streamId, version, takenOn, data);
 	END IF;
 END;
 $$ LANGUAGE plpgsql;

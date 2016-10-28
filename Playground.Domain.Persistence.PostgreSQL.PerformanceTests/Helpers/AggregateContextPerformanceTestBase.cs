@@ -12,6 +12,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
     public abstract class AggregateContextPerformanceTestBase : SimpleTestBase
     {
         protected IAggregateContext AggregateContext;
+        protected NpgsqlConnectionStringBuilder ConnectionStringBuilder;
 
         static AggregateContextPerformanceTestBase()
         {
@@ -24,7 +25,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
         {
             base.SetUp();
 
-            var connectionStringBuilder = new NpgsqlConnectionStringBuilder
+            ConnectionStringBuilder = new NpgsqlConnectionStringBuilder
             {
                 Host = ConfigurationManager.AppSettings["host"],
                 Database = ConfigurationManager.AppSettings["database"],
@@ -35,10 +36,10 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
                 TrustServerCertificate = true
             };
 
-            DatabaseHelper.CleanEvents(connectionStringBuilder);
-            DatabaseHelper.CleanEventStreams(connectionStringBuilder);
+            DatabaseHelper.CleanEvents(ConnectionStringBuilder);
+            DatabaseHelper.CleanEventStreams(ConnectionStringBuilder);
 
-            var eventRepository = new EventRepository(connectionStringBuilder);
+            var eventRepository = new EventRepository(ConnectionStringBuilder);
 
             var eventSerializer = new Serialization.Newtonsoft.EventSerializer();
 

@@ -103,8 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\AggregateContextPerformanceTestBase.cs" />
-    <Compile Include="Helpers\DatabaseHelper.cs" />
     <Compile Include="Helpers\DummyDispatcher.cs" />
+    <Compile Include="LoadAggregateWithSnaphostAndFewEventsTest.cs" />
     <Compile Include="LoadAggregateWithHundredsOfEventsTest.cs" />
     <Compile Include="LoadAggregateWithFewEventsTest.cs" />
     <Compile Include="Model\CannotChangeOrderAddressException.cs" />

@@ -67,6 +67,10 @@ namespace Playground.Domain.Persistence.UnitTests
                 event2
             };
 
+            A.CallTo(() => Faker.Resolve<ISnapshotStore>()
+                    .GetLastestSnaptshot<TestAggregateState>(aggregateRootId))
+                .Returns(null as Snapshot<TestAggregateState>);
+
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
                 .Returns(events);
@@ -87,7 +91,64 @@ namespace Playground.Domain.Persistence.UnitTests
         }
 
         [Test]
-        public async Task TryLoad_LoadsAggregateFromSnapshot_WhenThereIsASnapshotAvailable()
+        public async Task TryLoad_LoadsAggregateFromSnapshot_WhenThereIsASnapshotAvailableWithEvents()
+        {
+            // arrange
+            var aggregateRootId = Fixture.Create<Guid>();
+            var snapshotVersion = Fixture.Create<long>();
+            var snapshotTakenOn = Fixture.Create<DateTime>();
+            var snapshotData = Fixture.Create<TestAggregateState>();
+            var snapshot = new Snapshot<TestAggregateState>(
+                snapshotVersion,
+                snapshotTakenOn,
+                snapshotData);
+
+            var event1 = Fixture
+                .Build<TestAggregateChanged>()
+                .With(de => de.Metadata, new Metadata
+                {
+                    StorageVersion = snapshotVersion + 1
+                })
+                .Create();
+            var event2 = Fixture
+                .Build<TestAggregateChanged>()
+                .With(de => de.Metadata, new Metadata
+                {
+                    StorageVersion = snapshotVersion + 2
+                })
+                .Create();
+
+            var events = new List<DomainEvent>
+            {
+                event1,
+                event2
+            };
+
+            A.CallTo(() => Faker.Resolve<ISnapshotStore>()
+                    .GetLastestSnaptshot<TestAggregateState>(aggregateRootId))
+                .Returns(snapshot);
+
+            A.CallTo(() => Faker.Resolve<IEventStore>()
+                .LoadSelectedEvents(aggregateRootId, snapshotVersion))
+                .Returns(events);
+
+            // act
+            var aggregate = await Sut
+                .TryLoad<TestAggregateRoot, TestAggregateState>(aggregateRootId)
+                .ConfigureAwait(false);
+
+            // assert
+            aggregate.Should().NotBeNull();
+            aggregate.Id.Should().Be(aggregateRootId);
+            aggregate.CurrentVersion.Should().Be(events.Last().Metadata.StorageVersion);
+
+            A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
+                .HydrateAggregateWithEvents<TestAggregateState>(events, snapshotData))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public async Task TryLoad_LoadsAggregateFromSnapshot_WhenThereIsASnapshotAvailableWithoutEvents()
         {
             // arrange
             var aggregateRootId = Fixture.Create<Guid>();
@@ -106,7 +167,7 @@ namespace Playground.Domain.Persistence.UnitTests
             var events = new List<DomainEvent>();
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
-                .LoadAllEvents(aggregateRootId))
+                .LoadSelectedEvents(aggregateRootId, snapshotVersion))
                 .Returns(events);
 
             // act
@@ -129,6 +190,10 @@ namespace Playground.Domain.Persistence.UnitTests
         {
             // arrange
             var aggregateRootId = Fixture.Create<Guid>();
+
+            A.CallTo(() => Faker.Resolve<ISnapshotStore>()
+                    .GetLastestSnaptshot<TestAggregateState>(aggregateRootId))
+                .Returns(null as Snapshot<TestAggregateState>);
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
@@ -156,6 +221,10 @@ namespace Playground.Domain.Persistence.UnitTests
         {
             // arrange
             var aggregateRootId = Fixture.Create<Guid>();
+
+            A.CallTo(() => Faker.Resolve<ISnapshotStore>()
+                    .GetLastestSnaptshot<TestAggregateState>(aggregateRootId))
+                .Returns(null as Snapshot<TestAggregateState>);
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))

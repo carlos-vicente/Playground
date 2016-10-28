@@ -12,8 +12,7 @@ namespace Playground.Domain.Persistence.Serialization.Newtonsoft
         {
             Settings = new JsonSerializerSettings
             {
-                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-                MaxDepth = 1
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
             };
         }
 

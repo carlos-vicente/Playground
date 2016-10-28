@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Playground.Domain.Events;
@@ -74,7 +75,7 @@ namespace Playground.Domain.Persistence
                 : GetAggregateInstance<TAggregateRoot, TAggregateState>(
                     aggregateRootId,
                     events,
-                    snapshot?.Data);
+                    snapshot);
         }
 
         public async Task<TAggregateRoot> Load<TAggregateRoot, TAggregateState>(Guid aggregateRootId)
@@ -119,18 +120,22 @@ namespace Playground.Domain.Persistence
         private TAggregateRoot GetAggregateInstance<TAggregateRoot, TAggregateState>(
             Guid aggregateRootId,
             ICollection<DomainEvent> events,
-            TAggregateState snapshotData)
+            Snapshot<TAggregateState> snapshot)
             where TAggregateRoot : AggregateRoot<TAggregateState>
             where TAggregateState : class, IAggregateState, new()
         {
             TAggregateRoot instance;
 
-            if (events != null && events.Any())
+            if ((events != null && events.Any()) || snapshot != null)
             {
                 var state = _aggregateHydrator
-                    .HydrateAggregateWithEvents<TAggregateState>(events, snapshotData);
+                    .HydrateAggregateWithEvents<TAggregateState>(
+                        events ?? new List<DomainEvent>(),
+                        snapshot?.Data);
 
-                var currentVersion = events.Last().Metadata.StorageVersion;
+                var currentVersion = events.Any()
+                    ? events.Last().Metadata.StorageVersion
+                    : snapshot?.Version ?? 0;
 
                 instance = Activator
                     .CreateInstance(typeof(TAggregateRoot), aggregateRootId, state, currentVersion) as TAggregateRoot;
