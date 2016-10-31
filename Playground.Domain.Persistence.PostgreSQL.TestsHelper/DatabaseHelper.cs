@@ -1,4 +1,12 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
+using Dapper;
+using Npgsql;
+using NpgsqlTypes;
+using Playground.Domain.Persistence.Events;
 
 namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 {
@@ -116,6 +124,35 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
                     await command
                         .ExecuteNonQueryAsync()
                         .ConfigureAwait(false);
+                }
+            }
+        }
+
+        public static async Task CreateEvents(Guid streamId, IEnumerable<StoredEvent> storedEvents)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                foreach (var storedEvent in storedEvents)
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = CreateEventSql;
+
+                        command.Parameters.AddWithValue("@streamId", streamId);
+                        command.Parameters.AddWithValue("@eventId", storedEvent.EventId);
+                        command.Parameters.AddWithValue("@typeName", storedEvent.TypeName);
+                        command.Parameters.AddWithValue("@occurredOn", storedEvent.OccurredOn);
+                        command.Parameters.AddWithValue("@batchId", storedEvent.BatchId);
+                        command.Parameters.AddWithValue("@body", NpgsqlDbType.Json, storedEvent.EventBody);
+
+                        await command
+                            .ExecuteNonQueryAsync()
+                            .ConfigureAwait(false);
+                    }
                 }
             }
         }

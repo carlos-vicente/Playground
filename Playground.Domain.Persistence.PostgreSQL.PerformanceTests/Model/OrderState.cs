@@ -13,14 +13,37 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model
         IGetAppliedWith<ShipOrder>,
         IGetAppliedWith<OrderDelivered>
     {
-        public string UserOrdering { get; set; }
+        public string UserOrdering { get; private set; }
 
-        public string ShippingAddress { get; set; }
+        public string ShippingAddress { get; private set; }
 
-        public Guid ProductIdToSend { get; set; }
+        public Guid ProductIdToSend { get; private set; }
 
-        public OrderStatus Status { get; set; }
+        public OrderStatus Status { get; private set; }
 
+        public string PersonWhoReceivedOrder { get; private set; }
+
+        public OrderState()
+        {
+            
+        }
+
+        // For testing purposes only
+        public OrderState(
+            string userOrdering,
+            string shippingAddress,
+            Guid productIdToSend,
+            OrderStatus status,
+            string personWhoReceivedOrder)
+        {
+            UserOrdering = userOrdering;
+            ShippingAddress = shippingAddress;
+            ProductIdToSend = productIdToSend;
+            Status = status;
+            PersonWhoReceivedOrder = personWhoReceivedOrder;
+        }
+
+        #region IGetAppliedWith Events
         void IGetAppliedWith<OrderCreated>.Apply(OrderCreated e)
         {
             UserOrdering = e.UserOrdering;
@@ -47,6 +70,8 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model
         void IGetAppliedWith<OrderDelivered>.Apply(OrderDelivered e)
         {
             Status = OrderStatus.Delivered;
+            PersonWhoReceivedOrder = e.PersonWhoReceived;
         }
+        #endregion
     }
 }

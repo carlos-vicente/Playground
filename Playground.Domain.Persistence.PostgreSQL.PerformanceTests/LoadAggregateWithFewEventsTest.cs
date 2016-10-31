@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using Playground.Domain.Events;
 using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers;
 using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model;
+using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model.Events;
+using Playground.Domain.Persistence.PostgreSQL.TestsHelper;
 using Ploeh.AutoFixture;
 using Serilog;
 
@@ -22,20 +26,30 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
             // arrange
             var id = Guid.NewGuid();
 
-            var orderAggregate = await AggregateContext
-                .Create<Order, OrderState>(id)
+            await DatabaseHelper
+                .CreateEventStream(id, typeof(Order).AssemblyQualifiedName)
+                .ConfigureAwait(false);
+
+            var expectedState = new OrderState(
+                Fixture.Create<string>(),
+                Fixture.Create<string>(),
+                Fixture.Create<Guid>(),
+                OrderStatus.Delivered,
+                Fixture.Create<string>());
+
+            var events = new List<DomainEvent>
+            {
+                new OrderCreated(id, expectedState.UserOrdering, expectedState.ShippingAddress, expectedState.ProductIdToSend),
+                new StartedFulfilment(id),
+                new ShipOrder(id),
+                new OrderDelivered(id, expectedState.PersonWhoReceivedOrder)
+            };
+
+            await DatabaseHelper
+                .CreateEvents(id, GetStoredEvents(events))
                 .ConfigureAwait(false);
 
             var stopWatch = new Stopwatch();
-
-            orderAggregate.CreateOrder(Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<Guid>());
-            orderAggregate.StartFulfilling();
-            orderAggregate.Ship();
-            orderAggregate.Deliver(Fixture.Create<string>());
-
-            await AggregateContext
-                .Save<Order, OrderState>(orderAggregate)
-                .ConfigureAwait(false);
 
             // act
             stopWatch.Start();
@@ -51,7 +65,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
 
             aggregate
                 .State
-                .ShouldBeEquivalentTo(orderAggregate.State);
+                .ShouldBeEquivalentTo(expectedState);
             stopWatch
                 .ElapsedMilliseconds
                 .Should()

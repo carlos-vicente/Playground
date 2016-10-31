@@ -132,6 +132,10 @@
       <Project>{751be90e-7bd6-46d5-9323-2098e6ccf1ca}</Project>
       <Name>Playground.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Playground.Domain.Persistence.PostgreSQL.TestsHelper\Playground.Domain.Persistence.PostgreSQL.TestsHelper.csproj">
+      <Project>{dcb24172-e95f-4abf-abbc-bcfda00168be}</Project>
+      <Name>Playground.Domain.Persistence.PostgreSQL.TestsHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Domain.Persistence.PostgreSQL\Playground.Domain.Persistence.PostgreSQL.csproj">
       <Project>{bd5ab0dc-1289-4992-ab79-0665af35c0f4}</Project>
       <Name>Playground.Domain.Persistence.PostgreSQL</Name>

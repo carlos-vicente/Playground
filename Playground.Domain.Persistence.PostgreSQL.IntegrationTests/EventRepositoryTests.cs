@@ -5,7 +5,7 @@ using FluentAssertions;
 using Npgsql;
 using NUnit.Framework;
 using Playground.Domain.Persistence.Events;
-using Playground.Domain.Persistence.PostgreSQL.IntegrationTests.Postgresql;
+using Playground.Domain.Persistence.PostgreSQL.TestsHelper;
 using Playground.Tests;
 using Ploeh.AutoFixture;
 

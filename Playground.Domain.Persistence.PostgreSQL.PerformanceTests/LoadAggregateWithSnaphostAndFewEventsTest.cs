@@ -17,6 +17,8 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
         [Test]
         public async Task Execute()
         {
+            Assert.Inconclusive();
+
             //_logger.Debug("#############      LoadAggregateWithHundredsOfEventsTest       ###########");
 
             //// arrange

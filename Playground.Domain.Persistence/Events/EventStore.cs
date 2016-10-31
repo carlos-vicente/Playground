@@ -51,7 +51,8 @@ namespace Playground.Domain.Persistence.Events
             long currentVersion,
             ICollection<DomainEvent> eventsToStore)
         {
-            _logger.Debug($"Storing {eventsToStore.Count} events on stream {streamId} with current version {currentVersion}");
+            _logger
+                .Debug($"Storing {eventsToStore.Count} events on stream {streamId} with current version {currentVersion}");
 
             var lastStoredEvent = await _repository
                 .GetLast(streamId)
@@ -68,7 +69,8 @@ namespace Playground.Domain.Persistence.Events
             if (lastStoredEvent != null)
                 lastStoredEventId = lastStoredEvent.EventId;
 
-            _logger.Debug($"Current stored version for stream {streamId} is {lastStoredEventId}");
+            _logger
+                .Debug($"Current stored version for stream {streamId} is {lastStoredEventId}");
 
             var events = eventsToStore
                 .Select(e => new StoredEvent(
@@ -79,13 +81,15 @@ namespace Playground.Domain.Persistence.Events
                     ++lastStoredEventId))
                 .ToList();
 
-            _logger.Debug("Sending events to repository");
+            _logger
+                .Debug("Sending events to repository");
 
             await _repository
                 .Add(streamId, events)
                 .ConfigureAwait(false);
 
-            _logger.Debug("All events stored");
+            _logger
+                .Debug("All events stored");
         }
 
         public async Task<ICollection<DomainEvent>> LoadSelectedEvents(

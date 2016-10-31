@@ -22,8 +22,6 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
                 .Create<Order, OrderState>(Guid.NewGuid())
                 .ConfigureAwait(false);
 
-            var stopWatch = new Stopwatch();
-
             _logger.Debug("CreateOrder");
             orderAggregate
                 .CreateOrder(Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<Guid>());
@@ -40,7 +38,9 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
             _logger.Debug("Deliver");
             orderAggregate
                 .Deliver(Fixture.Create<string>());
-            
+
+            var stopWatch = new Stopwatch();
+
             // act
             stopWatch.Start();
 

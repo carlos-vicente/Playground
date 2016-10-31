@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using Playground.Domain.Events;
 using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers;
 using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model;
+using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model.Events;
+using Playground.Domain.Persistence.PostgreSQL.TestsHelper;
 using Ploeh.AutoFixture;
 using Serilog;
 
@@ -22,24 +26,37 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
             // arrange
             var id = Guid.NewGuid();
 
-            var orderAggregate = await AggregateContext
-                .Create<Order, OrderState>(id)
+            await DatabaseHelper
+                .CreateEventStream(id, typeof(Order).AssemblyQualifiedName)
+                .ConfigureAwait(false);
+
+            var expectedState = new OrderState(
+                Fixture.Create<string>(),
+                Fixture.Create<string>(),
+                Fixture.Create<Guid>(),
+                OrderStatus.Delivered,
+                Fixture.Create<string>());
+
+            var events = new List<DomainEvent>
+            {
+                new OrderCreated(id, expectedState.UserOrdering, Fixture.Create<string>(), expectedState.ProductIdToSend),
+            };
+
+            for (var i = 0; i < 999; ++i)
+            {
+                events.Add(new OrderShippingAddressChanged(id, Fixture.Create<string>()));
+            }
+
+            events.Add(new OrderShippingAddressChanged(id, expectedState.ShippingAddress));
+            events.Add(new StartedFulfilment(id));
+            events.Add(new ShipOrder(id));
+            events.Add(new OrderDelivered(id, expectedState.PersonWhoReceivedOrder));
+
+            await DatabaseHelper
+                .CreateEvents(id, GetStoredEvents(events))
                 .ConfigureAwait(false);
 
             var stopWatch = new Stopwatch();
-
-            orderAggregate.CreateOrder(Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<Guid>());
-            for (var i = 0; i < 1000; ++i)
-            {
-                orderAggregate.ChangeAddress(Fixture.Create<string>());
-            }
-            orderAggregate.StartFulfilling();
-            orderAggregate.Ship();
-            orderAggregate.Deliver(Fixture.Create<string>());
-
-            await AggregateContext
-                .Save<Order, OrderState>(orderAggregate)
-                .ConfigureAwait(false);
 
             // act
             stopWatch.Start();
@@ -55,7 +72,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
 
             aggregate
                 .State
-                .ShouldBeEquivalentTo(orderAggregate.State);
+                .ShouldBeEquivalentTo(expectedState);
             stopWatch
                 .ElapsedMilliseconds
                 .Should()
