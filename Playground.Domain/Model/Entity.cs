@@ -30,4 +30,35 @@ namespace Playground.Domain.Model
             return Id.GetHashCode();
         }
     }
+
+    public abstract class EntityWithTypedIdentity<TIdentity> 
+        : IEquatable<EntityWithTypedIdentity<TIdentity>>
+        where TIdentity : IIdentity
+    {
+        public TIdentity Identity { get; private set; }
+
+        protected EntityWithTypedIdentity(TIdentity identity)
+        {
+            Identity = identity;
+        }
+
+        public bool Equals(EntityWithTypedIdentity<TIdentity> other)
+        {
+            if (other == null)
+                return false;
+
+            return ReferenceEquals(this, other)
+                   || Identity.Id.Equals(other.Identity.Id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Entity);
+        }
+
+        public override int GetHashCode()
+        {
+            return Identity.Id.GetHashCode();
+        }
+    }
 }

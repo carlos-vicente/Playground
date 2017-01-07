@@ -13,14 +13,37 @@ namespace Playground.Domain.Persistence.Snapshots
             _repository = repository;
         }
 
-        public Task<Snapshot<TAggregateState>> GetLastestSnaptshot<TAggregateState>(Guid streamId)
+        public Task<Snapshot<TAggregateState>> GetLastestSnaptshot<TAggregateState>(
+            Guid streamId)
             where TAggregateState : class, IAggregateState, new()
         {
             throw new NotImplementedException();
         }
 
-        public Task StoreNewSnapshot<TAggregateState>(Guid streamId, Snapshot<TAggregateState> snapshot) 
+        public Task StoreNewSnapshot<TAggregateState>(
+            Guid streamId,
+            Snapshot<TAggregateState> snapshot) 
             where TAggregateState : class, IAggregateState, new()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class SnapshotStoreWithGenericIdentity : ISnapshotStoreWithGenericIdentity
+    {
+        public async Task<Snapshot<TAggregateState>> GetLastestSnaptshot<TAggregateState, TIdentity>(
+            TIdentity streamId)
+            where TAggregateState : class, IAggregateState, new()
+            where TIdentity : IIdentity
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task StoreNewSnapshot<TAggregateState, TIdentity>(
+            TIdentity streamId,
+            Snapshot<TAggregateState> snapshot)
+            where TAggregateState : class, IAggregateState, new()
+            where TIdentity : IIdentity
         {
             throw new NotImplementedException();
         }

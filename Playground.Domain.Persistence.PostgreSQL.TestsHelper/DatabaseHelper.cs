@@ -26,14 +26,18 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             };
         }
 
-        private const string SelectLatestStreamSql = "SELECT \"EventStreamId\", \"EventStreamName\" FROM public.\"EventStreams\" ORDER BY \"CreatedOn\" DESC LIMIT 1";
-        private const string SelectStreamEventsSql = "SELECT \"EventId\", \"TypeName\", \"OccurredOn\", \"BatchId\", \"EventBody\" FROM public.\"Events\"";
-        private const string CreateEventStreamSql = "INSERT INTO public.\"EventStreams\" (\"EventStreamId\", \"EventStreamName\", \"CreatedOn\") values(@streamId, @streamName, @createdOn);";
-        private const string CreateEventSql = "INSERT INTO public.\"Events\" (\"EventStreamId\", \"EventId\", \"TypeName\", \"OccurredOn\", \"BatchId\", \"EventBody\") values(@streamId, @eventId, @typeName, @occurredOn, @batchId, @body);";
+        private const string GuidIdSchema = "ES";
+        private const string StringIdSchema = "ESGeneric";
 
-        private const string DeleteEventsSql = "DELETE FROM public.\"Events\";";
-        private const string DeleteEventStreamsSql = "DELETE FROM public.\"EventStreams\";";
+        private const string SelectLatestStreamSql = "SELECT \"EventStreamId\", \"EventStreamName\" FROM {0}.\"EventStreams\" ORDER BY \"CreatedOn\" DESC LIMIT 1";
+        private const string SelectStreamEventsSql = "SELECT \"EventId\", \"TypeName\", \"OccurredOn\", \"BatchId\", \"EventBody\" FROM {0}.\"Events\" WHERE \"EventStreamId\" = @streamId";
+        private const string CreateEventStreamSql = "INSERT INTO {0}.\"EventStreams\" (\"EventStreamId\", \"EventStreamName\", \"CreatedOn\") values(@streamId, @streamName, @createdOn);";
+        private const string CreateEventSql = "INSERT INTO {0}.\"Events\" (\"EventStreamId\", \"EventId\", \"TypeName\", \"OccurredOn\", \"BatchId\", \"EventBody\") values(@streamId, @eventId, @typeName, @occurredOn, @batchId, @body);";
 
+        private const string DeleteEventsSql = "DELETE FROM {0}.\"Events\";";
+        private const string DeleteEventStreamsSql = "DELETE FROM {0}.\"EventStreams\";";
+
+        #region guid id
         public static void CleanEvents()
         {
             using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
@@ -42,7 +46,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = DeleteEventsSql;
+                    command.CommandText = string.Format(DeleteEventsSql, GuidIdSchema);
                     command.ExecuteNonQuery();
                 }
             }
@@ -56,7 +60,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = DeleteEventStreamsSql;
+                    command.CommandText = string.Format(DeleteEventStreamsSql, GuidIdSchema);
                     command.ExecuteNonQuery();
                 }
             }
@@ -71,7 +75,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
                     .ConfigureAwait(false);
 
                 var query = await connection
-                    .QueryAsync<EventStream>(SelectLatestStreamSql)
+                    .QueryAsync<EventStream>(string.Format(SelectLatestStreamSql, GuidIdSchema))
                     .ConfigureAwait(false);
 
                 return query.Any()
@@ -80,7 +84,9 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             }
         }
 
-        public static async Task CreateEventStream(Guid streamId, string streamName)
+        public static async Task CreateEventStream(
+            Guid streamId,
+            string streamName)
         {
             using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
             {
@@ -90,7 +96,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = CreateEventStreamSql;
+                    command.CommandText = string.Format(CreateEventStreamSql, GuidIdSchema);
                     command.Parameters.AddWithValue("@streamId", streamId);
                     command.Parameters.AddWithValue("@streamName", streamName);
                     command.Parameters.AddWithValue("@createdOn", DateTime.UtcNow);
@@ -102,7 +108,9 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             }
         }
 
-        public static async Task CreateEvent(Guid streamId, StoredEvent storedEvent)
+        public static async Task CreateEvent(
+            Guid streamId,
+            StoredEvent storedEvent)
         {
             using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
             {
@@ -112,7 +120,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = CreateEventSql;
+                    command.CommandText = string.Format(CreateEventSql, GuidIdSchema);
 
                     command.Parameters.AddWithValue("@streamId", streamId);
                     command.Parameters.AddWithValue("@eventId", storedEvent.EventId);
@@ -128,7 +136,9 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             }
         }
 
-        public static async Task CreateEvents(Guid streamId, IEnumerable<StoredEvent> storedEvents)
+        public static async Task CreateEvents(
+            Guid streamId,
+            IEnumerable<StoredEvent> storedEvents)
         {
             using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
             {
@@ -140,7 +150,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
                 {
                     using (var command = connection.CreateCommand())
                     {
-                        command.CommandText = CreateEventSql;
+                        command.CommandText = string.Format(CreateEventSql, GuidIdSchema);
 
                         command.Parameters.AddWithValue("@streamId", streamId);
                         command.Parameters.AddWithValue("@eventId", storedEvent.EventId);
@@ -166,11 +176,170 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
                     .ConfigureAwait(false);
 
                 var query = await connection
-                    .QueryAsync<StoredEvent>(SelectStreamEventsSql)
+                    .QueryAsync<StoredEvent>(
+                        string.Format(SelectStreamEventsSql, GuidIdSchema),
+                        new
+                        {
+                            streamId
+                        })
                     .ConfigureAwait(false);
 
                 return query.ToList();
             }
         }
+        #endregion
+
+        #region string id
+        public static void CleanEventsGeneric()
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = string.Format(DeleteEventsSql, StringIdSchema);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void CleanEventStreamsGeneric()
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = string.Format(DeleteEventStreamsSql, StringIdSchema);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static async Task<EventStreamForGenericIdentity> GetLatestStreamCreatedGeneric()
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                var query = await connection
+                    .QueryAsync<EventStreamForGenericIdentity>(string.Format(SelectLatestStreamSql, StringIdSchema))
+                    .ConfigureAwait(false);
+
+                return query.Any()
+                    ? query.Single()
+                    : default(EventStreamForGenericIdentity);
+            }
+        }
+
+        public static async Task CreateEventStreamGeneric(
+            string streamId,
+            string streamName)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = string.Format(CreateEventStreamSql, StringIdSchema);
+                    command.Parameters.AddWithValue("@streamId", NpgsqlDbType.Varchar, streamId);
+                    command.Parameters.AddWithValue("@streamName", streamName);
+                    command.Parameters.AddWithValue("@createdOn", DateTime.UtcNow);
+
+                    await command
+                        .ExecuteNonQueryAsync()
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+
+        public static async Task CreateEventGeneric(
+            string streamId,
+            StoredEvent storedEvent)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = string.Format(CreateEventSql, StringIdSchema);
+
+                    command.Parameters.AddWithValue("@streamId", streamId);
+                    command.Parameters.AddWithValue("@eventId", storedEvent.EventId);
+                    command.Parameters.AddWithValue("@typeName", storedEvent.TypeName);
+                    command.Parameters.AddWithValue("@occurredOn", storedEvent.OccurredOn);
+                    command.Parameters.AddWithValue("@batchId", storedEvent.BatchId);
+                    command.Parameters.AddWithValue("@body", NpgsqlDbType.Json, storedEvent.EventBody);
+
+                    await command
+                        .ExecuteNonQueryAsync()
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+
+        public static async Task CreateEventsGeneric(
+            string streamId,
+            IEnumerable<StoredEvent> storedEvents)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                foreach (var storedEvent in storedEvents)
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = string.Format(CreateEventSql, StringIdSchema);
+
+                        command.Parameters.AddWithValue("@streamId", streamId);
+                        command.Parameters.AddWithValue("@eventId", storedEvent.EventId);
+                        command.Parameters.AddWithValue("@typeName", storedEvent.TypeName);
+                        command.Parameters.AddWithValue("@occurredOn", storedEvent.OccurredOn);
+                        command.Parameters.AddWithValue("@batchId", storedEvent.BatchId);
+                        command.Parameters.AddWithValue("@body", NpgsqlDbType.Json, storedEvent.EventBody);
+
+                        await command
+                            .ExecuteNonQueryAsync()
+                            .ConfigureAwait(false);
+                    }
+                }
+            }
+        }
+
+        public static async Task<IEnumerable<StoredEvent>> GetStreamEventsGeneric(
+            string streamId)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                var query = await connection
+                    .QueryAsync<StoredEvent>(
+                        string.Format(SelectStreamEventsSql, StringIdSchema),
+                        new
+                        {
+                            streamId
+                        })
+                    .ConfigureAwait(false);
+
+                return query.ToList();
+            }
+        }
+        #endregion
     }
 }

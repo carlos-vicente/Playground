@@ -129,7 +129,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Returns(snapshot);
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
-                .LoadSelectedEvents(aggregateRootId, snapshotVersion))
+                .LoadSelectedEvents(aggregateRootId, snapshotVersion, long.MaxValue))
                 .Returns(events);
 
             // act
@@ -167,7 +167,7 @@ namespace Playground.Domain.Persistence.UnitTests
             var events = new List<DomainEvent>();
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
-                .LoadSelectedEvents(aggregateRootId, snapshotVersion))
+                .LoadSelectedEvents(aggregateRootId, snapshotVersion, long.MaxValue))
                 .Returns(events);
 
             // act

@@ -67,6 +67,9 @@
     <EmbeddedResource Include="Scripts\0001 - Create Schema.sql" />
     <EmbeddedResource Include="Scripts\0002 - Create stored procedures.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\0003 - Create user and add permissions.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

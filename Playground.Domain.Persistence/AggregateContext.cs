@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Playground.Domain.Events;
@@ -60,7 +59,7 @@ namespace Playground.Domain.Persistence
             if (snapshot != null)
             {
                 events = await _eventStore
-                    .LoadSelectedEvents(aggregateRootId, snapshot.Version)
+                    .LoadSelectedEvents(aggregateRootId, snapshot.Version, long.MaxValue)
                     .ConfigureAwait(false);
             }
             else
@@ -82,19 +81,34 @@ namespace Playground.Domain.Persistence
             where TAggregateRoot : AggregateRoot<TAggregateState>
             where TAggregateState : class, IAggregateState, new()
         {
-            // TODO: check if the is a snapshot available for this stream
-            // TODO: if there is a snapshot, then only obtain the events after the snapshot's version
-
-            var events = await _eventStore
-                .LoadAllEvents(aggregateRootId)
+            var snapshot = await _snapshotStore
+                .GetLastestSnaptshot<TAggregateState>(aggregateRootId)
                 .ConfigureAwait(false);
 
-            if (events == null)
+            ICollection<DomainEvent> events;
+
+            if (snapshot != null)
+            {
+                events = await _eventStore
+                    .LoadSelectedEvents(aggregateRootId, snapshot.Version, long.MaxValue)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                events = await _eventStore
+                    .LoadAllEvents(aggregateRootId)
+                    .ConfigureAwait(false);
+            }
+
+            if (snapshot == null && events == null)
             {
                 throw new InvalidOperationException($"No stream with identifier {aggregateRootId}");
             }
 
-            return GetAggregateInstance<TAggregateRoot, TAggregateState>(aggregateRootId, events, null);
+            return GetAggregateInstance<TAggregateRoot, TAggregateState>(
+                aggregateRootId,
+                events,
+                snapshot);
         }
 
         public async Task Save<TAggregateRoot, TAggregateState>(TAggregateRoot aggregateRoot)
@@ -134,6 +148,172 @@ namespace Playground.Domain.Persistence
                         snapshot?.Data);
 
                 var currentVersion = events.Any()
+                    ? events.Last().Metadata.StorageVersion
+                    : snapshot?.Version ?? 0;
+
+                instance = Activator
+                    .CreateInstance(typeof(TAggregateRoot), aggregateRootId, state, currentVersion) as TAggregateRoot;
+            }
+            else
+            {
+                instance = Activator
+                    .CreateInstance(typeof(TAggregateRoot), aggregateRootId) as TAggregateRoot;
+            }
+
+            return instance;
+        }
+    }
+
+    public class AggregateContextForAggregateWithIdentity : IAggregateContextForAggregateWithIdentity
+    {
+        private readonly IEventStoreForGenericIdentity _eventStore;
+        private readonly ISnapshotStoreWithGenericIdentity _snapshotStore;
+        private readonly IAggregateHydrator _aggregateHydrator;
+        private readonly IEventDispatcher _eventDispatcher;
+
+        public AggregateContextForAggregateWithIdentity(
+            IEventStoreForGenericIdentity eventStore,
+            ISnapshotStoreWithGenericIdentity snapshotStore,
+            IAggregateHydrator aggregateHydrator,
+            IEventDispatcher eventDispatcher)
+        {
+            _eventStore = eventStore;
+            _snapshotStore = snapshotStore;
+            _aggregateHydrator = aggregateHydrator;
+            _eventDispatcher = eventDispatcher;
+        }
+
+        public async Task<TAggregateRoot> Create<TAggregateRoot, TAggregateState, TIdentity>(
+            TIdentity aggregateRootId) 
+            where TAggregateRoot : AggregateRootWithIdentity<TAggregateState, TIdentity> 
+            where TAggregateState : class, IAggregateState, new() 
+            where TIdentity : IIdentity
+        {
+            //TODO: access if we should create a new stream at this point.
+            // What if something goes wrong when processing the command that creates this,
+            // then we would have an empty stream
+            // If this should be kept, then the TryLoad and Load method must be able to return
+            // an aggregate when there are no events, but there is a record created for it
+
+            await _eventStore
+                .CreateEventStream<TAggregateRoot>(aggregateRootId.Id)
+                .ConfigureAwait(false);
+
+            return GetAggregateInstance<TAggregateRoot, TAggregateState, TIdentity>(
+                aggregateRootId,
+                null,
+                null);
+        }
+
+        public async Task<TAggregateRoot> TryLoad<TAggregateRoot, TAggregateState, TIdentity>(
+            TIdentity aggregateRootId)
+            where TAggregateRoot : AggregateRootWithIdentity<TAggregateState, TIdentity>
+            where TAggregateState : class, IAggregateState, new()
+            where TIdentity : IIdentity
+        {
+            var snapshot = await _snapshotStore
+                .GetLastestSnaptshot<TAggregateState, TIdentity>(aggregateRootId)
+                .ConfigureAwait(false);
+
+            ICollection<DomainEvent> events;
+
+            if (snapshot != null)
+            {
+                events = await _eventStore
+                    .LoadSelectedEvents(aggregateRootId.Id, snapshot.Version, long.MaxValue)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                events = await _eventStore
+                    .LoadAllEvents(aggregateRootId.Id)
+                    .ConfigureAwait(false);
+            }
+
+            return events == null
+                ? null
+                : GetAggregateInstance<TAggregateRoot, TAggregateState, TIdentity>(
+                    aggregateRootId,
+                    events,
+                    snapshot);
+        }
+
+        public async Task<TAggregateRoot> Load<TAggregateRoot, TAggregateState, TIdentity>(
+            TIdentity aggregateRootId)
+            where TAggregateRoot : AggregateRootWithIdentity<TAggregateState, TIdentity>
+            where TAggregateState : class, IAggregateState, new()
+            where TIdentity : IIdentity
+        {
+            var snapshot = await _snapshotStore
+                .GetLastestSnaptshot<TAggregateState, TIdentity>(aggregateRootId)
+                .ConfigureAwait(false);
+
+            ICollection<DomainEvent> events;
+
+            if (snapshot != null)
+            {
+                events = await _eventStore
+                    .LoadSelectedEvents(aggregateRootId.Id, snapshot.Version, long.MaxValue)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                events = await _eventStore
+                    .LoadAllEvents(aggregateRootId.Id)
+                    .ConfigureAwait(false);
+            }
+
+            if (snapshot == null && events == null)
+            {
+                throw new InvalidOperationException($"No stream with identifier {aggregateRootId}");
+            }
+
+            return GetAggregateInstance<TAggregateRoot, TAggregateState, TIdentity>(
+                aggregateRootId,
+                events,
+                snapshot);
+        }
+
+        public async Task Save<TAggregateRoot, TAggregateState, TIdentity>(
+            TAggregateRoot aggregateRoot)
+            where TAggregateRoot : AggregateRootWithIdentity<TAggregateState, TIdentity>
+            where TAggregateState : class, IAggregateState, new()
+            where TIdentity : IIdentity
+        {
+            await _eventStore
+                .StoreEvents(
+                    aggregateRoot.Identity.Id,
+                    aggregateRoot.CurrentVersion,
+                    aggregateRoot.UncommittedEvents)
+                .ConfigureAwait(false);
+
+            // everything worked correctly so lets dispatch the events
+            foreach (var domainEvent in aggregateRoot.UncommittedEvents)
+            {
+                await _eventDispatcher
+                    .RaiseEvent(domainEvent)
+                    .ConfigureAwait(false);
+            }
+        }
+
+        private TAggregateRoot GetAggregateInstance<TAggregateRoot, TAggregateState, TIdentity>(
+            TIdentity aggregateRootId,
+            ICollection<DomainEvent> events,
+            Snapshot<TAggregateState> snapshot)
+            where TAggregateRoot : AggregateRootWithIdentity<TAggregateState, TIdentity>
+            where TAggregateState : class, IAggregateState, new()
+            where TIdentity : IIdentity
+        {
+            TAggregateRoot instance;
+
+            if ((events != null && events.Any()) || snapshot != null)
+            {
+                var state = _aggregateHydrator
+                    .HydrateAggregateWithEvents<TAggregateState>(
+                        events ?? new List<DomainEvent>(),
+                        snapshot?.Data);
+
+                var currentVersion = events != null && events.Any()
                     ? events.Last().Metadata.StorageVersion
                     : snapshot?.Version ?? 0;
 

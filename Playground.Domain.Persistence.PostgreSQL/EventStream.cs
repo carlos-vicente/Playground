@@ -8,4 +8,11 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         public string EventStreamName { get; set; }
     }
+
+    public class EventStreamForGenericIdentity
+    {
+        public string EventStreamId { get; set; }
+
+        public string EventStreamName { get; set; }
+    }
 }
