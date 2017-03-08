@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -33,45 +32,41 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
             var expectedState = new OrderState(
                 Fixture.Create<string>(),
                 Fixture.Create<string>(),
-                Fixture.Create<Guid>(),
+                Fixture.Create<string>(),
                 OrderStatus.Delivered,
                 Fixture.Create<string>());
 
             var events = new List<DomainEvent>
             {
-                new OrderCreated(id, expectedState.UserOrdering, expectedState.ShippingAddress, expectedState.ProductIdToSend),
-                new StartedFulfilment(id),
-                new ShipOrder(id),
-                new OrderDelivered(id, expectedState.PersonWhoReceivedOrder)
+                new OrderCreated(
+                    expectedState.UserOrdering,
+                    expectedState.ShippingAddress,
+                    expectedState.ProductIdToSend),
+                new OrderStartedBeingFulfilled(),
+                new OrderShipped(),
+                new OrderDelivered(expectedState.PersonWhoReceivedOrder)
             };
 
             await DatabaseHelper
                 .CreateEvents(id, GetStoredEvents(events))
                 .ConfigureAwait(false);
 
-            var stopWatch = new Stopwatch();
-
             // act
-            stopWatch.Start();
-
             var aggregate = await AggregateContext
                 .Load<Order, OrderState>(id)
                 .ConfigureAwait(false);
 
-            stopWatch.Stop();
-
             // assert
-            Console.WriteLine(stopWatch.Elapsed.ToString());
+            Console.WriteLine(MetricsCounter.ElapsedTime.ToString());
 
             aggregate
                 .State
                 .ShouldBeEquivalentTo(expectedState);
-            stopWatch
-                .ElapsedMilliseconds
+            MetricsCounter
+                .ElapsedTime
+                .TotalMilliseconds
                 .Should()
-                .BeLessOrEqualTo(1000);
-
-            _logger.Debug("###################################################################");
+                .BeLessOrEqualTo(MaximumAcceptedDuration);
         }
     }
 }

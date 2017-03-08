@@ -1,14 +1,14 @@
 ﻿using System;
 using Jil;
-using Playground.Domain.Persistence.Events;
+using Playground.Core.Serialization;
 
-namespace Playground.Domain.Persistence.Serialization.Jil
+namespace Playground.Serialization.Jil
 {
-    public class EventSerializer : IEventSerializer
+    public class ObjectSerializer : IObjectSerializer
     {
         private static readonly Options Options;
 
-        static EventSerializer()
+        static ObjectSerializer()
         {
            Options = Options.UtcCamelCase;
         }

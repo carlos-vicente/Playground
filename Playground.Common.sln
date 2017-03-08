@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26020.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{9CE5E191-59F5-4CF7-BD87-A6F6628DCC6D}"
 EndProject
@@ -93,10 +93,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Messaging.Rebus"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Messaging.Rebus.UnitTests", "Playground.Messaging.Rebus.UnitTests\Playground.Messaging.Rebus.UnitTests.csproj", "{9E6F7489-4855-4948-BFD2-8C06FEDDD222}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Domain.Persistence.Serialization.Jil", "Playground.Domain.Persistence.Serialization.Jil\Playground.Domain.Persistence.Serialization.Jil.csproj", "{D5436D18-0841-4D6F-BC9C-867E87B01979}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Domain.Persistence.Serialization.Newtonsoft", "Playground.Domain.Persistence.Serialization.Newtonsoft\Playground.Domain.Persistence.Serialization.Newtonsoft.csproj", "{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Serialization.Json", "Playground.Serialization.Json\Playground.Serialization.Json.csproj", "{26D09033-3B33-4369-B74F-B143DE7B93B7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BC493FB8-96AF-4C01-9A32-7C0F93ABB5C3}"
@@ -128,6 +124,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.QueryService.InMemory.UnitTests", "Playground.QueryService.InMemory.UnitTests\Playground.QueryService.InMemory.UnitTests.csproj", "{43A69474-6807-4F92-8762-967D974FDBD0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Domain.Persistence.PostgreSQL.TestsHelper", "Playground.Domain.Persistence.PostgreSQL.TestsHelper\Playground.Domain.Persistence.PostgreSQL.TestsHelper.csproj", "{DCB24172-E95F-4ABF-ABBC-BCFDA00168BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Serialization.Jil", "Playground.Serialization.Jil\Playground.Serialization.Jil.csproj", "{D5436D18-0841-4D6F-BC9C-867E87B01979}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Serialization.Newtonsoft", "Playground.Serialization.Newtonsoft\Playground.Serialization.Newtonsoft.csproj", "{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -227,14 +227,6 @@ Global
 		{9E6F7489-4855-4948-BFD2-8C06FEDDD222}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E6F7489-4855-4948-BFD2-8C06FEDDD222}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E6F7489-4855-4948-BFD2-8C06FEDDD222}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{26D09033-3B33-4369-B74F-B143DE7B93B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{26D09033-3B33-4369-B74F-B143DE7B93B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26D09033-3B33-4369-B74F-B143DE7B93B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -287,6 +279,14 @@ Global
 		{DCB24172-E95F-4ABF-ABBC-BCFDA00168BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCB24172-E95F-4ABF-ABBC-BCFDA00168BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCB24172-E95F-4ABF-ABBC-BCFDA00168BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5436D18-0841-4D6F-BC9C-867E87B01979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -328,8 +328,6 @@ Global
 		{E6FE12C0-A29A-4853-8271-899C024C630A} = {88884871-DCE3-4BB4-B05E-9196FB2BD79B}
 		{07AE8EA0-BA36-4C78-BD67-E2C9979ABDEC} = {88884871-DCE3-4BB4-B05E-9196FB2BD79B}
 		{9E6F7489-4855-4948-BFD2-8C06FEDDD222} = {E6FE12C0-A29A-4853-8271-899C024C630A}
-		{D5436D18-0841-4D6F-BC9C-867E87B01979} = {94CCFAF6-2F7B-47C3-97C6-F24171084EA6}
-		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3} = {94CCFAF6-2F7B-47C3-97C6-F24171084EA6}
 		{26D09033-3B33-4369-B74F-B143DE7B93B7} = {94CCFAF6-2F7B-47C3-97C6-F24171084EA6}
 		{BC493FB8-96AF-4C01-9A32-7C0F93ABB5C3} = {D5B1459D-BB60-4DA5-A277-C091AB981756}
 		{FF96D419-AF67-4C68-827F-EA84DFDB815A} = {D5B1459D-BB60-4DA5-A277-C091AB981756}
@@ -346,5 +344,7 @@ Global
 		{ED175880-ECF4-4696-ABD0-B39AD38C27BB} = {EE9E96E0-AE46-4DBC-A717-D06018108F93}
 		{43A69474-6807-4F92-8762-967D974FDBD0} = {0F85B703-B405-46FE-A1CA-575506380F33}
 		{DCB24172-E95F-4ABF-ABBC-BCFDA00168BE} = {CA1056D8-0289-41B2-8333-6B618ECB05E2}
+		{D5436D18-0841-4D6F-BC9C-867E87B01979} = {94CCFAF6-2F7B-47C3-97C6-F24171084EA6}
+		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3} = {94CCFAF6-2F7B-47C3-97C6-F24171084EA6}
 	EndGlobalSection
 EndGlobal

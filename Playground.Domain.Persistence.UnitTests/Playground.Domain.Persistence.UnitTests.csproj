@@ -34,13 +34,11 @@
       <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Autofac.Extras.FakeItEasy, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+    <Reference Include="Autofac.Extras.FakeItEasy, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da">
       <HintPath>..\packages\Autofac.Extras.FakeItEasy.4.0.0\lib\net451\Autofac.Extras.FakeItEasy.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="FakeItEasy, Version=2.3.1.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
-      <HintPath>..\packages\FakeItEasy.2.3.1\lib\net40\FakeItEasy.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="FakeItEasy, Version=2.3.3.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c">
+      <HintPath>..\packages\FakeItEasy.2.3.3\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions, Version=4.15.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.4.15.0\lib\net45\FluentAssertions.dll</HintPath>
@@ -74,8 +72,13 @@
     <Compile Include="TestModel\TestAggregateChanged.cs" />
     <Compile Include="TestModel\TestAggregateCreated.cs" />
     <Compile Include="TestModel\TestAggregateRoot.cs" />
+    <Compile Include="TestModel\TestAggregateState.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Playground.Core\Playground.Core.csproj">
+      <Project>{751BE90E-7BD6-46D5-9323-2098E6CCF1CA}</Project>
+      <Name>Playground.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Domain.Persistence\Playground.Domain.Persistence.csproj">
       <Project>{8d22c8a7-4c4f-472c-9dba-43bd55deb1e8}</Project>
       <Name>Playground.Domain.Persistence</Name>
@@ -96,6 +99,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

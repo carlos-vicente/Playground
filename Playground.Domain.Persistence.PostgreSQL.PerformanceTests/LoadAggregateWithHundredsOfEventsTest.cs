@@ -33,52 +33,45 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
             var expectedState = new OrderState(
                 Fixture.Create<string>(),
                 Fixture.Create<string>(),
-                Fixture.Create<Guid>(),
+                Fixture.Create<string>(),
                 OrderStatus.Delivered,
                 Fixture.Create<string>());
 
             var events = new List<DomainEvent>
             {
-                new OrderCreated(id, expectedState.UserOrdering, Fixture.Create<string>(), expectedState.ProductIdToSend),
+                new OrderCreated(expectedState.UserOrdering, Fixture.Create<string>(), expectedState.ProductIdToSend),
             };
 
             for (var i = 0; i < 999; ++i)
             {
-                events.Add(new OrderShippingAddressChanged(id, Fixture.Create<string>()));
+                events.Add(new OrderShippingAddressChanged(Fixture.Create<string>()));
             }
 
-            events.Add(new OrderShippingAddressChanged(id, expectedState.ShippingAddress));
-            events.Add(new StartedFulfilment(id));
-            events.Add(new ShipOrder(id));
-            events.Add(new OrderDelivered(id, expectedState.PersonWhoReceivedOrder));
+            events.Add(new OrderShippingAddressChanged(expectedState.ShippingAddress));
+            events.Add(new OrderStartedBeingFulfilled());
+            events.Add(new OrderShipped());
+            events.Add(new OrderDelivered(expectedState.PersonWhoReceivedOrder));
 
             await DatabaseHelper
                 .CreateEvents(id, GetStoredEvents(events))
                 .ConfigureAwait(false);
 
-            var stopWatch = new Stopwatch();
-
             // act
-            stopWatch.Start();
-
             var aggregate = await AggregateContext
                 .Load<Order, OrderState>(id)
                 .ConfigureAwait(false);
 
-            stopWatch.Stop();
-
             // assert
-            Console.WriteLine(stopWatch.Elapsed.ToString());
+            Console.WriteLine(MetricsCounter.ElapsedTime.ToString());
 
             aggregate
                 .State
                 .ShouldBeEquivalentTo(expectedState);
-            stopWatch
-                .ElapsedMilliseconds
+            MetricsCounter
+                .ElapsedTime
+                .TotalMilliseconds
                 .Should()
-                .BeLessOrEqualTo(1000);
-
-            _logger.Debug("###################################################################");
+                .BeLessOrEqualTo(MaximumAcceptedDuration);
         }
     }
 }

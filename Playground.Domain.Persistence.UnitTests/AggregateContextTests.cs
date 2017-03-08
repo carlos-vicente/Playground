@@ -50,14 +50,14 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Build<TestAggregateChanged>()
                 .With(de => de.Metadata, new Metadata
                 {
-                    StorageVersion = event1Version
+                    Version = event1Version
                 })
                 .Create();
             var event2 = Fixture
                 .Build<TestAggregateChanged>()
                 .With(de => de.Metadata, new Metadata
                 {
-                    StorageVersion = event2Version
+                    Version = event2Version
                 })
                 .Create();
 
@@ -107,14 +107,14 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Build<TestAggregateChanged>()
                 .With(de => de.Metadata, new Metadata
                 {
-                    StorageVersion = snapshotVersion + 1
+                    Version = snapshotVersion + 1
                 })
                 .Create();
             var event2 = Fixture
                 .Build<TestAggregateChanged>()
                 .With(de => de.Metadata, new Metadata
                 {
-                    StorageVersion = snapshotVersion + 2
+                    Version = snapshotVersion + 2
                 })
                 .Create();
 
@@ -140,7 +140,7 @@ namespace Playground.Domain.Persistence.UnitTests
             // assert
             aggregate.Should().NotBeNull();
             aggregate.Id.Should().Be(aggregateRootId);
-            aggregate.CurrentVersion.Should().Be(events.Last().Metadata.StorageVersion);
+            aggregate.CurrentVersion.Should().Be(events.Last().Metadata.Version);
 
             A.CallTo(() => Faker.Resolve<IAggregateHydrator>()
                 .HydrateAggregateWithEvents<TestAggregateState>(events, snapshotData))
@@ -251,14 +251,14 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Build<TestAggregateChanged>()
                 .With(de => de.Metadata, new Metadata
                 {
-                    StorageVersion = event1Version
+                    Version = event1Version
                 })
                 .Create();
             var event2 = Fixture
                 .Build<TestAggregateChanged>()
                 .With(de => de.Metadata, new Metadata
                 {
-                    StorageVersion = event2Version
+                    Version = event2Version
                 })
                 .Create();
 
@@ -267,6 +267,10 @@ namespace Playground.Domain.Persistence.UnitTests
                 event1,
                 event2
             };
+
+            A.CallTo(() => Faker.Resolve<ISnapshotStore>()
+                    .GetLastestSnaptshot<TestAggregateState>(aggregateRootId))
+                .Returns(null as Snapshot<TestAggregateState>);
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
@@ -292,6 +296,10 @@ namespace Playground.Domain.Persistence.UnitTests
         {
             // arrange
             var aggregateRootId = Fixture.Create<Guid>();
+
+            A.CallTo(() => Faker.Resolve<ISnapshotStore>()
+                    .GetLastestSnaptshot<TestAggregateState>(aggregateRootId))
+                .Returns(null as Snapshot<TestAggregateState>);
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))
@@ -319,6 +327,10 @@ namespace Playground.Domain.Persistence.UnitTests
         {
             // arrange
             var aggregateRootId = Fixture.Create<Guid>();
+
+            A.CallTo(() => Faker.Resolve<ISnapshotStore>()
+                    .GetLastestSnaptshot<TestAggregateState>(aggregateRootId))
+                .Returns(null as Snapshot<TestAggregateState>);
 
             A.CallTo(() => Faker.Resolve<IEventStore>()
                 .LoadAllEvents(aggregateRootId))

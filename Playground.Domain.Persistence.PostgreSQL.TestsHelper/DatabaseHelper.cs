@@ -7,6 +7,7 @@ using Dapper;
 using Npgsql;
 using NpgsqlTypes;
 using Playground.Domain.Persistence.Events;
+using Playground.Domain.Persistence.Snapshots;
 
 namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 {
@@ -33,12 +34,14 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
         private const string SelectStreamEventsSql = "SELECT \"EventId\", \"TypeName\", \"OccurredOn\", \"BatchId\", \"EventBody\" FROM {0}.\"Events\" WHERE \"EventStreamId\" = @streamId";
         private const string CreateEventStreamSql = "INSERT INTO {0}.\"EventStreams\" (\"EventStreamId\", \"EventStreamName\", \"CreatedOn\") values(@streamId, @streamName, @createdOn);";
         private const string CreateEventSql = "INSERT INTO {0}.\"Events\" (\"EventStreamId\", \"EventId\", \"TypeName\", \"OccurredOn\", \"BatchId\", \"EventBody\") values(@streamId, @eventId, @typeName, @occurredOn, @batchId, @body);";
+        private const string CreateSnapshotSql = "INSERT INTO {0}.\"Snapshots\" (\"EventStreamId\", \"Version\", \"TakenOn\", \"Data\") values(@streamId, @version, @takenOn, @data);";
 
         private const string DeleteEventsSql = "DELETE FROM {0}.\"Events\";";
+        private const string DeleteSnapshotsSql = "DELETE FROM {0}.\"Snapshots\";";
         private const string DeleteEventStreamsSql = "DELETE FROM {0}.\"EventStreams\";";
 
         #region guid id
-        public static void CleanEvents()
+        public static void CleanEventStreams()
         {
             using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
             {
@@ -46,18 +49,16 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 
                 using (var command = connection.CreateCommand())
                 {
+                    command.CommandText = string.Format(DeleteSnapshotsSql, GuidIdSchema);
+                    command.ExecuteNonQuery();
+                }
+
+                using (var command = connection.CreateCommand())
+                {
                     command.CommandText = string.Format(DeleteEventsSql, GuidIdSchema);
                     command.ExecuteNonQuery();
                 }
-            }
-        }
-        
-        public static void CleanEventStreams()
-        {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
-            {
-                connection.Open();
-
+            
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = string.Format(DeleteEventStreamsSql, GuidIdSchema);
@@ -136,6 +137,32 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             }
         }
 
+        public static async Task CreateSnapshot(
+            Guid streamId,
+            StoredSnapshot storedSnapshot)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = string.Format(CreateSnapshotSql, GuidIdSchema);
+
+                    command.Parameters.AddWithValue("@streamId", streamId);
+                    command.Parameters.AddWithValue("@version", storedSnapshot.Version);
+                    command.Parameters.AddWithValue("@takenOn", storedSnapshot.TakenOn);
+                    command.Parameters.AddWithValue("@data", NpgsqlDbType.Json, storedSnapshot.Data);
+
+                    await command
+                        .ExecuteNonQueryAsync()
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+
         public static async Task CreateEvents(
             Guid streamId,
             IEnumerable<StoredEvent> storedEvents)
@@ -190,7 +217,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
         #endregion
 
         #region string id
-        public static void CleanEventsGeneric()
+        public static void CleanEventStreamsGeneric()
         {
             using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
             {
@@ -198,17 +225,15 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 
                 using (var command = connection.CreateCommand())
                 {
+                    command.CommandText = string.Format(DeleteSnapshotsSql, StringIdSchema);
+                    command.ExecuteNonQuery();
+                }
+
+                using (var command = connection.CreateCommand())
+                {
                     command.CommandText = string.Format(DeleteEventsSql, StringIdSchema);
                     command.ExecuteNonQuery();
                 }
-            }
-        }
-
-        public static void CleanEventStreamsGeneric()
-        {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
-            {
-                connection.Open();
 
                 using (var command = connection.CreateCommand())
                 {

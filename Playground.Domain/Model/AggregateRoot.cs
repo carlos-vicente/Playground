@@ -10,6 +10,7 @@ namespace Playground.Domain.Model
         public ICollection<DomainEvent> UncommittedEvents { get; private set; }
         public TAggregateState State { get; private set; }
         public long CurrentVersion { get; private set; }
+        private long _currentUncommittedVersion;
 
         protected AggregateRoot(Guid id)
             : this(id, null, 0L)
@@ -22,11 +23,17 @@ namespace Playground.Domain.Model
             UncommittedEvents = new List<DomainEvent>();
             State = hydratedState ?? new TAggregateState();
             CurrentVersion = currentVersion;
+            _currentUncommittedVersion = currentVersion;
         }
 
         protected void When<TDomainEvent>(TDomainEvent domainEvent)
             where TDomainEvent : DomainEvent
         {
+            domainEvent.Metadata = new Metadata(
+                Id,
+                ++_currentUncommittedVersion,
+                typeof(TDomainEvent));
+
             UncommittedEvents.Add(domainEvent);
 
             ((IGetAppliedWith<TDomainEvent>)State).Apply(domainEvent);
@@ -38,9 +45,10 @@ namespace Playground.Domain.Model
         where TAggregateState : class, IAggregateState, new()
         where TIdentity : IIdentity
     {
-        public ICollection<DomainEvent> UncommittedEvents { get; private set; }
+        public ICollection<DomainEventForAggregateRootWithIdentity<TIdentity>> UncommittedEvents { get; private set; }
         public TAggregateState State { get; private set; }
         public long CurrentVersion { get; private set; }
+        private long _currentUncommittedVersion;
 
         protected AggregateRootWithIdentity(TIdentity identity)
             : this(identity, null, 0L)
@@ -53,17 +61,22 @@ namespace Playground.Domain.Model
             long currentVersion)
             : base(identity)
         {
-            UncommittedEvents = new List<DomainEvent>();
+            UncommittedEvents = new List<DomainEventForAggregateRootWithIdentity<TIdentity>>();
             State = hydratedState ?? new TAggregateState();
             CurrentVersion = currentVersion;
         }
 
         protected void When<TDomainEvent>(TDomainEvent domainEvent)
-            where TDomainEvent : DomainEvent
+            where TDomainEvent : DomainEventForAggregateRootWithIdentity<TIdentity>
         {
+            domainEvent.Metadata = new MetadataForAggregateRootWithIdentity<TIdentity>(
+                Identity,
+                ++_currentUncommittedVersion,
+                typeof(TDomainEvent));
+
             UncommittedEvents.Add(domainEvent);
 
-            ((IGetAppliedWith<TDomainEvent>)State).Apply(domainEvent);
+            ((IGetAppliedWithForAggregateWithIdentity<TDomainEvent, TIdentity>)State).Apply(domainEvent);
         }
     }
 }

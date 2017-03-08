@@ -9,10 +9,12 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model.Events
 
         public string Address { get; set; }
 
-        public Guid ProductId { get; set; }
+        public string ProductId { get; set; }
 
-        public OrderCreated(Guid aggregateRootId, string userOrdering, string address, Guid productId) 
-            : base(aggregateRootId)
+        public OrderCreated(
+            string userOrdering,
+            string address,
+            string productId)
         {
             UserOrdering = userOrdering;
             Address = address;

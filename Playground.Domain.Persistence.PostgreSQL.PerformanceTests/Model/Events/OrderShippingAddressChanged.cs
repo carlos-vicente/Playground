@@ -7,8 +7,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model.Events
     {
         public string NewAddress { get; set; }
 
-        public OrderShippingAddressChanged(Guid aggregateRootId, string newAddress) 
-            : base(aggregateRootId)
+        public OrderShippingAddressChanged(string newAddress)
         {
             NewAddress = newAddress;
         }

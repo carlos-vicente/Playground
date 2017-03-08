@@ -87,10 +87,6 @@
       <Project>{BD5AB0DC-1289-4992-AB79-0665AF35C0F4}</Project>
       <Name>Playground.Domain.Persistence.PostgreSQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Playground.Domain.Persistence.Serialization.Jil\Playground.Domain.Persistence.Serialization.Jil.csproj">
-      <Project>{D5436D18-0841-4D6F-BC9C-867E87B01979}</Project>
-      <Name>Playground.Domain.Persistence.Serialization.Jil</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Playground.Domain.Persistence\Playground.Domain.Persistence.csproj">
       <Project>{8D22C8A7-4C4F-472C-9DBA-43BD55DEB1E8}</Project>
       <Name>Playground.Domain.Persistence</Name>
@@ -106,6 +102,10 @@
     <ProjectReference Include="..\Playground.Messaging\Playground.Messaging.csproj">
       <Project>{a15462e6-1f1a-40ad-9ede-23127289cb6a}</Project>
       <Name>Playground.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Playground.Serialization.Jil\Playground.Serialization.Jil.csproj">
+      <Project>{D5436D18-0841-4D6F-BC9C-867E87B01979}</Project>
+      <Name>Playground.Serialization.Jil</Name>
     </ProjectReference>
     <ProjectReference Include="..\Playground.TicketOffice.Theater.Data.Contracts\Playground.TicketOffice.Theater.Data.Contracts.csproj">
       <Project>{79af13d9-d9e5-41b7-921f-8c3ac65d4430}</Project>

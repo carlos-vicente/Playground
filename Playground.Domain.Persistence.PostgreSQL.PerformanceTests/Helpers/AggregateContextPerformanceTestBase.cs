@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Npgsql;
+using Playground.Core.Serialization;
 using Playground.Domain.Events;
 using Playground.Domain.Model;
 using Playground.Domain.Persistence.Events;
+using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model;
 using Playground.Domain.Persistence.PostgreSQL.TestsHelper;
+using Playground.Domain.Persistence.Snapshots;
 using Playground.Logging.Serilog;
 using Playground.Tests;
 using Serilog;
@@ -14,9 +17,15 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
 {
     public abstract class AggregateContextPerformanceTestBase : SimpleTestBase
     {
-        private IEventSerializer EventSerializer;
+        protected static double MaximumAcceptedDuration = 1000;
+
+        protected IObjectSerializer ObjectSerializer;
+
         protected IAggregateContext AggregateContext;
+
         protected NpgsqlConnectionStringBuilder ConnectionStringBuilder;
+
+        protected IMetricsCounter MetricsCounter => AggregateContext as IMetricsCounter;
 
         static AggregateContextPerformanceTestBase()
         {
@@ -29,28 +38,39 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
         {
             base.SetUp();
 
-            DatabaseHelper.CleanEvents();
             DatabaseHelper.CleanEventStreams();
 
-            var eventRepository = new EventRepository(DatabaseHelper.GetConnectionStringBuilder());
+            var connectionStringBuilder = DatabaseHelper.GetConnectionStringBuilder();
 
-            EventSerializer = new Serialization.Newtonsoft.EventSerializer();
+            var eventRepository = new EventRepository(connectionStringBuilder);
+
+            ObjectSerializer = new Serialization.Newtonsoft.ObjectSerializer();
 
             var logger = new SerilogLogger(Log.ForContext<EventStore>());
 
             var eventStore = new EventStore(
-                EventSerializer,
+                ObjectSerializer,
                 eventRepository,
                 logger,
                 Guid.NewGuid);
 
-            AggregateContext = new AggregateContext(
+            var snapshotStore = new SnapshotStore(
+                new SnapshotRepository(connectionStringBuilder),
+                ObjectSerializer,
+                logger);
+
+            var actualAggregateContext = new AggregateContext(
                 eventStore,
-                null, // TODO: replace with actual SnapshotStore
+                snapshotStore,
                 new AggregateHydrator(),
                 new DummyDispatcher());
-        }
 
+            AggregateContext = new AggregateContextMetricsCounter(actualAggregateContext);
+
+            // warm up
+            AggregateContext.TryLoad<Order, OrderState>(Guid.NewGuid());
+        }
+        
         protected IEnumerable<StoredEvent> GetStoredEvents(IEnumerable<DomainEvent> domainEvents)
         {
             if (domainEvents == null)
@@ -65,10 +85,22 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
                 .Select(de => new StoredEvent(
                     de.GetType().AssemblyQualifiedName,
                     de.Metadata.OccorredOn,
-                    EventSerializer.Serialize(de),
+                    ObjectSerializer.Serialize(de),
                     batchId,
                     ++lastStoredEventId))
                 .ToList();
+        }
+
+        protected StoredSnapshot GetStoredSnapshot<TSnapshotData>(
+            long version,
+            TSnapshotData data)
+        {
+            return new StoredSnapshot
+            {
+                Version = version,
+                TakenOn = DateTime.UtcNow,
+                Data = ObjectSerializer.Serialize<TSnapshotData>(data)
+            };
         }
     }
 }

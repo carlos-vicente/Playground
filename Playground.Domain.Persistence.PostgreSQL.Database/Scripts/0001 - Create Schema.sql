@@ -51,7 +51,7 @@ CREATE TABLE es."Snapshots"
 	"Version" bigint NOT NULL,
 	"TakenOn" timestamp without time zone NOT NULL,
 	"Data" json NOT NULL,
-	CONSTRAINT "Snapshots_PK" PRIMARY KEY ("EventStreamId"),
+	CONSTRAINT "Snapshots_PK" PRIMARY KEY ("EventStreamId", "Version"),
 	CONSTRAINT "Snapshots_EventStreams_FK" FOREIGN KEY ("EventStreamId")
       REFERENCES es."EventStreams" ("EventStreamId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -63,7 +63,7 @@ CREATE TABLE esgeneric."Snapshots"
 	"Version" bigint NOT NULL,
 	"TakenOn" timestamp without time zone NOT NULL,
 	"Data" json NOT NULL,
-	CONSTRAINT "Snapshots_PK" PRIMARY KEY ("EventStreamId"),
+	CONSTRAINT "Snapshots_PK" PRIMARY KEY ("EventStreamId", "Version"),
 	CONSTRAINT "Snapshots_EventStreams_FK" FOREIGN KEY ("EventStreamId")
       REFERENCES esgeneric."EventStreams" ("EventStreamId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION

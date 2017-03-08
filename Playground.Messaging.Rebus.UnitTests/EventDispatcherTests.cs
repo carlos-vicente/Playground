@@ -14,7 +14,7 @@ namespace Playground.Messaging.Rebus.UnitTests
         public async Task RaiseEvent_WillPublishEventOnBus()
         {
             // arrange
-            var evt = new TestEvent(Guid.NewGuid());
+            var evt = new TestEvent();
 
             // act
             await Sut

@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Playground.Core.Logging;
+using Playground.Core.Serialization;
 using Playground.Domain.Events;
 
 namespace Playground.Domain.Persistence.Events
 {
     public class EventStore : IEventStore
     {
-        private readonly IEventSerializer _serializer;
+        private readonly IObjectSerializer _serializer;
         private readonly IEventRepository _repository;
         private readonly ILogger _logger;
         private readonly Func<Guid> _batchIdProviderFunc;
 
         public EventStore(
-            IEventSerializer serializer,
+            IObjectSerializer serializer,
             IEventRepository repository,
             ILogger logger,
             Func<Guid> batchIdProviderFunc)
@@ -65,20 +66,20 @@ namespace Playground.Domain.Persistence.Events
 
             var batchId = _batchIdProviderFunc();
 
-            var lastStoredEventId = 0L;
-            if (lastStoredEvent != null)
-                lastStoredEventId = lastStoredEvent.EventId;
+            //var lastStoredEventId = 0L;
+            //if (lastStoredEvent != null)
+            //    lastStoredEventId = lastStoredEvent.EventId;
 
             _logger
-                .Debug($"Current stored version for stream {streamId} is {lastStoredEventId}");
+                .Debug($"Current stored version for stream {streamId} is {lastStoredEvent?.EventId}");
 
             var events = eventsToStore
                 .Select(e => new StoredEvent(
                     e.GetType().AssemblyQualifiedName,
                     e.Metadata.OccorredOn,
-                    _serializer.Serialize(e as object),
+                    _serializer.Serialize(e as object), // todo: review the as object cast
                     batchId,
-                    ++lastStoredEventId))
+                    e.Metadata.Version))
                 .ToList();
 
             _logger
@@ -92,12 +93,35 @@ namespace Playground.Domain.Persistence.Events
                 .Debug("All events stored");
         }
 
-        public Task<ICollection<DomainEvent>> LoadSelectedEvents(
+        public async Task<ICollection<DomainEvent>> LoadSelectedEvents(
             Guid streamId,
             long fromEventId,
             long toEventId)
         {
-            throw new NotImplementedException();
+            _logger.Debug($"Loading an event stream's slice for {streamId}, from version {fromEventId} to {toEventId}");
+
+            var doesStreamExist = await _repository
+                .CheckStream(streamId)
+                .ConfigureAwait(false);
+
+            if (!doesStreamExist)
+                return null;
+
+            _logger.Debug($"Get slice of stored events for stream {streamId}");
+
+            var storedEvents = await _repository
+                .GetSelected(streamId, fromEventId) // TODO: add the toEventId, always use from and to for slices: even when the to would be a Max
+                .ConfigureAwait(false);
+
+            _logger.Debug("Convert slice of stored events to domain events");
+
+            var domainEvents = storedEvents?
+                                   .Select(GetDomainEvent)
+                                   .ToList() ?? new List<DomainEvent>();
+
+            _logger.Debug($"Returning a slice of domain events for stream {streamId}");
+
+            return domainEvents;
         }
 
         public async Task<ICollection<DomainEvent>> LoadAllEvents(Guid streamId)
@@ -139,13 +163,13 @@ namespace Playground.Domain.Persistence.Events
 
     public class EventStoreForGenericIdentity : IEventStoreForGenericIdentity
     {
-        private readonly IEventSerializer _serializer;
+        private readonly IObjectSerializer _serializer;
         private readonly IEventRepositoryForGenericIdentity _repository;
         private readonly ILogger _logger;
         private readonly Func<Guid> _batchIdProviderFunc;
 
         public EventStoreForGenericIdentity(
-            IEventSerializer serializer,
+            IObjectSerializer serializer,
             IEventRepositoryForGenericIdentity repository,
             ILogger logger,
             Func<Guid> batchIdProviderFunc)

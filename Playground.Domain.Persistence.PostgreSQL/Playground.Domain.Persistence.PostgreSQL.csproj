@@ -48,20 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AddEventsCommand.cs" />
-    <Compile Include="Commands\CreateEventStreamCommand.cs" />
-    <Compile Include="Commands\RemoveAllEventsCommand.cs" />
-    <Compile Include="Commands\RemoveEventCommand.cs" />
+    <Compile Include="BaseRepository.cs" />
     <Compile Include="Commands\Scripts.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventRepository.cs" />
     <Compile Include="EventStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Queries\CheckIfStreamExistsQuery.cs" />
-    <Compile Include="Queries\GetAllEventsQuery.cs" />
-    <Compile Include="Queries\GetEventQuery.cs" />
-    <Compile Include="Queries\GetLastEventQuery.cs" />
     <Compile Include="Queries\Scripts.cs" />
+    <Compile Include="SnapshotRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Playground.Core\Playground.Core.csproj">

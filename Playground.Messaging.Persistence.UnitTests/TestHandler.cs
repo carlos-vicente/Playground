@@ -13,10 +13,12 @@ namespace Playground.Messaging.Persistence.UnitTests
         {
         }
 
-        protected override async Task HandleOnAggregate(Command command, Aggregate aggregate)
+        protected override Task HandleOnAggregate(Command command, Aggregate aggregate)
         {
             CalledWithCommand = command;
             CalledWithAggregate = aggregate;
+
+            return Task.FromResult(0);
         }
     }
 }

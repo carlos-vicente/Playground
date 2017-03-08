@@ -14,13 +14,14 @@ namespace Playground.Domain.Model
         /// </summary>
         /// <typeparam name="TAggregateState">The type to use when creating the state object</typeparam>
         /// <param name="domainEvents">The list of domain events to apply on to the aggregate</param>
-        /// <returns>The aggregate instance with the events applied</returns>
+        /// <param name="snapshot">The snapshot to use as the aggregate state's baseline</param>
+        /// <returns>The aggregate instance with all the events applied</returns>
         public TAggregateState HydrateAggregateWithEvents<TAggregateState>(
             ICollection<DomainEvent> domainEvents,
             TAggregateState snapshot)
             where TAggregateState : class, IAggregateState, new()
         {
-            var state = new TAggregateState();
+            var state = snapshot ?? new TAggregateState();
 
             foreach (var domainEvent in domainEvents)
             {
@@ -38,6 +39,45 @@ namespace Playground.Domain.Model
             where TDomainEvent : DomainEvent
         {
             ((IGetAppliedWith<TDomainEvent>)aggregateRootState).Apply(domainEvent);
+        }
+    }
+
+    public class AggregateHydratorWithGenericIdentity : IAggregateHydratorWithGenericIdentity
+    {
+        private static void Apply<TAggregateState, TDomainEvent, TIdentity>(
+            TAggregateState aggregateRootState,
+            TDomainEvent domainEvent)
+            where TAggregateState : class, new()
+            where TDomainEvent : DomainEventForAggregateRootWithIdentity<TIdentity>
+            where TIdentity : IIdentity
+        {
+            ((IGetAppliedWithForAggregateWithIdentity<TDomainEvent, TIdentity>)aggregateRootState)
+                .Apply(domainEvent);
+        }
+
+        /// <summary>
+        /// Apply all the events in <paramref name="domainEvents"/> to a newly created instance of <typeparamref name="TAggregateState"/>
+        /// </summary>
+        /// <typeparam name="TAggregateState">The type to use when creating the state object</typeparam>
+        /// <typeparam name="TIdentity"></typeparam>
+        /// <param name="domainEvents">The list of domain events to apply on to the aggregate</param>
+        /// <param name="snapshot">The snapshot to use as the aggregate state's baseline</param>
+        /// <returns>The aggregate instance with all the events applied</returns>
+        public TAggregateState HydrateAggregateWithEvents<TAggregateState, TIdentity>(
+            ICollection<DomainEventForAggregateRootWithIdentity<TIdentity>> domainEvents,
+            TAggregateState snapshot)
+            where TAggregateState : class, IAggregateState, new()
+            where TIdentity : IIdentity
+        {
+            var state = snapshot ?? new TAggregateState();
+
+            foreach (var domainEvent in domainEvents)
+            {
+                // the dynamic cast makes sure the right method is called
+                Apply(state, (dynamic)domainEvent);
+            }
+
+            return state;
         }
     }
 }

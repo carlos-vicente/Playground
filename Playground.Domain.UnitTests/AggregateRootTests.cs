@@ -36,7 +36,7 @@ namespace Playground.Domain.UnitTests
 
             public void DoIt(string name)
             {
-                When(new ItHappened(Id)
+                When(new ItHappened
                 {
                     Name = name
                 });
@@ -58,7 +58,7 @@ namespace Playground.Domain.UnitTests
             // arrange
             var name = Fixture.Create<string>();
 
-            var expectedEvent = new ItHappened(_sut.Id)
+            var expectedEvent = new ItHappened
             {
                 Name = name
             };
@@ -78,7 +78,7 @@ namespace Playground.Domain.UnitTests
                     expectedEvent,
                     opts => opts
                         .Excluding(de => de.Metadata.OccorredOn)
-                        .Excluding(de => de.Metadata.StorageVersion));
+                        .Excluding(de => de.Metadata.Version));
 
             _sut
                 .State

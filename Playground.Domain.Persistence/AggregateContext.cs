@@ -90,7 +90,10 @@ namespace Playground.Domain.Persistence
             if (snapshot != null)
             {
                 events = await _eventStore
-                    .LoadSelectedEvents(aggregateRootId, snapshot.Version, long.MaxValue)
+                    .LoadSelectedEvents(
+                        aggregateRootId,
+                        snapshot.Version + 1,
+                        long.MaxValue)
                     .ConfigureAwait(false);
             }
             else
@@ -147,12 +150,17 @@ namespace Playground.Domain.Persistence
                         events ?? new List<DomainEvent>(),
                         snapshot?.Data);
 
-                var currentVersion = events.Any()
-                    ? events.Last().Metadata.StorageVersion
+                var currentVersion = events != null && events.Any()
+                    ? events.Last().Metadata.Version
                     : snapshot?.Version ?? 0;
 
                 instance = Activator
-                    .CreateInstance(typeof(TAggregateRoot), aggregateRootId, state, currentVersion) as TAggregateRoot;
+                        .CreateInstance(
+                            typeof(TAggregateRoot),
+                            aggregateRootId,
+                            state,
+                            currentVersion)
+                    as TAggregateRoot;
             }
             else
             {
@@ -314,11 +322,16 @@ namespace Playground.Domain.Persistence
                         snapshot?.Data);
 
                 var currentVersion = events != null && events.Any()
-                    ? events.Last().Metadata.StorageVersion
+                    ? events.Last().Metadata.Version
                     : snapshot?.Version ?? 0;
 
                 instance = Activator
-                    .CreateInstance(typeof(TAggregateRoot), aggregateRootId, state, currentVersion) as TAggregateRoot;
+                        .CreateInstance(
+                            typeof(TAggregateRoot),
+                            aggregateRootId,
+                            state,
+                            currentVersion)
+                    as TAggregateRoot;
             }
             else
             {

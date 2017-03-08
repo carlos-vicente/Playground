@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Playground.Domain.Persistence.Events
+namespace Playground.Core.Serialization
 {
-    public interface IEventSerializer
+    public interface IObjectSerializer
     {
         string Serialize(object obj);
 

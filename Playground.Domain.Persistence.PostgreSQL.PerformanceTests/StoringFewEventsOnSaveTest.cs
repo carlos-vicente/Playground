@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -17,16 +16,19 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
         [Test]
         public async Task Execute()
         {
+            _logger.Debug("#############      StoringFewEventsOnSaveTest       ###########");
+
             // arrange
             var orderAggregate = await AggregateContext
                 .Create<Order, OrderState>(Guid.NewGuid())
                 .ConfigureAwait(false);
 
             _logger.Debug("CreateOrder");
-            orderAggregate
-                .CreateOrder(Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<Guid>());
-
-
+            orderAggregate.CreateOrder(
+                Fixture.Create<string>(),
+                Fixture.Create<string>(),
+                Fixture.Create<string>());
+            
             _logger.Debug("StartFulfilling");
             orderAggregate
                 .StartFulfilling();
@@ -39,23 +41,18 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
             orderAggregate
                 .Deliver(Fixture.Create<string>());
 
-            var stopWatch = new Stopwatch();
-
             // act
-            stopWatch.Start();
-
             await AggregateContext
                 .Save<Order, OrderState>(orderAggregate)
                 .ConfigureAwait(false);
 
-            stopWatch.Stop();
-
             // assert
-            Console.WriteLine(stopWatch.Elapsed.ToString());
-            stopWatch
-                .ElapsedMilliseconds
+            Console.WriteLine(MetricsCounter.ElapsedTime.ToString());
+            MetricsCounter
+                .ElapsedTime
+                .TotalMilliseconds
                 .Should()
-                .BeLessOrEqualTo(1000);
+                .BeLessOrEqualTo(MaximumAcceptedDuration);
         }
     }
 }

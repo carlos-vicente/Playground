@@ -10,19 +10,15 @@ using Playground.Domain.Persistence.Events;
 
 namespace Playground.Domain.Persistence.PostgreSQL
 {
-    public class EventRepository : IEventRepository
+    public class EventRepository : BaseRepository, IEventRepository
     {
-        private readonly NpgsqlConnectionStringBuilder _connectionStringBuilder;
-
         static EventRepository()
         {
             NpgsqlConnection.MapCompositeGlobally<Event>("es.event");
         }
 
-        public EventRepository(NpgsqlConnectionStringBuilder connectionStringBuilder)
-        {
-            _connectionStringBuilder = connectionStringBuilder;
-        }
+        public EventRepository(NpgsqlConnectionStringBuilder connectionStringBuilder) 
+            : base(connectionStringBuilder) { }
 
         public async Task CreateStream(Guid streamId, string streamName)
         {
@@ -237,40 +233,17 @@ namespace Playground.Domain.Persistence.PostgreSQL
         {
             throw new NotImplementedException();
         }
-
-        private NpgsqlCommand CreateStoredProcedureCommand(
-            NpgsqlConnection connection,
-            string storedProcedure)
-        {
-            return new NpgsqlCommand(storedProcedure, connection)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
-        }
-
-        private async Task<NpgsqlConnection> OpenConnection()
-        {
-            var conn = new NpgsqlConnection(_connectionStringBuilder);
-            await conn
-                .OpenAsync()
-                .ConfigureAwait(false);
-            return conn;
-        }
     }
 
-    public class EventRepositoryForGenericIdentity : IEventRepositoryForGenericIdentity
+    public class EventRepositoryForGenericIdentity : BaseRepository, IEventRepositoryForGenericIdentity
     {
-        private readonly NpgsqlConnectionStringBuilder _connectionStringBuilder;
-
         static EventRepositoryForGenericIdentity()
         {
             NpgsqlConnection.MapCompositeGlobally<Event>("esgeneric.event");
         }
 
         public EventRepositoryForGenericIdentity(NpgsqlConnectionStringBuilder connectionStringBuilder)
-        {
-            _connectionStringBuilder = connectionStringBuilder;
-        }
+            : base(connectionStringBuilder) { }
 
         public async Task CreateStream(string streamId, string streamName)
         {
@@ -484,25 +457,6 @@ namespace Playground.Domain.Persistence.PostgreSQL
         public Task Remove(string streamId)
         {
             throw new NotImplementedException();
-        }
-
-        private NpgsqlCommand CreateStoredProcedureCommand(
-            NpgsqlConnection connection,
-            string storedProcedure)
-        {
-            return new NpgsqlCommand(storedProcedure, connection)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
-        }
-
-        private async Task<NpgsqlConnection> OpenConnection()
-        {
-            var conn = new NpgsqlConnection(_connectionStringBuilder);
-            await conn
-                .OpenAsync()
-                .ConfigureAwait(false);
-            return conn;
         }
     }
 }

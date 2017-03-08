@@ -6,10 +6,5 @@ namespace Playground.Domain.UnitTests.Events
     public class ItHappened : DomainEvent
     {
         public string Name { get; set; }
-
-        public ItHappened(Guid aggregateRootId) 
-            : base(aggregateRootId)
-        {
-        }
     }
 }

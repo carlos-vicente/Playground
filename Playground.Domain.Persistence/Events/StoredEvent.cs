@@ -21,7 +21,7 @@ namespace Playground.Domain.Persistence.Events
 
         public StoredEvent()
         {
-            // Used only for mapping
+            // Used only for mapping & deserialization
         }
 
         public StoredEvent(

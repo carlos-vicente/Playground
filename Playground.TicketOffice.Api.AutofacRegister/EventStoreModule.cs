@@ -1,7 +1,8 @@
 ﻿using Autofac;
+using Playground.Core.Serialization;
 using Playground.Domain.Persistence.Events;
 using Playground.Domain.Persistence.PostgreSQL;
-using Playground.Domain.Persistence.Serialization.Jil;
+using Playground.Serialization.Jil;
 
 namespace Playground.TicketOffice.Api.AutofacRegister
 {
@@ -20,8 +21,8 @@ namespace Playground.TicketOffice.Api.AutofacRegister
                 .InstancePerLifetimeScope();
 
             builder
-                .RegisterType<EventSerializer>()
-                .As<IEventSerializer>()
+                .RegisterType<ObjectSerializer>()
+                .As<IObjectSerializer>()
                 .SingleInstance();
         }
     }

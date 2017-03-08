@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
+using Playground.Core.Serialization;
 using Playground.Domain.Events;
 using Playground.Domain.Persistence.Events;
 using Playground.Domain.Persistence.UnitTests.TestModel;
@@ -70,16 +71,15 @@ namespace Playground.Domain.Persistence.UnitTests
         {
             // arrange
             var streamId = Guid.NewGuid();
-            var eventMetadata = new Metadata(streamId, typeof (TestAggregateChanged));
             var currentStreamVersion = Fixture.Create<long>();
 
             var event1 = Fixture
                 .Build<TestAggregateChanged>()
-                .With(e => e.Metadata, eventMetadata)
+                .With(e => e.Metadata, new Metadata(streamId, currentStreamVersion + 1, typeof(TestAggregateChanged)))
                 .Create();
             var event2 = Fixture
                 .Build<TestAggregateChanged>()
-                .With(e => e.Metadata, eventMetadata)
+                .With(e => e.Metadata, new Metadata(streamId, currentStreamVersion + 2, typeof(TestAggregateChanged)))
                 .Create();
 
             var lastStreamEvent = new StoredEvent(
@@ -96,11 +96,11 @@ namespace Playground.Domain.Persistence.UnitTests
             var event1Serialiazed = Fixture.Create<string>();
             var event2Serialiazed = Fixture.Create<string>();
 
-            A.CallTo(() => Faker.Resolve<IEventSerializer>()
+            A.CallTo(() => Faker.Resolve<IObjectSerializer>()
                 .Serialize(event1))
                 .Returns(event1Serialiazed);
 
-            A.CallTo(() => Faker.Resolve<IEventSerializer>()
+            A.CallTo(() => Faker.Resolve<IObjectSerializer>()
                 .Serialize(event2))
                 .Returns(event2Serialiazed);
 
@@ -154,11 +154,11 @@ namespace Playground.Domain.Persistence.UnitTests
             var event1Serialiazed = Fixture.Create<string>();
             var event2Serialiazed = Fixture.Create<string>();
 
-            A.CallTo(() => Faker.Resolve<IEventSerializer>()
+            A.CallTo(() => Faker.Resolve<IObjectSerializer>()
                 .Serialize(event1))
                 .Returns(event1Serialiazed);
 
-            A.CallTo(() => Faker.Resolve<IEventSerializer>()
+            A.CallTo(() => Faker.Resolve<IObjectSerializer>()
                 .Serialize(event2))
                 .Returns(event2Serialiazed);
 
@@ -245,11 +245,11 @@ namespace Playground.Domain.Persistence.UnitTests
 
             var event1Metadata = new Metadata(streamId, typeof(TestAggregateChanged))
             {
-                StorageVersion = 1L
+                Version = 1L
             };
             var event2Metadata = new Metadata(streamId, typeof(TestAggregateChanged))
             {
-                StorageVersion = 2L
+                Version = 2L
             };
             var typeName = typeof(TestAggregateChanged).AssemblyQualifiedName;
 
@@ -274,8 +274,8 @@ namespace Playground.Domain.Persistence.UnitTests
             var batchId = Guid.NewGuid();
             var storedEvents = new List<StoredEvent>
             {
-                new StoredEvent(typeName, event1Metadata.OccorredOn, event1Serialized, batchId, event1Metadata.StorageVersion),
-                new StoredEvent(typeName, event2Metadata.OccorredOn, event2Serialized, batchId, event2Metadata.StorageVersion)
+                new StoredEvent(typeName, event1Metadata.OccorredOn, event1Serialized, batchId, event1Metadata.Version),
+                new StoredEvent(typeName, event2Metadata.OccorredOn, event2Serialized, batchId, event2Metadata.Version)
             };
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
@@ -286,10 +286,10 @@ namespace Playground.Domain.Persistence.UnitTests
                 .GetAll(streamId))
                 .Returns(storedEvents);
 
-            A.CallTo(() => Faker.Resolve<IEventSerializer>()
+            A.CallTo(() => Faker.Resolve<IObjectSerializer>()
                 .Deserialize(event1Serialized, typeof(TestAggregateChanged)))
                 .Returns(event1);
-            A.CallTo(() => Faker.Resolve<IEventSerializer>()
+            A.CallTo(() => Faker.Resolve<IObjectSerializer>()
                 .Deserialize(event2Serialized, typeof(TestAggregateChanged)))
                 .Returns(event2);
 
@@ -333,7 +333,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Should()
                 .BeEmpty();
 
-            A.CallTo(() => Faker.Resolve<IEventSerializer>()
+            A.CallTo(() => Faker.Resolve<IObjectSerializer>()
                 .Deserialize(A<string>._, A<Type>._))
                 .MustNotHaveHappened();
         }
@@ -365,7 +365,7 @@ namespace Playground.Domain.Persistence.UnitTests
                 .Should()
                 .BeEmpty();
 
-            A.CallTo(() => Faker.Resolve<IEventSerializer>()
+            A.CallTo(() => Faker.Resolve<IObjectSerializer>()
                 .Deserialize(A<string>._, A<Type>._))
                 .MustNotHaveHappened();
         }

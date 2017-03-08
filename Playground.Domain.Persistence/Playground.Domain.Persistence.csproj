@@ -44,7 +44,6 @@
     <Compile Include="AggregateContext.cs" />
     <Compile Include="Events\StoredEvent.cs" />
     <Compile Include="Events\IEventRepository.cs" />
-    <Compile Include="Events\IEventSerializer.cs" />
     <Compile Include="Events\IEventStore.cs" />
     <Compile Include="IAggregateContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +52,7 @@
     <Compile Include="Snapshots\ISnapshotStore.cs" />
     <Compile Include="Snapshots\ITakeSnapshots.cs" />
     <Compile Include="Snapshots\SnapshotStore.cs" />
+    <Compile Include="Snapshots\StoredSnapshot.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Playground.Core\Playground.Core.csproj">

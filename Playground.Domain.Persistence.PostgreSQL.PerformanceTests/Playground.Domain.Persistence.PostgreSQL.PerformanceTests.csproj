@@ -42,9 +42,8 @@
       <HintPath>..\packages\Dapper-Async.1.03\lib\net45\Dapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FakeItEasy, Version=2.3.1.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
-      <HintPath>..\packages\FakeItEasy.2.3.1\lib\net40\FakeItEasy.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="FakeItEasy, Version=2.3.3.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c">
+      <HintPath>..\packages\FakeItEasy.2.3.3\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions, Version=4.15.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.4.15.0\lib\net45\FluentAssertions.dll</HintPath>
@@ -102,8 +101,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\AggregateContextMetricsCounter.cs" />
     <Compile Include="Helpers\AggregateContextPerformanceTestBase.cs" />
     <Compile Include="Helpers\DummyDispatcher.cs" />
+    <Compile Include="Helpers\IMetricsCounter.cs" />
     <Compile Include="LoadAggregateWithSnaphostAndFewEventsTest.cs" />
     <Compile Include="LoadAggregateWithHundredsOfEventsTest.cs" />
     <Compile Include="LoadAggregateWithFewEventsTest.cs" />
@@ -117,14 +118,16 @@
     <Compile Include="Model\Events\OrderDelivered.cs" />
     <Compile Include="Model\OrderState.cs" />
     <Compile Include="Model\OrderStatus.cs" />
-    <Compile Include="Model\Events\StartedFulfilment.cs" />
-    <Compile Include="Model\Events\ShipOrder.cs" />
+    <Compile Include="Model\Events\OrderStartedBeingFulfilled.cs" />
+    <Compile Include="Model\Events\OrderShipped.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoringFewEventsOnSaveTest.cs" />
     <Compile Include="StoringHundredsOfEventsOnSaveTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -139,14 +142,6 @@
     <ProjectReference Include="..\Playground.Domain.Persistence.PostgreSQL\Playground.Domain.Persistence.PostgreSQL.csproj">
       <Project>{bd5ab0dc-1289-4992-ab79-0665af35c0f4}</Project>
       <Name>Playground.Domain.Persistence.PostgreSQL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Domain.Persistence.Serialization.Jil\Playground.Domain.Persistence.Serialization.Jil.csproj">
-      <Project>{D5436D18-0841-4D6F-BC9C-867E87B01979}</Project>
-      <Name>Playground.Domain.Persistence.Serialization.Jil</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Playground.Domain.Persistence.Serialization.Newtonsoft\Playground.Domain.Persistence.Serialization.Newtonsoft.csproj">
-      <Project>{ccfbcb9b-e386-4ab6-a425-c37dbc996fa3}</Project>
-      <Name>Playground.Domain.Persistence.Serialization.Newtonsoft</Name>
     </ProjectReference>
     <ProjectReference Include="..\Playground.Domain.Persistence\Playground.Domain.Persistence.csproj">
       <Project>{8d22c8a7-4c4f-472c-9dba-43bd55deb1e8}</Project>
@@ -164,10 +159,17 @@
       <Project>{A15462E6-1F1A-40AD-9EDE-23127289CB6A}</Project>
       <Name>Playground.Messaging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Playground.Serialization.Newtonsoft\Playground.Serialization.Newtonsoft.csproj">
+      <Project>{ccfbcb9b-e386-4ab6-a425-c37dbc996fa3}</Project>
+      <Name>Playground.Serialization.Newtonsoft</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Playground.Tests\Playground.Tests.csproj">
       <Project>{128691BD-75CA-4303-947D-B8D7062510EC}</Project>
       <Name>Playground.Tests</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

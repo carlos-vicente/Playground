@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Npgsql;
 using NUnit.Framework;
+using Playground.Core;
 using Playground.Domain.Persistence.Events;
 using Playground.Domain.Persistence.PostgreSQL.TestsHelper;
 using Playground.Tests;
@@ -19,7 +20,6 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
         {
             base.SetUp();
 
-            DatabaseHelper.CleanEvents();
             DatabaseHelper.CleanEventStreams();
 
             _sut = new EventRepository(DatabaseHelper.GetConnectionStringBuilder());
@@ -168,7 +168,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
             var streamId = Fixture.Create<Guid>();
             var streamName = Fixture.Create<string>();
 
-            var now = GetDateTimeToMillisecond(DateTime.UtcNow); 
+            var now = DateTime.UtcNow.GetToTheMillisecond(); 
 
             await DatabaseHelper
                 .CreateEventStream(streamId, streamName)
@@ -260,7 +260,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
             var streamId = Fixture.Create<Guid>();
             var streamName = Fixture.Create<string>();
 
-            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+            var now = DateTime.UtcNow.GetToTheMillisecond();
 
             await DatabaseHelper
                 .CreateEventStream(streamId, streamName)
@@ -310,7 +310,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
                 .CreateEventStream(streamId, streamName)
                 .ConfigureAwait(false);
 
-            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+            var now = DateTime.UtcNow.GetToTheMillisecond();
             var batchId = Guid.NewGuid();
 
             var event1 = new StoredEvent("some type", now, "{\"prop\":\"value\"}", batchId, 1L);
@@ -390,7 +390,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
                 .CreateEventStream(streamId, streamName)
                 .ConfigureAwait(false);
 
-            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+            var now = DateTime.UtcNow.GetToTheMillisecond();
 
             var batchId = Guid.NewGuid();
 
@@ -459,7 +459,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
                 .CreateEventStream(streamId, streamName)
                 .ConfigureAwait(false);
 
-            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+            var now = DateTime.UtcNow.GetToTheMillisecond();
 
             var batchId = Guid.NewGuid();
 
@@ -495,7 +495,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
                 .CreateEventStream(streamId, streamName)
                 .ConfigureAwait(false);
 
-            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+            var now = DateTime.UtcNow.GetToTheMillisecond();
 
             var batchId = Guid.NewGuid();
 
@@ -539,7 +539,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
             // arrange
             var streamId = Fixture.Create<Guid>();
 
-            var now = GetDateTimeToMillisecond(DateTime.UtcNow);
+            var now = DateTime.UtcNow.GetToTheMillisecond();
 
             var batchId = Guid.NewGuid();
 
@@ -610,18 +610,6 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
                 .ParamName
                 .ShouldBeEquivalentTo("events");
         }
-
-        private static DateTime GetDateTimeToMillisecond(DateTime current)
-        {
-            return new DateTime(
-                current.Year,
-                current.Month,
-                current.Day,
-                current.Hour,
-                current.Minute,
-                current.Second,
-                current.Millisecond);
-        }
     }
 
     public class EventRepositoryForGenericIdentityTests : SimpleTestBase
@@ -632,7 +620,6 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
         {
             base.SetUp();
 
-            DatabaseHelper.CleanEvents();
             DatabaseHelper.CleanEventStreams();
 
             _sut = new EventRepositoryForGenericIdentity(DatabaseHelper.GetConnectionStringBuilder());

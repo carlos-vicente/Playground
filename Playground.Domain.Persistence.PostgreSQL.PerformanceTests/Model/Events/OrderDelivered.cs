@@ -7,7 +7,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model.Events
     {
         public string PersonWhoReceived { get; set; }
 
-        public OrderDelivered(Guid id, string personWhoReceived) : base(id)
+        public OrderDelivered(string personWhoReceived)
         {
             PersonWhoReceived = personWhoReceived;
         }

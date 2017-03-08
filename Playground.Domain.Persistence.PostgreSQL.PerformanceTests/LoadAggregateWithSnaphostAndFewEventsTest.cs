@@ -1,10 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using Playground.Domain.Events;
 using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers;
 using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model;
+using Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model.Events;
+using Playground.Domain.Persistence.PostgreSQL.TestsHelper;
 using Ploeh.AutoFixture;
 using Serilog;
 
@@ -17,56 +21,84 @@ namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
         [Test]
         public async Task Execute()
         {
-            Assert.Inconclusive();
+            _logger.Debug("#############      LoadAggregateWithSnaphostAndFewEventsTest       ###########");
 
-            //_logger.Debug("#############      LoadAggregateWithHundredsOfEventsTest       ###########");
+            // arrange
+            var id = Guid.NewGuid();
+            var streamName = Fixture.Create<string>();
 
-            //// arrange
-            //var id = Guid.NewGuid();
+            await DatabaseHelper
+                .CreateEventStream(id, streamName)
+                .ConfigureAwait(false);
 
-            //var orderAggregate = await AggregateContext
-            //    .Create<Order, OrderState>(id)
-            //    .ConfigureAwait(false);
+            var orderCreatedEvent = new OrderCreated(
+                Fixture.Create<string>(),
+                Fixture.Create<string>(),
+                Fixture.Create<string>());
 
-            //var stopWatch = new Stopwatch();
+            var addressChangedEvents = new List<OrderShippingAddressChanged>();
+            for (var i = 0; i < 1000; ++i)
+            {
+                addressChangedEvents.Add(new OrderShippingAddressChanged(Fixture.Create<string>()));
+            }
 
-            //orderAggregate.CreateOrder(Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<Guid>());
-            //for (var i = 0; i < 1000; ++i)
-            //{
-            //    orderAggregate.ChangeAddress(Fixture.Create<string>());
-            //}
-            //orderAggregate.StartFulfilling();
-            //orderAggregate.Ship();
-            //orderAggregate.Deliver(Fixture.Create<string>());
+            var orderStartedBeingFulfilledEvent = new OrderStartedBeingFulfilled();
+            var orderShippedEvent = new OrderShipped();
+            var orderDeliveredEvent = new OrderDelivered(Fixture.Create<string>());
 
-            //await AggregateContext
-            //    .Save<Order, OrderState>(orderAggregate)
-            //    .ConfigureAwait(false);
+            var domainEvents = new List<DomainEvent>();
+            domainEvents.Add(orderCreatedEvent);
+            domainEvents.AddRange(addressChangedEvents);
+            domainEvents.Add(orderStartedBeingFulfilledEvent);
+            domainEvents.Add(orderShippedEvent);
+            domainEvents.Add(orderDeliveredEvent);
 
-            //// act
-            //stopWatch.Start();
+            var storedEvents = GetStoredEvents(domainEvents);
 
-            //var aggregate = await AggregateContext
-            //    .Load<Order, OrderState>(id)
-            //    .ConfigureAwait(false);
+            var version = storedEvents
+                .Single(ev => ev.EventType == typeof(OrderStartedBeingFulfilled))
+                .EventId;
 
-            //stopWatch.Stop();
+            await DatabaseHelper
+                .CreateEvents(id, storedEvents)
+                .ConfigureAwait(false);
 
-            //// assert
-            //Console.WriteLine(stopWatch.Elapsed.ToString());
+            var snapshotData = new OrderState(
+                orderCreatedEvent.UserOrdering,
+                addressChangedEvents.Last().NewAddress,
+                orderCreatedEvent.ProductId,
+                OrderStatus.BeingFulfilled,
+                null);
 
-            //aggregate
-            //    .State
-            //    .ShouldBeEquivalentTo(orderAggregate.State);
-            //stopWatch
-            //    .ElapsedMilliseconds
-            //    .Should()
-            //    .BeLessOrEqualTo(1000);
+            var storedSnapshot = GetStoredSnapshot<OrderState>(version, snapshotData);
 
-            //_logger.Debug("###################################################################");
+            await DatabaseHelper
+                .CreateSnapshot(id, storedSnapshot)
+                .ConfigureAwait(false);
 
-            // TODO: implement this test
-            // TODO: stop using the domain model to setup the tests, use testing infrastructure code
+            var expectedState = new OrderState(
+                orderCreatedEvent.UserOrdering,
+                addressChangedEvents.Last().NewAddress,
+                orderCreatedEvent.ProductId,
+                OrderStatus.Delivered,
+                orderDeliveredEvent.PersonWhoReceived);
+
+            // act
+            var aggregate = await AggregateContext
+                .Load<Order, OrderState>(id)
+                .ConfigureAwait(false);
+
+            // assert
+            Console.WriteLine(MetricsCounter.ElapsedTime.ToString());
+
+            aggregate
+                .State
+                .ShouldBeEquivalentTo(expectedState);
+            MetricsCounter
+                .ElapsedTime
+                .TotalMilliseconds
+                .Should()
+                .BeLessOrEqualTo(MaximumAcceptedDuration);
         }
     }
 }

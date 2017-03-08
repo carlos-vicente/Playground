@@ -6,10 +6,5 @@ namespace Playground.Domain.Persistence.UnitTests.TestModel
     public class TestAggregateChanged : DomainEvent
     {
         public string NewName { get; set; }
-
-        public TestAggregateChanged(Guid aggregateRootId) 
-            : base(aggregateRootId)
-        {
-        }
     }
 }

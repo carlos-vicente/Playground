@@ -100,9 +100,21 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION es.get_snapshot_for_stream(streamId UUID)
 RETURNS TABLE ("Version" bigint, "TakenOn" timestamp without time zone, "Data" json) AS $$
 BEGIN
-	RETURN QUERY SELECT "Version", "Data"
-		FROM es."Snaphots" as S
-		WHERE S."EventStreamId" = streamId;
+	RETURN QUERY SELECT S."Version", S."TakenOn", S."Data"
+		FROM es."Snapshots" as S
+		WHERE S."EventStreamId" = streamId
+		ORDER BY S."Version" DESC
+		LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION es.get_latest_snapshot_version(streamId UUID)
+RETURNS BIGINT AS $$
+BEGIN
+	RETURN (SELECT S."Version"
+		FROM es."Snapshots" as S
+		WHERE S."EventStreamId" = streamId);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -231,8 +243,21 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION esgeneric.get_snapshot_for_stream(streamId varchar(100))
 RETURNS TABLE ("Version" bigint, "TakenOn" timestamp without time zone, "Data" json) AS $$
 BEGIN
-	RETURN QUERY SELECT "Version", "Data"
-		FROM esgeneric."Snaphots" as S
-		WHERE S."EventStreamId" = streamId;
+	RETURN QUERY SELECT S."Version", S."TakenOn", S."Data"
+		FROM esgeneric."Snapshots" as S
+		WHERE S."EventStreamId" = streamId
+		ORDER BY S."Version" DESC
+		LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION esgeneric.get_latest_snapshot_version(streamId UUID)
+RETURNS BIGINT AS $$
+BEGIN
+	RETURN (SELECT S."Version"
+		FROM esgeneric."Snapshots" as S
+		WHERE S."EventStreamId" = streamId);
 END;
 $$ LANGUAGE plpgsql;
