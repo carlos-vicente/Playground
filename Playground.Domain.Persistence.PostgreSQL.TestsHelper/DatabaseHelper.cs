@@ -313,6 +313,32 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             }
         }
 
+        public static async Task CreateSnapshotGeneric(
+            string streamId,
+            StoredSnapshot storedSnapshot)
+        {
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            {
+                await connection
+                    .OpenAsync()
+                    .ConfigureAwait(false);
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = string.Format(CreateSnapshotSql, StringIdSchema);
+
+                    command.Parameters.AddWithValue("@streamId", streamId);
+                    command.Parameters.AddWithValue("@version", storedSnapshot.Version);
+                    command.Parameters.AddWithValue("@takenOn", storedSnapshot.TakenOn);
+                    command.Parameters.AddWithValue("@data", NpgsqlDbType.Json, storedSnapshot.Data);
+
+                    await command
+                        .ExecuteNonQueryAsync()
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+
         public static async Task CreateEventsGeneric(
             string streamId,
             IEnumerable<StoredEvent> storedEvents)

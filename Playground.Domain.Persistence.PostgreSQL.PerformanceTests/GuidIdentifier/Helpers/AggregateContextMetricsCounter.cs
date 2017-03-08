@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Playground.Domain.Model;
 
-namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
+namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.GuidIdentifier.Helpers
 {
     internal class AggregateContextMetricsCounter
         : IAggregateContext, IMetricsCounter

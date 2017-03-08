@@ -70,6 +70,10 @@
       <Project>{8d22c8a7-4c4f-472c-9dba-43bd55deb1e8}</Project>
       <Name>Playground.Domain.Persistence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Playground.Domain\Playground.Domain.csproj">
+      <Project>{66B417D5-A799-4DC8-BF29-904898CE2653}</Project>
+      <Name>Playground.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

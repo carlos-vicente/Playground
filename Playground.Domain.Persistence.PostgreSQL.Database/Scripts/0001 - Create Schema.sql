@@ -12,7 +12,7 @@ CREATE TABLE es."EventStreams"
 CREATE TABLE esgeneric."EventStreams"
 (
   "EventStreamId" varchar(100) NOT NULL,
-  "EventStreamName" varchar(100) NOT NULL,
+  "EventStreamName" text NOT NULL,
   "CreatedOn" timestamp without time zone NOT NULL,
   CONSTRAINT "EventStream_PK" PRIMARY KEY ("EventStreamId")
 );

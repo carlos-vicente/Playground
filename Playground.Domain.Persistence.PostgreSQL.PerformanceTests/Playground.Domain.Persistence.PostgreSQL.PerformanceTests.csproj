@@ -101,28 +101,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\AggregateContextMetricsCounter.cs" />
-    <Compile Include="Helpers\AggregateContextPerformanceTestBase.cs" />
-    <Compile Include="Helpers\DummyDispatcher.cs" />
-    <Compile Include="Helpers\IMetricsCounter.cs" />
-    <Compile Include="LoadAggregateWithSnaphostAndFewEventsTest.cs" />
-    <Compile Include="LoadAggregateWithHundredsOfEventsTest.cs" />
-    <Compile Include="LoadAggregateWithFewEventsTest.cs" />
+    <Compile Include="GenericIdentifer\Helpers\AggregateContextMetricsCounter.cs" />
+    <Compile Include="GenericIdentifer\Helpers\AggregateContextPerformanceTestBase.cs" />
+    <Compile Include="GenericIdentifer\Helpers\DummyDispatcher.cs" />
+    <Compile Include="GenericIdentifer\LoadAggregateWithFewEventsTest.cs" />
+    <Compile Include="GenericIdentifer\LoadAggregateWithHundredsOfEventsTest.cs" />
+    <Compile Include="GenericIdentifer\LoadAggregateWithSnaphostAndFewEventsTest.cs" />
+    <Compile Include="GenericIdentifer\Model\Events\OrderCreated.cs" />
+    <Compile Include="GenericIdentifer\Model\Events\OrderDelivered.cs" />
+    <Compile Include="GenericIdentifer\Model\Events\OrderShipped.cs" />
+    <Compile Include="GenericIdentifer\Model\Events\OrderShippingAddressChanged.cs" />
+    <Compile Include="GenericIdentifer\Model\Events\OrderStartedBeingFulfilled.cs" />
+    <Compile Include="GenericIdentifer\Model\Order.cs" />
+    <Compile Include="GenericIdentifer\Model\OrderIdentity.cs" />
+    <Compile Include="GenericIdentifer\Model\OrderState.cs" />
+    <Compile Include="GenericIdentifer\StoringFewEventsOnSaveTest.cs" />
+    <Compile Include="GenericIdentifer\StoringHundredsOfEventsOnSaveTest.cs" />
+    <Compile Include="GuidIdentifier\Helpers\AggregateContextMetricsCounter.cs" />
+    <Compile Include="GuidIdentifier\Helpers\AggregateContextPerformanceTestBase.cs" />
+    <Compile Include="GuidIdentifier\Helpers\DummyDispatcher.cs" />
+    <Compile Include="IMetricsCounter.cs" />
+    <Compile Include="GuidIdentifier\LoadAggregateWithSnaphostAndFewEventsTest.cs" />
+    <Compile Include="GuidIdentifier\LoadAggregateWithHundredsOfEventsTest.cs" />
+    <Compile Include="GuidIdentifier\LoadAggregateWithFewEventsTest.cs" />
     <Compile Include="Model\CannotChangeOrderAddressException.cs" />
     <Compile Include="Model\CannotDeliverException.cs" />
     <Compile Include="Model\CannotShipException.cs" />
     <Compile Include="Model\CannotStartFulfillingException.cs" />
-    <Compile Include="Model\Events\OrderCreated.cs" />
-    <Compile Include="Model\Order.cs" />
-    <Compile Include="Model\Events\OrderShippingAddressChanged.cs" />
-    <Compile Include="Model\Events\OrderDelivered.cs" />
-    <Compile Include="Model\OrderState.cs" />
+    <Compile Include="GuidIdentifier\Model\Events\OrderCreated.cs" />
+    <Compile Include="GuidIdentifier\Model\Order.cs" />
+    <Compile Include="GuidIdentifier\Model\Events\OrderShippingAddressChanged.cs" />
+    <Compile Include="GuidIdentifier\Model\Events\OrderDelivered.cs" />
+    <Compile Include="GuidIdentifier\Model\OrderState.cs" />
     <Compile Include="Model\OrderStatus.cs" />
-    <Compile Include="Model\Events\OrderStartedBeingFulfilled.cs" />
-    <Compile Include="Model\Events\OrderShipped.cs" />
+    <Compile Include="GuidIdentifier\Model\Events\OrderStartedBeingFulfilled.cs" />
+    <Compile Include="GuidIdentifier\Model\Events\OrderShipped.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StoringFewEventsOnSaveTest.cs" />
-    <Compile Include="StoringHundredsOfEventsOnSaveTest.cs" />
+    <Compile Include="GuidIdentifier\StoringFewEventsOnSaveTest.cs" />
+    <Compile Include="GuidIdentifier\StoringHundredsOfEventsOnSaveTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -171,6 +187,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

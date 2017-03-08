@@ -220,7 +220,7 @@ namespace Playground.Domain.Persistence
             where TIdentity : IIdentity
         {
             var snapshot = await _snapshotStore
-                .GetLastestSnaptshot<TAggregateState, TIdentity>(aggregateRootId)
+                .GetLastestSnaptshot<TAggregateState>(aggregateRootId.Id)
                 .ConfigureAwait(false);
 
             ICollection<DomainEventForAggregateRootWithIdentity> events;
@@ -253,7 +253,7 @@ namespace Playground.Domain.Persistence
             where TIdentity : IIdentity
         {
             var snapshot = await _snapshotStore
-                .GetLastestSnaptshot<TAggregateState, TIdentity>(aggregateRootId)
+                .GetLastestSnaptshot<TAggregateState>(aggregateRootId.Id)
                 .ConfigureAwait(false);
 
             ICollection<DomainEventForAggregateRootWithIdentity> events;

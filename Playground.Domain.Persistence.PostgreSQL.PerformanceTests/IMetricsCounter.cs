@@ -1,6 +1,6 @@
 using System;
 
-namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Helpers
+namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests
 {
     public interface IMetricsCounter
     {

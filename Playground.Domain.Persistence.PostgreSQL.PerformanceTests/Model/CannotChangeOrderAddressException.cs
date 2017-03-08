@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Playground.Domain.Persistence.PostgreSQL.PerformanceTests.Model
 {
