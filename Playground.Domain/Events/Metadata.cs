@@ -51,13 +51,12 @@ namespace Playground.Domain.Events
         }
     }
 
-    public class MetadataForAggregateRootWithIdentity<TIdentity>
-        where TIdentity : IIdentity
+    public class MetadataForAggregateRootWithIdentity
     {
         /// <summary>
         /// Aggregate root identifier to which aggregate root this event applies to
         /// </summary>
-        public TIdentity AggregateRootId { get; set; }
+        public string AggregateRootId { get; set; }
 
         /// <summary>
         /// When the event occurred (in UTC format to prevent timezone issues)
@@ -88,7 +87,7 @@ namespace Playground.Domain.Events
         /// <param name="aggregateRootId">The aggregates root identity</param>
         /// <param name="version">The version in which the event occurred</param>
         /// <param name="eventType">The event type</param>
-        public MetadataForAggregateRootWithIdentity(TIdentity aggregateRootId, long version, Type eventType)
+        public MetadataForAggregateRootWithIdentity(string aggregateRootId, long version, Type eventType)
         {
             AggregateRootId = aggregateRootId;
             Version = version;

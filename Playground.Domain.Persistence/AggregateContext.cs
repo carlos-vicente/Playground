@@ -176,14 +176,14 @@ namespace Playground.Domain.Persistence
     {
         private readonly IEventStoreForGenericIdentity _eventStore;
         private readonly ISnapshotStoreWithGenericIdentity _snapshotStore;
-        private readonly IAggregateHydrator _aggregateHydrator;
-        private readonly IEventDispatcher _eventDispatcher;
+        private readonly IAggregateHydratorWithGenericIdentity _aggregateHydrator;
+        private readonly IEventDispatcherWithGenericIdentity _eventDispatcher;
 
         public AggregateContextForAggregateWithIdentity(
             IEventStoreForGenericIdentity eventStore,
             ISnapshotStoreWithGenericIdentity snapshotStore,
-            IAggregateHydrator aggregateHydrator,
-            IEventDispatcher eventDispatcher)
+            IAggregateHydratorWithGenericIdentity aggregateHydrator,
+            IEventDispatcherWithGenericIdentity eventDispatcher)
         {
             _eventStore = eventStore;
             _snapshotStore = snapshotStore;
@@ -223,7 +223,7 @@ namespace Playground.Domain.Persistence
                 .GetLastestSnaptshot<TAggregateState, TIdentity>(aggregateRootId)
                 .ConfigureAwait(false);
 
-            ICollection<DomainEvent> events;
+            ICollection<DomainEventForAggregateRootWithIdentity> events;
 
             if (snapshot != null)
             {
@@ -256,7 +256,7 @@ namespace Playground.Domain.Persistence
                 .GetLastestSnaptshot<TAggregateState, TIdentity>(aggregateRootId)
                 .ConfigureAwait(false);
 
-            ICollection<DomainEvent> events;
+            ICollection<DomainEventForAggregateRootWithIdentity> events;
 
             if (snapshot != null)
             {
@@ -306,7 +306,7 @@ namespace Playground.Domain.Persistence
 
         private TAggregateRoot GetAggregateInstance<TAggregateRoot, TAggregateState, TIdentity>(
             TIdentity aggregateRootId,
-            ICollection<DomainEvent> events,
+            ICollection<DomainEventForAggregateRootWithIdentity> events,
             Snapshot<TAggregateState> snapshot)
             where TAggregateRoot : AggregateRootWithIdentity<TAggregateState, TIdentity>
             where TAggregateState : class, IAggregateState, new()
@@ -318,7 +318,7 @@ namespace Playground.Domain.Persistence
             {
                 var state = _aggregateHydrator
                     .HydrateAggregateWithEvents<TAggregateState>(
-                        events ?? new List<DomainEvent>(),
+                        events ?? new List<DomainEventForAggregateRootWithIdentity>(),
                         snapshot?.Data);
 
                 var currentVersion = events != null && events.Any()

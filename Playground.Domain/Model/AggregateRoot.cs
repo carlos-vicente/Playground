@@ -45,7 +45,7 @@ namespace Playground.Domain.Model
         where TAggregateState : class, IAggregateState, new()
         where TIdentity : IIdentity
     {
-        public ICollection<DomainEventForAggregateRootWithIdentity<TIdentity>> UncommittedEvents { get; private set; }
+        public ICollection<DomainEventForAggregateRootWithIdentity> UncommittedEvents { get; private set; }
         public TAggregateState State { get; private set; }
         public long CurrentVersion { get; private set; }
         private long _currentUncommittedVersion;
@@ -61,22 +61,22 @@ namespace Playground.Domain.Model
             long currentVersion)
             : base(identity)
         {
-            UncommittedEvents = new List<DomainEventForAggregateRootWithIdentity<TIdentity>>();
+            UncommittedEvents = new List<DomainEventForAggregateRootWithIdentity>();
             State = hydratedState ?? new TAggregateState();
             CurrentVersion = currentVersion;
         }
 
         protected void When<TDomainEvent>(TDomainEvent domainEvent)
-            where TDomainEvent : DomainEventForAggregateRootWithIdentity<TIdentity>
+            where TDomainEvent : DomainEventForAggregateRootWithIdentity
         {
-            domainEvent.Metadata = new MetadataForAggregateRootWithIdentity<TIdentity>(
-                Identity,
+            domainEvent.Metadata = new MetadataForAggregateRootWithIdentity(
+                Identity.Id,
                 ++_currentUncommittedVersion,
                 typeof(TDomainEvent));
 
             UncommittedEvents.Add(domainEvent);
 
-            ((IGetAppliedWithForAggregateWithIdentity<TDomainEvent, TIdentity>)State).Apply(domainEvent);
+            ((IGetAppliedWithForAggregateWithIdentity<TDomainEvent>)State).Apply(domainEvent);
         }
     }
 }

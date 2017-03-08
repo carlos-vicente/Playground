@@ -10,9 +10,8 @@ namespace Playground.Domain.Events
         void Apply(TDomainEvent e);
     }
 
-    public interface IGetAppliedWithForAggregateWithIdentity<in TDomainEvent, TIdentity> 
-        where TDomainEvent : DomainEventForAggregateRootWithIdentity<TIdentity>
-        where TIdentity : IIdentity
+    public interface IGetAppliedWithForAggregateWithIdentity<in TDomainEvent> 
+        where TDomainEvent : DomainEventForAggregateRootWithIdentity
     {
         /// <summary>
         /// Applies changes to the aggregate root instance that happens as a consequence of this event

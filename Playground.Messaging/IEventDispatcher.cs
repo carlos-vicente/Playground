@@ -8,4 +8,10 @@ namespace Playground.Messaging
         Task RaiseEvent<TEvent>(TEvent domainEvent)
             where TEvent : DomainEvent;
     }
+
+    public interface IEventDispatcherWithGenericIdentity
+    {
+        Task RaiseEvent<TEvent>(TEvent domainEvent)
+            where TEvent : DomainEventForAggregateRootWithIdentity;
+    }
 }

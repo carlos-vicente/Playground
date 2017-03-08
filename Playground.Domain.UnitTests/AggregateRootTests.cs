@@ -60,6 +60,7 @@ namespace Playground.Domain.UnitTests
 
             var expectedEvent = new ItHappened
             {
+                Metadata = new Metadata(_sut.Id, 1L, typeof(ItHappened)),
                 Name = name
             };
 
@@ -76,9 +77,7 @@ namespace Playground.Domain.UnitTests
                 .Single()
                 .ShouldBeEquivalentTo(
                     expectedEvent,
-                    opts => opts
-                        .Excluding(de => de.Metadata.OccorredOn)
-                        .Excluding(de => de.Metadata.Version));
+                    opts => opts.Excluding(de => de.Metadata.OccorredOn));
 
             _sut
                 .State

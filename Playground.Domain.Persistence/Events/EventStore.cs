@@ -203,7 +203,7 @@ namespace Playground.Domain.Persistence.Events
         public async Task StoreEvents(
             string streamId,
             long currentVersion,
-            ICollection<DomainEvent> eventsToStore)
+            ICollection<DomainEventForAggregateRootWithIdentity> eventsToStore)
         {
             _logger
                 .Debug($"Storing {eventsToStore.Count} events on stream {streamId} with current version {currentVersion}");
@@ -246,7 +246,7 @@ namespace Playground.Domain.Persistence.Events
                 .Debug("All events stored");
         }
 
-        public Task<ICollection<DomainEvent>> LoadSelectedEvents(
+        public Task<ICollection<DomainEventForAggregateRootWithIdentity>> LoadSelectedEvents(
             string streamId,
             long fromEventId,
             long toEventId)
@@ -254,7 +254,7 @@ namespace Playground.Domain.Persistence.Events
             throw new NotImplementedException();
         }
 
-        public async Task<ICollection<DomainEvent>> LoadAllEvents(string streamId)
+        public async Task<ICollection<DomainEventForAggregateRootWithIdentity>> LoadAllEvents(string streamId)
         {
             _logger.Debug($"Loading entire event stream for {streamId}");
 
@@ -275,19 +275,19 @@ namespace Playground.Domain.Persistence.Events
 
             var domainEvents = storedEvents?
                 .Select(GetDomainEvent)
-                .ToList() ?? new List<DomainEvent>();
+                .ToList() ?? new List<DomainEventForAggregateRootWithIdentity>();
 
             _logger.Debug($"Returning all domain events for stream {streamId}");
 
             return domainEvents;
         }
 
-        private DomainEvent GetDomainEvent(StoredEvent storedEvent)
+        private DomainEventForAggregateRootWithIdentity GetDomainEvent(StoredEvent storedEvent)
         {
             var deserialized = _serializer
                 .Deserialize(storedEvent.EventBody, storedEvent.EventType);
 
-            return deserialized as DomainEvent;
+            return deserialized as DomainEventForAggregateRootWithIdentity;
         }
     }
 }

@@ -136,15 +136,14 @@ namespace Playground.Domain.Persistence.UnitTests
         {
             // arrange
             var streamId = Guid.NewGuid();
-            var eventMetadata = new Metadata(streamId, typeof(TestAggregateChanged));
-
+            
             var event1 = Fixture
                 .Build<TestAggregateChanged>()
-                .With(e => e.Metadata, eventMetadata)
+                .With(e => e.Metadata, new Metadata(streamId, 1L, typeof(TestAggregateChanged)))
                 .Create();
             var event2 = Fixture
                 .Build<TestAggregateChanged>()
-                .With(e => e.Metadata, eventMetadata)
+                .With(e => e.Metadata, new Metadata(streamId, 2L, typeof(TestAggregateChanged)))
                 .Create();
 
             A.CallTo(() => Faker.Resolve<IEventRepository>()
@@ -194,16 +193,15 @@ namespace Playground.Domain.Persistence.UnitTests
         {
             // arrange
             var streamId = Guid.NewGuid();
-            var eventMetadata = new Metadata(streamId, typeof(TestAggregateChanged));
             var currentStreamVersion = Fixture.Create<long>();
 
             var event1 = Fixture
                 .Build<TestAggregateChanged>()
-                .With(e => e.Metadata, eventMetadata)
+                .With(e => e.Metadata, new Metadata(streamId, 1L, typeof(TestAggregateChanged)))
                 .Create();
             var event2 = Fixture
                 .Build<TestAggregateChanged>()
-                .With(e => e.Metadata, eventMetadata)
+                .With(e => e.Metadata, new Metadata(streamId, 2L, typeof(TestAggregateChanged)))
                 .Create();
 
             var lastStreamEvent = new StoredEvent(
@@ -243,14 +241,8 @@ namespace Playground.Domain.Persistence.UnitTests
             // arrange
             var streamId = Guid.NewGuid();
 
-            var event1Metadata = new Metadata(streamId, typeof(TestAggregateChanged))
-            {
-                Version = 1L
-            };
-            var event2Metadata = new Metadata(streamId, typeof(TestAggregateChanged))
-            {
-                Version = 2L
-            };
+            var event1Metadata = new Metadata(streamId, 1L, typeof(TestAggregateChanged));
+            var event2Metadata = new Metadata(streamId, 2L, typeof(TestAggregateChanged));
             var typeName = typeof(TestAggregateChanged).AssemblyQualifiedName;
 
             var event1 = Fixture

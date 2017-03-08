@@ -59,14 +59,14 @@ namespace Playground.Domain.Persistence.Events
         /// <param name="eventsToStore">The events to store</param>
         /// <param name="currentVersion"></param>
         /// <exception cref="InvalidOperationException">When store version is higher than <paramref name="currentVersion"/></exception>
-        Task StoreEvents(string streamId, long currentVersion, ICollection<DomainEvent> eventsToStore);
+        Task StoreEvents(string streamId, long currentVersion, ICollection<DomainEventForAggregateRootWithIdentity> eventsToStore);
 
         /// <summary>
         /// Loads all the events of a given stream
         /// </summary>
         /// <param name="streamId">The stream identifier</param>
         /// <returns>The complete list of domain events for the stream; An empty list if the stream exists but has no events; Null if the stream does not exists</returns>
-        Task<ICollection<DomainEvent>> LoadAllEvents(string streamId);
+        Task<ICollection<DomainEventForAggregateRootWithIdentity>> LoadAllEvents(string streamId);
 
         /// <summary>
         /// Loads a batch of events of a given stream from a given version to another given version
@@ -75,6 +75,6 @@ namespace Playground.Domain.Persistence.Events
         /// <param name="fromEventId">The first event identifier to load (inclusive)</param>
         /// <param name="toEventId">The last event identifier to load (inclusive)</param>
         /// <returns>The batch list of domain events for the stream; An empty list if the stream exists but has no events; Null if the stream does not exists</returns>
-        Task<ICollection<DomainEvent>> LoadSelectedEvents(string streamId, long fromEventId, long toEventId);
+        Task<ICollection<DomainEventForAggregateRootWithIdentity>> LoadSelectedEvents(string streamId, long fromEventId, long toEventId);
     }
 }

@@ -28,14 +28,12 @@ namespace Playground.Domain.Model
         /// Apply all the events in <paramref name="domainEvents"/> to a newly created instance of <typeparamref name="TAggregateState"/>
         /// </summary>
         /// <typeparam name="TAggregateState">The type to use when creating the state object</typeparam>
-        /// <typeparam name="TIdentity"></typeparam>
         /// <param name="domainEvents">The list of domain events to apply on to the aggregate</param>
         /// <param name="snapshot">The lastest snapshot for this aggregate state; NULL if no snapshot is available</param>
         /// <returns>The aggregate instance with the events applied</returns>
-        TAggregateState HydrateAggregateWithEvents<TAggregateState, TIdentity>(
-            ICollection<DomainEventForAggregateRootWithIdentity<TIdentity>> domainEvents,
+        TAggregateState HydrateAggregateWithEvents<TAggregateState>(
+            ICollection<DomainEventForAggregateRootWithIdentity> domainEvents,
             TAggregateState snapshot)
-            where TAggregateState : class, IAggregateState, new()
-            where TIdentity : IIdentity;
+            where TAggregateState : class, IAggregateState, new();
     }
 }
