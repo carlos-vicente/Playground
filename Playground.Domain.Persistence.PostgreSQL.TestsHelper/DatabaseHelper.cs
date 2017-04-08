@@ -43,7 +43,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
         #region guid id
         public static void CleanEventStreams()
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 connection.Open();
 
@@ -69,7 +69,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 
         public static async Task<EventStream> GetLatestStreamCreated()
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -89,7 +89,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             Guid streamId,
             string streamName)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -113,7 +113,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             Guid streamId,
             StoredEvent storedEvent)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -141,7 +141,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             Guid streamId,
             StoredSnapshot storedSnapshot)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -167,7 +167,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             Guid streamId,
             IEnumerable<StoredEvent> storedEvents)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -196,7 +196,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 
         public static async Task<IEnumerable<StoredEvent>> GetStreamEvents(Guid streamId)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -219,7 +219,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
         #region string id
         public static void CleanEventStreamsGeneric()
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 connection.Open();
 
@@ -245,7 +245,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
 
         public static async Task<EventStreamForGenericIdentity> GetLatestStreamCreatedGeneric()
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -265,7 +265,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             string streamId,
             string streamName)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -289,7 +289,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             string streamId,
             StoredEvent storedEvent)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -317,7 +317,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             string streamId,
             StoredSnapshot storedSnapshot)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -343,7 +343,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
             string streamId,
             IEnumerable<StoredEvent> storedEvents)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()
@@ -373,7 +373,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.TestsHelper
         public static async Task<IEnumerable<StoredEvent>> GetStreamEventsGeneric(
             string streamId)
         {
-            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(GetConnectionStringBuilder().ConnectionString))
             {
                 await connection
                     .OpenAsync()

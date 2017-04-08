@@ -177,6 +177,11 @@ namespace Playground.Validation.Fluent.UnitTests
     public class GenericFluentValidationValidatorTests 
         : TestBaseWithSut<FluentValidationValidator<string>>
     {
+        public override void SetUp()
+        {
+            base.SetUp();
+        }
+
         [Test]
         public void Validate_WillCallValidateOnFluentValidationValidator()
         {

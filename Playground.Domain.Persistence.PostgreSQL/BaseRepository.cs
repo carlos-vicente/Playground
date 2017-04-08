@@ -25,7 +25,7 @@ namespace Playground.Domain.Persistence.PostgreSQL
 
         protected async Task<NpgsqlConnection> OpenConnection()
         {
-            var conn = new NpgsqlConnection(_connectionStringBuilder);
+            var conn = new NpgsqlConnection(_connectionStringBuilder.ConnectionString);
             await conn
                 .OpenAsync()
                 .ConfigureAwait(false);

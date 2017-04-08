@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26020.0
+VisualStudioVersion = 15.0.26228.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{9CE5E191-59F5-4CF7-BD87-A6F6628DCC6D}"
 EndProject
@@ -128,6 +128,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Serialization.Jil", "Playground.Serialization.Jil\Playground.Serialization.Jil.csproj", "{D5436D18-0841-4D6F-BC9C-867E87B01979}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Serialization.Newtonsoft", "Playground.Serialization.Newtonsoft\Playground.Serialization.Newtonsoft.csproj", "{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MassTransit", "MassTransit", "{F2E8DE1B-2561-4847-82EE-A5E46F61D772}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MediatR", "MediatR", "{63410A82-7AE6-42B4-83B9-A6B329E77CCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Messaging.MediatR", "Playground.Messaging.MediatR\Playground.Messaging.MediatR.csproj", "{B006B839-2C91-43EA-B765-1B3F47EB5241}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7C0C9FDD-6CDF-4ED1-9B16-85642FFCC9EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Messaging.MediatR.Tests", "Playground.Messaging.MediatR.Tests\Playground.Messaging.MediatR.Tests.csproj", "{AA86E4D1-E8F2-4184-92DA-64DABF21E873}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -287,6 +297,14 @@ Global
 		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B006B839-2C91-43EA-B765-1B3F47EB5241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B006B839-2C91-43EA-B765-1B3F47EB5241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B006B839-2C91-43EA-B765-1B3F47EB5241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B006B839-2C91-43EA-B765-1B3F47EB5241}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA86E4D1-E8F2-4184-92DA-64DABF21E873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA86E4D1-E8F2-4184-92DA-64DABF21E873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA86E4D1-E8F2-4184-92DA-64DABF21E873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA86E4D1-E8F2-4184-92DA-64DABF21E873}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -346,5 +364,10 @@ Global
 		{DCB24172-E95F-4ABF-ABBC-BCFDA00168BE} = {CA1056D8-0289-41B2-8333-6B618ECB05E2}
 		{D5436D18-0841-4D6F-BC9C-867E87B01979} = {94CCFAF6-2F7B-47C3-97C6-F24171084EA6}
 		{CCFBCB9B-E386-4AB6-A425-C37DBC996FA3} = {94CCFAF6-2F7B-47C3-97C6-F24171084EA6}
+		{F2E8DE1B-2561-4847-82EE-A5E46F61D772} = {1CC5EEA5-02E4-493D-B2BF-B0C5E56DEFB6}
+		{63410A82-7AE6-42B4-83B9-A6B329E77CCF} = {1CC5EEA5-02E4-493D-B2BF-B0C5E56DEFB6}
+		{B006B839-2C91-43EA-B765-1B3F47EB5241} = {63410A82-7AE6-42B4-83B9-A6B329E77CCF}
+		{7C0C9FDD-6CDF-4ED1-9B16-85642FFCC9EA} = {63410A82-7AE6-42B4-83B9-A6B329E77CCF}
+		{AA86E4D1-E8F2-4184-92DA-64DABF21E873} = {7C0C9FDD-6CDF-4ED1-9B16-85642FFCC9EA}
 	EndGlobalSection
 EndGlobal

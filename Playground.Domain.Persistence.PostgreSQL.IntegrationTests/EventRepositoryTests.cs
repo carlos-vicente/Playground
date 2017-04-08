@@ -620,7 +620,7 @@ namespace Playground.Domain.Persistence.PostgreSQL.IntegrationTests
         {
             base.SetUp();
 
-            DatabaseHelper.CleanEventStreams();
+            DatabaseHelper.CleanEventStreamsGeneric();
 
             _sut = new EventRepositoryForGenericIdentity(DatabaseHelper.GetConnectionStringBuilder());
         }
